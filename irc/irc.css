@@ -1,0 +1,15 @@
+/* irc css */
+#irc-auto-label, #irc-pop-label{
+	float: left;
+	width: 200px;
+	margin-top: 10px;
+}
+
+#irc-autochans, #irc-sitechats {
+	float: left;
+	margin-top: 10px;
+}
+
+#irc-submit {
+	margin-top: 15px;
+}

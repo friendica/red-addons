@@ -28,9 +28,10 @@ return '';
 function random_channel_home_home(&$a, &$o){
  
 	$x = random_channel_select();
-	$base = "/channel/";
-	$clicky = ($base . $x);
+	$clicky = (z_root() . '/channel/' . $x);
+
 	if($clicky)
 		goaway(zid($clicky));
-	goaway($a->get_baseurl() . '/profile');
+	else 
+		return;
 }

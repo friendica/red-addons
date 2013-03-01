@@ -18,8 +18,11 @@ function random_channel_home_uninstall() {
 }
 
 function random_channel_select(){
-	$r = q("select channel_address from channel where channel_r_stream = 1 order by rand() limit 1");
-		return $r[0]['channel_address'];
+        $r = q("select channel_address from channel where channel_r_stream = 1 order by rand() limit 1");
+if($r)
+        return $r[0]['channel_address'];
+return '';
+
 }
 
 function random_channel_home_home(&$a, &$o){

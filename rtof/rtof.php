@@ -62,7 +62,7 @@ function rtof_settings_post ($a,$post) {
 function rtof_settings(&$a,&$s) {
 	if(! local_user())
 		return;
-	head_add_css(z_root() . '/addon/rtof/rtof.css');
+	head_add_css('/addon/rtof/rtof.css');
 
 	$api     = get_pconfig(local_user(), 'rtof', 'baseapi');
 	$username    = get_pconfig(local_user(), 'rtof', 'username' );
@@ -80,7 +80,7 @@ function rtof_settings(&$a,&$s) {
 	$s .= '<label id="rtof-default-label" for="rtof-default">'. t('Send public postings to Friendica by default') .'</label>';
 	$s .= '<input id="rtof-default" type="checkbox" name="rtof_default" value="1" ' . $defchecked . '/>';
 	$s .= '<div class="clear"></div>';    
-	$s .= '<label id="rtof-baseapi-label" for="rtof_baseapi">'. t('Friendica API Path ($http://sitename/api)') .'</label>';
+	$s .= '<label id="rtof-baseapi-label" for="rtof_baseapi">'. t('Friendica API Path (https://{sitename}/api)') .'</label>';
 	$s .= '<input id="rtof-baseapi" type="text" name="rtof_baseapi" value="' . $api . '" size="35" />';
 	$s .= '<div class="clear"></div>';
 	$s .= '<label id="rtof-username-label" for="rtof_username">'. t('Friendica login name') .'</label>';

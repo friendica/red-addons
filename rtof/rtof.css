@@ -1,69 +1,21 @@
-
-
-#statusnet-avatar {
-	float: left;
-	width: 48px;
-	height: 48px;
-	padding: 2px;
-}
-#statusnet-info-block {
-	height: 52px;
-	vertical-align: middle;
-}
-#statusnet-disconnect-label {
-	float: left;
-	width: 250px;
-	margin-bottom: 25px;
-}
-#statusnet-disconnect {
-	float: left;
-}
-
-#statusnet-default-label,
-#statusnet-applicationname-label,
-#statusnet-sendtaglinks-label,
-#statusnet-shortening-label, 
-#statusnet-mirror-label,
-#statusnet-pin-label,
-#statusnet-enable-label {
+#rtof-default-label,
+#rtof-username-label,
+#rtof-password-label,
+#rtof-enable-label {
 	float: left;
 	width: 250px;
 	margin-bottom: 5px;
 }
 
-#statusnet-checkbox {
+#rtof-checkbox {
 	float: left;
 }
 
-#statusnet-pin {
-	float: left;
-}
-
-
-#statusnet-consumerkey-label {
+#rtof-baseapi-label {
 	float: left;
 	width: 250px;
-	margin-bottom: 8px;
 }
-#statusnet-consumerkey {
+#rtof-baseapi, #rtof-username, #rtof-password {
 	float: left;
-	margin-bottom: 8px;
-}
-#statusnet-consumersecret-label {
-	float: left;
-	width: 250px;
-	margin-bottom: 8px;
-}
-#statusnet-consumersecret {
-	float: left;
-	margin-bottom: 8px;
-}
-#statusnet-baseapi-label {
-	float: left;
-	width: 250px;
-	margin-bottom: 25px;
-}
-#statusnet-baseapi {
-	float: left;
-	margin-bottom: 8px;
+	margin-bottom: 5px;
 }

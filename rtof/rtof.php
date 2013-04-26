@@ -123,6 +123,11 @@ function rtof_post_hook(&$a,&$b) {
 	 * Post to Friendica
 	 */
 
+	// for now, just top level posts.
+
+	if($b['mid'] != $b['parent_mid'])
+		return;
+
 	if(($b['item_flags'] & ITEM_DELETED) || $b['item_private'] || ($b['created'] !== $b['edited']))
 		return;
 

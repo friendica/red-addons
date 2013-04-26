@@ -135,6 +135,11 @@ EOT;
 
 function js_upload_post_init(&$a,&$b) {
 
+	if($b['source'] != 'photos')
+		return;
+
+	$a->data['upload_plugin'] = $b['source'];
+
 	// list of valid extensions, ex. array("jpeg", "xml", "bmp")
 
 	$allowedExtensions = array("jpeg","gif","png","jpg");
@@ -163,6 +168,9 @@ function js_upload_post_init(&$a,&$b) {
 
 function js_upload_post_file(&$a,&$b) {
 
+	if( ! x($a->data,'upload_plugin'))
+		return;
+
 	$result = $a->data['upload_result'];
 
 	$b['src']		= $result['path'];
@@ -173,6 +181,9 @@ function js_upload_post_file(&$a,&$b) {
 
 
 function js_upload_post_end(&$a,&$b) {
+
+	if( ! x($a->data,'upload_plugin'))
+		return;
 
 	if(x($a->data,'upload_jsonresponse')) {
 		echo $a->data['upload_jsonresponse'];

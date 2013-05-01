@@ -8,14 +8,14 @@
  */
 
 
-function startpage_install() {
+function startpage_load() {
 	register_hook('home_init', 'addon/startpage/startpage.php', 'startpage_home_init');
 	register_hook('feature_settings', 'addon/startpage/startpage.php', 'startpage_settings');
 	register_hook('feature_settings_post', 'addon/startpage/startpage.php', 'startpage_settings_post');
 }
 
 
-function startpage_uninstall() {
+function startpage_unload() {
 	unregister_hook('home_init', 'addon/startpage/startpage.php', 'startpage_home_init');
 	unregister_hook('feature_settings', 'addon/startpage/startpage.php', 'startpage_settings');
 	unregister_hook('feature_settings_post', 'addon/startpage/startpage.php', 'startpage_settings_post');

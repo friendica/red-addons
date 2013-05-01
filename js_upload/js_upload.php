@@ -17,7 +17,7 @@
  */
 
 
-function js_upload_install() {
+function js_upload_load() {
 	register_hook('photo_upload_form', 'addon/js_upload/js_upload.php', 'js_upload_form');
 	register_hook('photo_upload_begin',   'addon/js_upload/js_upload.php', 'js_upload_post_init');
 	register_hook('photo_upload_file',   'addon/js_upload/js_upload.php', 'js_upload_post_file');
@@ -25,7 +25,7 @@ function js_upload_install() {
 }
 
 
-function js_upload_uninstall() {
+function js_upload_unload() {
 	unregister_hook('photo_upload_form', 'addon/js_upload/js_upload.php', 'js_upload_form');
 	unregister_hook('photo_upload_begin',   'addon/js_upload/js_upload.php', 'js_upload_post_init');
 	unregister_hook('photo_upload_file',   'addon/js_upload/js_upload.php', 'js_upload_post_file');

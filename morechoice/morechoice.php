@@ -9,7 +9,7 @@
  */
 
 
-function morechoice_install() {
+function morechoice_load() {
 
 	register_hook('gender_selector', 'addon/morechoice/morechoice.php', 'morechoice_gender_selector');
 	register_hook('sexpref_selector', 'addon/morechoice/morechoice.php', 'morechoice_sexpref_selector');
@@ -17,7 +17,7 @@ function morechoice_install() {
 }
 
 
-function morechoice_uninstall() {
+function morechoice_unload() {
 
 	unregister_hook('gender_selector', 'addon/morechoice/morechoice.php', 'morechoice_gender_selector');
 	unregister_hook('sexpref_selector', 'addon/morechoice/morechoice.php', 'morechoice_sexpref_selector');

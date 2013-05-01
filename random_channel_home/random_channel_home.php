@@ -7,12 +7,12 @@
  */
 
 
-function random_channel_home_install() {
+function random_channel_home_load() {
 	register_hook('home_content', 'addon/random_channel_home/random_channel_home.php', 'random_channel_home_home');
-	logger("installed random_channel_home");
+	logger("loaded random_channel_home");
 }
 
-function random_channel_home_uninstall() {
+function random_channel_home_unload() {
 	unregister_hook('home_content', 'addon/random_channel_home/random_channel_home.php', 'random_channel_home_home');
 	logger("removed random_channel_home");
 }

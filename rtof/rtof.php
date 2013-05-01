@@ -11,18 +11,18 @@
  */
 
 
-function rtof_install() {
+function rtof_load() {
 	//  we need some hooks, for the configuration and for sending tweets
 	register_hook('feature_settings', 'addon/rtof/rtof.php', 'rtof_settings'); 
 	register_hook('feature_settings_post', 'addon/rtof/rtof.php', 'rtof_settings_post');
 	register_hook('notifier_normal', 'addon/rtof/rtof.php', 'rtof_post_hook');
 	register_hook('post_local', 'addon/rtof/rtof.php', 'rtof_post_local');
 	register_hook('jot_networks',    'addon/rtof/rtof.php', 'rtof_jot_nets');
-	logger("installed rtof");
+	logger("loaded rtof");
 }
 
 
-function rtof_uninstall() {
+function rtof_unload() {
 	unregister_hook('feature_settings', 'addon/rtof/rtof.php', 'rtof_settings'); 
 	unregister_hook('feature_settings_post', 'addon/rtof/rtof.php', 'rtof_settings_post');
 	unregister_hook('notifier_normal', 'addon/rtof/rtof.php', 'rtof_post_hook');

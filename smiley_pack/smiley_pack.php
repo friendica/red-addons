@@ -11,11 +11,11 @@
 
 */
 
-function smiley_pack_install() {
+function smiley_pack_load() {
 	register_hook('smilie', 'addon/smiley_pack/smiley_pack.php', 'smiley_pack_smilies');
 }
 
-function smiley_pack_uninstall() {
+function smiley_pack_unload() {
 	unregister_hook('smilie', 'addon/smiley_pack/smiley_pack.php', 'smiley_pack_smilies');
 }
 

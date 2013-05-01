@@ -8,7 +8,7 @@
  */
 
 
-function planets_install() {
+function planets_load() {
 
 	/**
 	 * 
@@ -30,16 +30,16 @@ function planets_install() {
 	register_hook('feature_settings', 'addon/planets/planets.php', 'planets_settings');
 	register_hook('feature_settings_post', 'addon/planets/planets.php', 'planets_settings_post');
 
-	logger("installed planets");
+	logger("loaded planets");
 }
 
 
-function planets_uninstall() {
+function planets_unload() {
 
 	/**
 	 *
-	 * uninstall unregisters any hooks created with register_hook
-	 * during install. It may also delete configuration settings
+	 * unload unregisters any hooks created with register_hook
+	 * during load. It may also delete configuration settings
 	 * and any other cleanup.
 	 *
 	 */

@@ -8,11 +8,11 @@
  */
 
 
-function mahjongg_install() {
+function mahjongg_load() {
     register_hook('app_menu', 'addon/mahjongg/mahjongg.php', 'mahjongg_app_menu');
 }
 
-function mahjongg_uninstall() {
+function mahjongg_unload() {
     unregister_hook('app_menu', 'addon/mahjongg/mahjongg.php', 'mahjongg_app_menu');
 
 }

@@ -100,6 +100,7 @@ function createUploader() {
 					newalbum		:	document.getElementById('photos-upload-newalbum').value,
 					album			:	document.getElementById('photos-upload-album-select').value,
 					not_visible     :   document.getElementById('photos-upload-noshare').checked,
+					source          :   document.getElementById('photos-upload-source').value,
 					group_allow		:	acl.allow_gid.join(','),
 					contact_allow	:	acl.allow_cid.join(','),
 					group_deny		:	acl.deny_gid.join(','),
@@ -110,6 +111,7 @@ function createUploader() {
 					newalbum		:	document.getElementById('photos-upload-newalbum').value,
 					album			:	document.getElementById('photos-upload-album-select').value,
 					not_visible     :   document.getElementById('photos-upload-noshare').checked,
+					source          :   document.getElementById('photos-upload-source').value,
 					group_allow		:	getSelected(document.getElementById('group_allow')).join(','),
 					contact_allow	:	getSelected(document.getElementById('contact_allow')).join(','),
 					group_deny		:	getSelected(document.getElementById('group_deny')).join(','),
@@ -135,10 +137,10 @@ EOT;
 
 function js_upload_post_init(&$a,&$b) {
 
-	if($b['source'] != 'photos')
+	if((! array_key_exists('source',$_REQUEST)) || ($_REQUEST['source'] != 'photos'))
 		return;
 
-	$a->data['upload_plugin'] = $b['source'];
+//	$a->data['upload_plugin'] = $b['source'];
 
 	// list of valid extensions, ex. array("jpeg", "xml", "bmp")
 
@@ -168,7 +170,7 @@ function js_upload_post_init(&$a,&$b) {
 
 function js_upload_post_file(&$a,&$b) {
 
-	if( ! x($a->data,'upload_plugin'))
+	if((! array_key_exists('source',$_REQUEST)) || ($_REQUEST['source'] != 'photos'))
 		return;
 
 	$result = $a->data['upload_result'];
@@ -182,7 +184,7 @@ function js_upload_post_file(&$a,&$b) {
 
 function js_upload_post_end(&$a,&$b) {
 
-	if( ! x($a->data,'upload_plugin'))
+	if((! array_key_exists('source',$_REQUEST)) || ($_REQUEST['source'] != 'photos'))
 		return;
 
 	if(x($a->data,'upload_jsonresponse')) {

@@ -64,7 +64,7 @@ function pumpio_registerclient($a, $host) {
 		$application_name = $a->get_hostname();
 
         $params["type"] = "client_associate";
-        $params["contacts"] = $a->config['admin_email'];
+        $params["contacts"] = $a->config['system']['admin_email'];
         $params["application_type"] = "native";
         $params["application_name"] = $application_name;
         $params["logo_url"] = $a->get_baseurl()."/images/friendica-256.png";
@@ -80,13 +80,16 @@ function pumpio_registerclient($a, $host) {
         $s = curl_exec($ch);
         $curl_info = curl_getinfo($ch);
 
+		logger('pumpio: registerclient: ' . $s, LOGGER_DATA);
+
         if ($curl_info["http_code"] == "200") {
                 $values = json_decode($s);
-		return($values);
                 $pumpio = array();
                 $pumpio["client_id"] = $values->client_id;
                 $pumpio["client_secret"] = $values->client_secret;
+			
                 print_r($values);
+				return($values);
         }
 	return(false);
 }

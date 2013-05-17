@@ -10,7 +10,7 @@ require('addon/pumpio/oauth/oauth_client.php');
 
 define('PUMPIO_DEFAULT_POLL_INTERVAL', 5); // given in minutes
 
-function pumpio_install() {
+function pumpio_load() {
     register_hook('post_local',           'addon/pumpio/pumpio.php', 'pumpio_post_local');
     register_hook('notifier_normal',      'addon/pumpio/pumpio.php', 'pumpio_send');
     register_hook('jot_networks',         'addon/pumpio/pumpio.php', 'pumpio_jot_nets');
@@ -19,7 +19,7 @@ function pumpio_install() {
 //    register_hook('cron', 'addon/pumpio/pumpio.php', 'pumpio_cron');
 
 }
-function pumpio_uninstall() {
+function pumpio_unload() {
     unregister_hook('post_local',       'addon/pumpio/pumpio.php', 'pumpio_post_local');
     unregister_hook('notifier_normal',  'addon/pumpio/pumpio.php', 'pumpio_send');
     unregister_hook('jot_networks',     'addon/pumpio/pumpio.php', 'pumpio_jot_nets');

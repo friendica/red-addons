@@ -24,6 +24,8 @@ function startpage_unload() {
 
 
 function startpage_home_init($a, $b) {
+
+	return;
 	if(! local_user())
 		return;
 
@@ -64,6 +66,7 @@ function startpage_settings_post($a,$post) {
 				$page = z_root() . '/' . $page;
 
 		set_pconfig(local_user(),'system','startpage',$page);
+	}
 }
 
 

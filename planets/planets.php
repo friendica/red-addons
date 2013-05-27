@@ -8,7 +8,7 @@
  */
 
 
-function planets_install() {
+function planets_load() {
 
 	/**
 	 * 
@@ -30,16 +30,16 @@ function planets_install() {
 	register_hook('feature_settings', 'addon/planets/planets.php', 'planets_settings');
 	register_hook('feature_settings_post', 'addon/planets/planets.php', 'planets_settings_post');
 
-	logger("installed planets");
+	logger("loaded planets");
 }
 
 
-function planets_uninstall() {
+function planets_unload() {
 
 	/**
 	 *
-	 * uninstall unregisters any hooks created with register_hook
-	 * during install. It may also delete configuration settings
+	 * unload unregisters any hooks created with register_hook
+	 * during load. It may also delete configuration settings
 	 * and any other cleanup.
 	 *
 	 */
@@ -95,7 +95,7 @@ function planets_post_hook($a, &$item) {
 	$planets = array('Alderaan','Tatooine','Dagoba','Polis Massa','Coruscant','Hoth','Endor','Kamino','Rattatak','Mustafar','Iego','Geonosis','Felucia','Dantooine','Ansion','Artaru','Bespin','Boz Pity','Cato Neimoidia','Christophsis','Kashyyk','Kessel','Malastare','Mygeeto','Nar Shaddaa','Ord Mantell','Saleucami','Subterrel','Death Star','Teth','Tund','Utapau','Yavin');
 
 	$planet = array_rand($planets,1);
-	$item['location'] = $planets[$planet];
+	$item['location'] = '#[url=http://starwars.com]' . $planets[$planet] . '[/url]';
 
 	return;
 }
@@ -115,8 +115,10 @@ function planets_post_hook($a, &$item) {
 function planets_settings_post($a,$post) {
 	if(! local_user())
 		return;
-	if($_POST['planets-submit'])
+	if($_POST['planets-submit']) {
 		set_pconfig(local_user(),'planets','enable',intval($_POST['planets']));
+		info( t('Planets Settings updated.') . EOL);
+	}
 }
 
 

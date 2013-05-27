@@ -1,0 +1,21 @@
+#rtof-default-label,
+#rtof-username-label,
+#rtof-password-label,
+#rtof-enable-label {
+	float: left;
+	width: 250px;
+	margin-bottom: 5px;
+}
+
+#rtof-checkbox {
+	float: left;
+}
+
+#rtof-baseapi-label {
+	float: left;
+	width: 250px;
+}
+#rtof-baseapi, #rtof-username, #rtof-password {
+	float: left;
+	margin-bottom: 5px;
+}

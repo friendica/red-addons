@@ -183,7 +183,7 @@ function statusnet_settings_post ($a,$post) {
                         }
                     }
                 }
-                goaway($a->get_baseurl().'/settings/connectors');
+                goaway($a->get_baseurl().'/settings/featured');
             } else {
             if (isset($_POST['statusnet-consumersecret'])) {
                 //  check if we can reach the API of the StatusNet server

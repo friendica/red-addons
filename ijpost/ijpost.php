@@ -141,7 +141,7 @@ function ijpost_post_local(&$a,&$b) {
 
 function ijpost_send(&$a,&$b) {
 
-    if($b['deleted'] || $b['private'] || ($b['created'] !== $b['edited']))
+    if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
         return;
 
     if(! strstr($b['postopts'],'ijpost'))

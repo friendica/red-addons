@@ -22,6 +22,7 @@ function irc_load() {
 function irc_unload() {
 	unregister_hook('app_menu', 'addon/irc/irc.php', 'irc_app_menu');
 	unregister_hook('feature_settings', 'addon/irc/irc.php', 'irc_addon_settings');
+	unregister_hook('feature_settings_post', 'addon/irc/irc.php', 'irc_addon_settings_post');
 
 }
 

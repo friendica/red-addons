@@ -51,7 +51,7 @@ function startpage_home_init($a, $b) {
 function startpage_settings_post($a,$post) {
 	if(! local_user())
 		return;
-	$c = $a->get_channel();
+	$channel = $a->get_channel();
 
 	if($_POST['startpage-submit']) {
 		$page = strip_tags(trim($_POST['startpage']));
@@ -62,7 +62,7 @@ function startpage_settings_post($a,$post) {
 		elseif($page == '')
 			$page = '';
 		else
-			if($strpos($page,'http') !== 0)
+			if(strpos($page,'http') !== 0)
 				$page = z_root() . '/' . $page;
 
 		set_pconfig(local_user(),'system','startpage',$page);

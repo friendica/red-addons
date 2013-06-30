@@ -144,13 +144,18 @@ function nsfw_prepare_body(&$a,&$b) {
 					$found = true;
 					break;
 				}
-				if(stristr($b['item']['tag'], ']' . $word . '[' )) {
-					$found = true;
-					break;
+				if($b['item']['term']) {
+					foreach($b['item']['term'] as $t) {
+						if(stristr($t['term'],$word )) {
+							$found = true;
+							break;
+						}
+					}
 				}
-			} 
+				if($found)
+					break; 
+			}
 		}
-		
 	}
 	if($found) {
 		$rnd = random_string(8);

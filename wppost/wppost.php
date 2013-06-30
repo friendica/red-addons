@@ -22,11 +22,6 @@ function wppost_unload () {
     unregister_hook('feature_settings',      'addon/wppost/wppost.php', 'wppost_settings');
     unregister_hook('feature_settings_post', 'addon/wppost/wppost.php', 'wppost_settings_post');
 
-	// obsolete - remove
-    unregister_hook('post_local_end',   'addon/wppost/wppost.php', 'wppost_send');
-    unregister_hook('plugin_settings',  'addon/wppost/wppost.php', 'wppost_settings');
-    unregister_hook('plugin_settings_post',  'addon/wppost/wppost.php', 'wppost_settings_post');
-
 }
 
 

@@ -15,13 +15,14 @@
 
 function irc_load() {
 	register_hook('app_menu', 'addon/irc/irc.php', 'irc_app_menu');
-	register_hook('plugin_settings', 'addon/irc/irc.php', 'irc_addon_settings');
-	register_hook('plugin_settings_post', 'addon/irc/irc.php', 'irc_addon_settings_post');
+	register_hook('feature_settings', 'addon/irc/irc.php', 'irc_addon_settings');
+	register_hook('feature_settings_post', 'addon/irc/irc.php', 'irc_addon_settings_post');
 }
 
 function irc_unload() {
 	unregister_hook('app_menu', 'addon/irc/irc.php', 'irc_app_menu');
-	unregister_hook('plugin_settings', 'addon/irc/irc.php', 'irc_addon_settings');
+	unregister_hook('feature_settings', 'addon/irc/irc.php', 'irc_addon_settings');
+	unregister_hook('feature_settings_post', 'addon/irc/irc.php', 'irc_addon_settings_post');
 
 }
 

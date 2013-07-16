@@ -96,7 +96,7 @@ function visage_content(&$a) {
 			}
 
             $o .= replace_macros($tpl,array(
-                '$url'   => $rr['xchan_url'],
+                '$url'   => (($rr['xchan_flags'] & XCHAN_FLAGS_HIDDEN) ? z_root() : $rr['xchan_url']),
                 '$name'  => $rr['xchan_name'],
                 '$photo' => $rr['xchan_photo_m'],
                 '$tags'  => relative_date($x[$g][1])

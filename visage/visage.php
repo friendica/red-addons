@@ -99,7 +99,8 @@ function visage_content(&$a) {
                 '$url'   => (($rr['xchan_flags'] & XCHAN_FLAGS_HIDDEN) ? z_root() : chanlink_url($rr['xchan_url'])),
                 '$name'  => $rr['xchan_name'],
                 '$photo' => $rr['xchan_photo_m'],
-                '$tags'  => relative_date($x[$g][1])
+                '$tags'  => (($rr['xchan_flags'] & XCHAN_FLAGS_HIDDEN) ? z_root() : chanlink_url($rr['xchan_url'])),
+				'$note'  => relative_date($x[$g][1])
             ));
         }
 

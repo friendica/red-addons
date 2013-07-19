@@ -74,6 +74,8 @@ function visage_content(&$a) {
 
 	if(! local_user())
 		return;
+
+	$o = '<h3>' . t('Recent Channel/Profile Viewers') . '</h3>';
 	$x = get_pconfig(local_user(),'visage','visitors');
 	if((! $x) || (! is_array($x)))
 		return;

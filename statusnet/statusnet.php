@@ -388,7 +388,7 @@ function statusnet_post_local(&$a,&$b) {
 	if($b['edit'])
 		return;
 
-	if((local_user()) && (local_user() == $b['uid']) && (! $b['private'])) {
+	if((local_user()) && (local_user() == $b['uid']) && (! $b['item_private'])) {
 
 		$statusnet_post = get_pconfig(local_user(),'statusnet','post');
 		$statusnet_enable = (($statusnet_post && x($_REQUEST,'statusnet_enable')) ? intval($_REQUEST['statusnet_enable']) : 0);

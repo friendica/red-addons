@@ -115,7 +115,7 @@ function libertree_post_local(&$a,&$b) {
 	if((! local_user()) || (local_user() != $b['uid']))
 		return;
 
-	if($b['private'] || $b['parent'])
+	if($b['item_private'] || $b['parent'])
 		return;
 
 	$ltree_post   = intval(get_pconfig(local_user(),'libertree','post'));

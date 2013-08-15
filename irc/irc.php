@@ -91,7 +91,7 @@ function irc_content(&$a) {
 	if($sitechats)
 		$chats = explode(',',$sitechats);
 	else
-		$chats = array('friendica','chat','chatback','hottub','ircbar','dateroom','debian');
+		$chats = array('redmatrix','friendica','chat','chatback','hottub','ircbar','dateroom','debian');
 
 
 	$a->page['aside'] .= '<div class="widget"><h3>' . t('Popular Channels') . '</h3><ul>';

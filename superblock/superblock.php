@@ -11,8 +11,8 @@
 
 function superblock_load() {
 
-	register_hook('plugin_settings', 'addon/superblock/superblock.php', 'superblock_addon_settings');
-	register_hook('plugin_settings_post', 'addon/superblock/superblock.php', 'superblock_addon_settings_post');
+	register_hook('feature_settings', 'addon/superblock/superblock.php', 'superblock_addon_settings');
+	register_hook('feature_settings_post', 'addon/superblock/superblock.php', 'superblock_addon_settings_post');
 	register_hook('conversation_start', 'addon/superblock/superblock.php', 'superblock_conversation_start');
 	register_hook('item_photo_menu', 'addon/superblock/superblock.php', 'superblock_item_photo_menu');
 	register_hook('enotify_store', 'addon/superblock/superblock.php', 'superblock_enotify_store');
@@ -22,8 +22,8 @@ function superblock_load() {
 
 function superblock_unload() {
 
-	unregister_hook('plugin_settings', 'addon/superblock/superblock.php', 'superblock_addon_settings');
-	unregister_hook('plugin_settings_post', 'addon/superblock/superblock.php', 'superblock_addon_settings_post');
+	unregister_hook('feature_settings', 'addon/superblock/superblock.php', 'superblock_addon_settings');
+	unregister_hook('feature_settings_post', 'addon/superblock/superblock.php', 'superblock_addon_settings_post');
 	unregister_hook('conversation_start', 'addon/superblock/superblock.php', 'superblock_conversation_start');
 	unregister_hook('item_photo_menu', 'addon/superblock/superblock.php', 'superblock_item_photo_menu');
 	unregister_hook('enotify_store', 'addon/superblock/superblock.php', 'superblock_enotify_store');

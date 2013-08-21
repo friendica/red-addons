@@ -111,13 +111,6 @@ function superblock_conversation_start(&$a,&$b) {
 		$a->data['superblock'] = explode(',',$words);
 	}
 
-	if($b['items']) {
-		for($x = 0; $x < count($b['items']); $x ++) {
-			if(array_key_exists($b['items'][$x]['author_xchan'],$a->data['superblock']))
-				unset($b['items'][$x]);
-		}
-	} 
-
 	$a->page['htmlhead'] .= <<< EOT
 
 <script>

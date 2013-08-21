@@ -110,6 +110,14 @@ function superblock_conversation_start(&$a,&$b) {
 	if($words) {
 		$a->data['superblock'] = explode(',',$words);
 	}
+
+	if($b['items']) {
+		for($x = 0; $x < count($b['items']); $x ++) {
+			if(array_key_exists($b['items'][$x]['author_xchan'],$a->data['superblock']))
+				unset($b['items'][$x]);
+		}
+	} 
+
 	$a->page['htmlhead'] .= <<< EOT
 
 <script>
@@ -126,11 +134,14 @@ EOT;
 
 function superblock_item_photo_menu(&$a,&$b) {
 
-	if((! local_user()) || ($b['item']['self']))
+	if(! local_user())
 		return;
 
 	$blocked = false;
 	$author = $b['item']['author_xchan'];
+	if($a->channel['channel_hash'] == $author)
+		return;
+
 	if(is_array($a->data['superblock'])) {
 		foreach($a->data['superblock'] as $bloke) {
 			if(link_compare($bloke,$author)) {

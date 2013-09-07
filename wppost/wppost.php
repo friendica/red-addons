@@ -117,7 +117,7 @@ function wppost_settings_post(&$a,&$b) {
 		set_pconfig(local_user(),'wppost','wp_password',trim($_POST['wp_password']));
 		set_pconfig(local_user(),'wppost','wp_blog',trim($_POST['wp_blog']));
 		set_pconfig(local_user(),'wppost','backlink',trim($_POST['wp_backlink']));
-
+                info( t('Wordpress Settings saved.') . EOL);
 	}
 
 }

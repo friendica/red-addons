@@ -103,7 +103,7 @@ function ljpost_settings_post(&$a,&$b) {
 		set_pconfig(local_user(),'ljpost','post_by_default',intval($_POST['lj_bydefault']));
 		set_pconfig(local_user(),'ljpost','lj_username',trim($_POST['lj_username']));
 		set_pconfig(local_user(),'ljpost','lj_password',trim($_POST['lj_password']));
-
+                info( t('Livejournal Settings saved.') . EOL);
 	}
 
 }

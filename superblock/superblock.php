@@ -40,7 +40,8 @@ function superblock_addon_settings(&$a,&$s) {
 		return;
 
     /* Add our stylesheet to the page so we can make our settings look nice */
-
+	if(! array_key_exists('htmlhead',$a->page))
+		$a->page['htmlhead'] = '';
     $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/superblock/superblock.css' . '" media="all" />' . "\r\n";
 
 
@@ -110,6 +111,9 @@ function superblock_conversation_start(&$a,&$b) {
 	if($words) {
 		$a->data['superblock'] = explode(',',$words);
 	}
+
+	if(! array_key_exists('htmlhead',$a->page))
+		$a->page['htmlhead'] = '';
 
 	$a->page['htmlhead'] .= <<< EOT
 

@@ -131,6 +131,11 @@ function rtof_post_hook(&$a,&$b) {
 	if(($b['item_flags'] & ITEM_DELETED) || $b['item_private'] || ($b['created'] !== $b['edited']))
 		return;
 
+
+	if(! perm_is_allowed($b['uid'],'','view_stream'))
+		return;
+
+
 	if(! strstr($b['postopts'],'rtof'))
 		return;
 

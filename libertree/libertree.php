@@ -100,6 +100,7 @@ function libertree_settings_post(&$a,&$b) {
 		set_pconfig(local_user(),'libertree','post_by_default',intval($_POST['libertree_bydefault']));
 		set_pconfig(local_user(),'libertree','libertree_api_token',trim($_POST['libertree_api_token']));
 		set_pconfig(local_user(),'libertree','libertree_url',trim($_POST['libertree_url']));
+                info( t('Libertree Settings saved.') . EOL);
 
 	}
 

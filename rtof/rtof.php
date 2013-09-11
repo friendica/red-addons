@@ -56,6 +56,7 @@ function rtof_settings_post ($a,$post) {
 	set_pconfig(local_user(), 'rtof', 'password',        trim($_POST['rtof_password']));
 	set_pconfig(local_user(), 'rtof', 'post',            intval($_POST['rtof_enable']));
 	set_pconfig(local_user(), 'rtof', 'post_by_default', intval($_POST['rtof_default']));
+        info( t('rtof Settings saved.') . EOL);
 
 }
 

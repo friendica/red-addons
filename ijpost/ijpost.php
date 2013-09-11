@@ -103,7 +103,7 @@ function ijpost_settings_post(&$a,&$b) {
 		set_pconfig(local_user(),'ijpost','post_by_default',intval($_POST['ij_bydefault']));
 		set_pconfig(local_user(),'ijpost','ij_username',trim($_POST['ij_username']));
 		set_pconfig(local_user(),'ijpost','ij_password',trim($_POST['ij_password']));
-
+                info( t('Insane Journal Settings saved.') . EOL);
 	}
 
 }

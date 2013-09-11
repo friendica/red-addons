@@ -275,6 +275,8 @@ function pumpio_settings_post(&$a,&$b) {
 		set_pconfig(local_user(),'pumpio','public',$_POST['pumpio_public']);
 		set_pconfig(local_user(),'pumpio','mirror',$_POST['pumpio_mirror']);
 		set_pconfig(local_user(),'pumpio','post_by_default',intval($_POST['pumpio_bydefault']));
+                info( t('PumpIO Settings saved.') . EOL);
+
 
 	}
 

@@ -160,7 +160,7 @@ function rtof_post_hook(&$a,&$b) {
 		if($ret['success'])
 			logger('rtof: returns: ' . print_r($ret['body'],true));
 		else
-			logger('rtof: z_post_url failed');
+			logger('rtof: z_post_url failed: ' . print_r($ret['debug'],true));
 	}
 }
 

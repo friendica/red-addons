@@ -37,7 +37,7 @@ function rtaside_network_mod_init(&$a,&$b) {
                 <div class="title tool">
                 <h4>'.t("Right Aside").'</h4></div>';
 
-    $rtaside .= "right aside content:<br />$rtaside_content";
+    $rtaside .= "$rtaside_content";
 
     $rtaside .= '</div><div class="clear"></div>';
 
@@ -78,7 +78,7 @@ function rtaside_settings(&$a,&$s) {
 	$s .= '<h3>' . t('Right Aside Settings') . '</h3>';
 	$s .= '<div id="rtaside-settings-wrapper">';
 	$s .= '<label id="rtaside-content-label" for="rtaside_content">' . t('Right Aside Content: ') . '</label>';
-	$s .= '<input id="rtaside-content" type="text" name="rtaside_loc" value="' . $rtaside_content . '"/>';
+	$s .= '<textarea id="rtaside-content" type="text" name="rtaside_content">' . $rtaside_content . '</textarea>';
 	$s .= '<div class="clear"></div>';
 	$s .= '<label id="rtaside-enable-label" for="rtaside_enable">' . t('Enable Right Aside') . '</label>';
 	$s .= '<input id="rtaside-enable" type="checkbox" name="rtaside_enable" value="1" ' . $enable_checked . '/>';

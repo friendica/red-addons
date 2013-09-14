@@ -1,0 +1,10 @@
+
+#rtaside-settings-label, #rtaside-location-label, #rtaside-enable-label {
+	float: left;
+	width: 200px;
+	margin-bottom: 25px;
+}
+#rtaside-network {
+	float: left;
+}
+

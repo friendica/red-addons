@@ -9,6 +9,7 @@
 
 function htmlwidget_load() {
 	register_hook('network_mod_init', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_network_mod_init');
+	register_hook('channel_mod_init', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_channel_mod_init');
 	register_hook('feature_settings', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_settings');
 	register_hook('feature_settings_post', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_settings_post');
 
@@ -16,6 +17,7 @@ function htmlwidget_load() {
 
 function htmlwidget_unload() {
 	unregister_hook('network_mod_init', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_network_mod_init');
+	unregister_hook('channel_mod_init', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_channel_mod_init');
 	unregister_hook('feature_settings', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_settings');
 	unregister_hook('feature_settings_post', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_settings_post');
 

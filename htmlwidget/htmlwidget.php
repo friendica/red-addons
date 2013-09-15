@@ -31,9 +31,6 @@ function htmlwidget_network_mod_init(&$a,&$b) {
 
     $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/htmlwidget/htmlwidget.css' . '" media="all" />' . "\r\n";
 
-    // the getweather file does all the work here
-    // the $rpt value is needed for location
-    // which getweather uses to fetch the weather data for weather and temp
     $htmlwidget_content = get_pconfig(local_user(), 'htmlwidget', 'htmlwidget_content');
     $htmlwidget = '<div id="htmlwidget_channel" class="widget">';
 

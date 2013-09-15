@@ -52,7 +52,7 @@ function curweather_network_mod_init(&$a,&$b) {
 
     $curweather .= '</div><div class="clear"></div>';
 
-    $a->page['aside'] = $curweather.$a->page['aside'];
+    $a->page['right_aside'] = $curweather.$a->page['right_aside'];
 
 }
 

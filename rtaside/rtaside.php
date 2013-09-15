@@ -1,21 +1,21 @@
 <?php
 /**
- * Name: Right Aside
- * Description: Creates a right aside 
+ * Name: Right Aside HTML widget
+ * Description: Creates a right aside and allows placement of html (or plain text) in it.
  * Version: 0.1
  * Author: tazman@tazmandevil.info
  * Author: tony baldwin
  */
 
 function rtaside_load() {
-	register_hook('channel_mod_init', 'addon/rtaside/rtaside.php', 'rtaside_network_mod_init');
+	register_hook('network_mod_init', 'addon/rtaside/rtaside.php', 'rtaside_network_mod_init');
 	register_hook('feature_settings', 'addon/rtaside/rtaside.php', 'rtaside_settings');
 	register_hook('feature_settings_post', 'addon/rtaside/rtaside.php', 'rtaside_settings_post');
 
 }
 
 function rtaside_unload() {
-	unregister_hook('channel_mod_init', 'addon/rtaside/rtaside.php', 'rtaside_network_mod_init');
+	unregister_hook('network_mod_init', 'addon/rtaside/rtaside.php', 'rtaside_network_mod_init');
 	unregister_hook('feature_settings', 'addon/rtaside/rtaside.php', 'rtaside__settings');
 	unregister_hook('feature_settings_post', 'addon/rtaside/rtaside.php', 'rtaside_settings_post');
 
@@ -34,8 +34,8 @@ function rtaside_network_mod_init(&$a,&$b) {
     // which getweather uses to fetch the weather data for weather and temp
     $rtaside_content = get_pconfig(local_user(), 'rtaside', 'rtaside_content');
     $rtaside = '<div id="rtaside_channel" class="widget">
-                <div class="title tool">
-                <h4>'.t("Right Aside").'</h4></div>';
+                <div class="title tool">';
+	/** <h4>'.t("Cool stuff:").'</h4></div>'; **/
 
     $rtaside .= "$rtaside_content";
 
@@ -49,7 +49,7 @@ function rtaside_network_mod_init(&$a,&$b) {
 function rtaside_settings_post($a,$s) {
 	if(! local_user() || (! x($_POST,'rtaside-settings-submit')))
 		return;
-	set_pconfig(local_user(),'rtaside','rtaside_content',trim($_POST['rtaside_loc']));
+	set_pconfig(local_user(),'rtaside','rtaside_content',trim($_POST['rtaside_content']));
 	set_pconfig(local_user(),'rtaside','rtaside_enable',intval($_POST['rtaside_enable']));
 
 	info( t('Right Aside settings updated.') . EOL);
@@ -77,8 +77,9 @@ function rtaside_settings(&$a,&$s) {
 	$s .= '<div class="settings-block">';
 	$s .= '<h3>' . t('Right Aside Settings') . '</h3>';
 	$s .= '<div id="rtaside-settings-wrapper">';
-	$s .= '<label id="rtaside-content-label" for="rtaside_content">' . t('Right Aside Content: ') . '</label>';
-	$s .= '<textarea id="rtaside-content" type="text" name="rtaside_content">' . $rtaside_content . '</textarea>';
+	$s .= '<label id="rtaside-content-label" for="rtaside_content">' . t('Right Aside Content: ') . '</label><br />';
+	$s .= '<textarea id="rtaside-content" type="text" name="rtaside_content" >' . $rtaside_content . '</textarea>'; 
+/**	$s .= '<input id="rtaside-content" type="text" name="rtaside_content" value="' . $rtaside_content . '"/>'; **/
 	$s .= '<div class="clear"></div>';
 	$s .= '<label id="rtaside-enable-label" for="rtaside_enable">' . t('Enable Right Aside') . '</label>';
 	$s .= '<input id="rtaside-enable" type="checkbox" name="rtaside_enable" value="1" ' . $enable_checked . '/>';

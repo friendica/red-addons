@@ -39,10 +39,7 @@ $lastposts .= "<ul>";
 $channel = $a->get_channel();
 $channel_hash = $channel['channel_hash'];
 
-mysql_connect("$db_host", "$db_user", "$db_pass") or die(mysql_error());
-mysql_select_db("$db_data") or die(mysql_error());
-
-$query  = "SELECT title, plink, created FROM item where author_xchan=$channel_hash LIMIT 0,5";
+$query  = q("SELECT title, plink, created FROM item where author_xchan=$channel_hash LIMIT 0,5");
 
 $result = mysql_query($query);
 while($row = mysql_fetch_assoc($result)) {

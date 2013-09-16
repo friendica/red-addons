@@ -4,7 +4,6 @@
  * Description: Latest Posts aside widget, displays linked list of latest 5 posts
  * Version: 0.1
  * Author: tazman@tazmandevil.info
- * Author: tony baldwin
  */
 
 include '../../.htconfig.php';

@@ -7,6 +7,8 @@
  * Author: tony baldwin
  */
 
+include '../../.htconfig.php';
+
 function lastposts_load() {
 	register_hook('network_mod_init', 'addon/lastposts/lastposts.php', 'lastposts_network_mod_init');
 	register_hook('channel_mod_init', 'addon/lastposts/lastposts.php', 'lastposts_channel_mod_init');

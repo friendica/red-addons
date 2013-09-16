@@ -39,22 +39,26 @@ $lastposts .= "<ul>";
 $channel = $a->get_channel();
 $channel_hash = $channel['channel_hash'];
 
-$query  = q("SELECT title, plink, created FROM item where author_xchan=$channel_hash LIMIT 0,5");
-
-$result = mysql_query($query);
-while($row = mysql_fetch_assoc($result)) {
 	
+$channel = $a->get_channel();
+$channel_hash = $channel['channel_hash'];
+
+$query = q("select title, plink, created from item where author_xchan '%s' LIMIT 0,5",
+	                        dbesc($channel_hash)
+					);
+
+if($query) {
+	  foreach($query as $row) {
 	$plink = $row['plink'];
 	$created = $row['created'];
 	if (! $row['title'] ) {
-		$title="$created";
+		$title = $created;
             } else {
-		$title=$row['title'];
+		$title = $row['title'];
 	}
 	$lastposts .= "<li><a href=\"$plink\">$title</a></li>";
 }
 	$lastposts .= "</ul>";
-	mysql_close();
 
 	$lastposts .= '</div><div class="clear"></div>';
 
@@ -64,6 +68,7 @@ while($row = mysql_fetch_assoc($result)) {
 		$a->page['right_aside'] = $lastposts.$a->page['right_aside'];
     }
 
+	}
 }
 
 function lastposts_settings_post($a,$s) {
@@ -111,7 +116,3 @@ function lastposts_settings(&$a,&$s) {
 	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="lastposts-settings-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
 
 }
-
-function lastposts_content($a,$s) {
-}
-

@@ -10,7 +10,6 @@
 include '../../.htconfig.php';
 
 function lastposts_load() {
-	register_hook('network_mod_init', 'addon/lastposts/lastposts.php', 'lastposts_network_mod_init');
 	register_hook('channel_mod_init', 'addon/lastposts/lastposts.php', 'lastposts_channel_mod_init');
 	register_hook('feature_settings', 'addon/lastposts/lastposts.php', 'lastposts_settings');
 	register_hook('feature_settings_post', 'addon/lastposts/lastposts.php', 'lastposts_settings_post');
@@ -18,7 +17,6 @@ function lastposts_load() {
 }
 
 function lastposts_unload() {
-	unregister_hook('network_mod_init', 'addon/lastposts/lastposts.php', 'lastposts_network_mod_init');
 	unregister_hook('channel_mod_init', 'addon/lastposts/lastposts.php', 'lastposts_channel_mod_init');
 	unregister_hook('feature_settings', 'addon/lastposts/lastposts.php', 'lastposts_settings');
 	unregister_hook('feature_settings_post', 'addon/lastposts/lastposts.php', 'lastposts_settings_post');

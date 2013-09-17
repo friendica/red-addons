@@ -56,15 +56,9 @@ function debianart_network_mod_init(&$a,&$b) {
 	<div class="title tool">
 	<h4>'.t("DebianArt.org").'</h4></div>';
 
-	logger('debianart_net1: ' . print_r($debianart,true));
-	
 	$debianart .= '<script type="text/javascript" src="http://l.yimg.com/a/i/us/pps/imagebadge_1.5.js">{"pipe_id":"f2c734d2e480b74b4dfedc88372b6029","_btype":"image"}</script>';
 
-	logger('debianart_net2: ' . print_r($debianart,true));
-
 	$debianart .= '</div><div class="clear"></div>';
-
-	logger('debianart_net3: ' . print_r($debianart,true));
 	
 	if (! intval(get_pconfig(local_user(), 'debianart', 'debianart_right'))) {
 		$a->page['aside'] = $debianart.$a->page['aside'];
@@ -72,7 +66,6 @@ function debianart_network_mod_init(&$a,&$b) {
 		$a->page['right_aside'] = $debianart.$a->page['right_aside'];
 	}
 
-	logger('debianart_net4: ' . print_r($debianart,true));
 }
 
 function debianart_settings_post($a,$s) {
@@ -81,7 +74,7 @@ function debianart_settings_post($a,$s) {
 	set_pconfig(local_user(),'debianart','debianart_right',intval($_POST['debianart_right']));
 	set_pconfig(local_user(),'debianart','debianart_enable',intval($_POST['debianart_enable']));
 
-	info( t('HTML widget settings updated.') . EOL);
+	info( t('DebianArt widget settings updated.') . EOL);
 }
 
 

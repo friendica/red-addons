@@ -9,7 +9,7 @@
 require_once('addon/curweather/getweather.php');
 
 function curweather_load() {
-	register_hook('network_mod_init', 'addon/curweather/curweather.php', 'curweather_network_mod_init');
+	register_hook('network_mod_init', 'addon/curweather/curweather.php', 'curweather_network_mod_init'); 
 	register_hook('channel_mod_init', 'addon/curweather/curweather.php', 'curweather_channel_mod_init');
 	register_hook('feature_settings', 'addon/curweather/curweather.php', 'curweather_settings');
 	register_hook('feature_settings_post', 'addon/curweather/curweather.php', 'curweather_settings_post');
@@ -17,7 +17,7 @@ function curweather_load() {
 }
 
 function curweather_unload() {
-	unregister_hook('network_mod_init', 'addon/curweather/curweather.php', 'curweather_network_mod_init');
+	unregister_hook('network_mod_init', 'addon/curweather/curweather.php', 'curweather_network_mod_init'); 
 	unregister_hook('channel_mod_init', 'addon/curweather/curweather.php', 'curweather_channel_mod_init');
 	unregister_hook('feature_settings', 'addon/curweather/curweather.php', 'curweather__settings');
 	unregister_hook('feature_settings_post', 'addon/curweather/curweather.php', 'curweather_settings_post');
@@ -29,6 +29,9 @@ function curweather_channel_mod_init(&$a,&$b) {
 
     if(! intval(get_pconfig(local_user(),'curweather','curweather_enable')))
         return;
+
+	$a = get_app();
+	$title = "currentweather";
 
     $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/curweather/curweather.css' . '" media="all" />' . "\r\n";
 
@@ -42,7 +45,7 @@ function curweather_channel_mod_init(&$a,&$b) {
     $rhumid = $wxdata['RELATIVE_HUMIDITY'];
     $pressure = $wxdata['PRESSURE_STRING'];
     $wind = $wxdata['WIND_STRING'];
-    $curweather = '<div id="curweather-network" class="widget">
+    $curweather = '<div id="curweather-channel" class="widget">
                 <div class="title tool">
                 <h4>'.t("Current Weather").'</h4></div>';
 
@@ -54,9 +57,14 @@ function curweather_channel_mod_init(&$a,&$b) {
 
     $curweather .= '</div><div class="clear"></div>';
 
-    $a->page['right_aside'] = $curweather.$a->page['right_aside'];
+    if (! intval(get_pconfig(local_user(), 'curweather', 'curweather_right'))) {
+	    $a->set_widget($title,$curweather,$location = 'aside');
+    }	else {
+	    $a->set_widget($title,$curweather,$location = 'right_aside');
+    }
 
-}
+
+} 
 
 
 function curweather_network_mod_init(&$a,&$b) {
@@ -95,8 +103,7 @@ function curweather_network_mod_init(&$a,&$b) {
 	    $a->page['right_aside'] = $curweather.$a->page['right_aside'];
     }
 
-}
-
+} 
 
 function curweather_settings_post($a,$s) {
 	if(! local_user() || (! x($_POST,'curweather-settings-submit')))

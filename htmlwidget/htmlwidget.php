@@ -26,11 +26,14 @@ function htmlwidget_unload() {
 
 function htmlwidget_channel_mod_init(&$a,&$b) {
 
-	$a = get_app();
-	$title = "htmlwidget";
 
     if(! intval(get_pconfig(local_user(),'htmlwidget','htmlwidget_enable')))
         return;
+	logger('htmlchan widget invoked');
+	$a = get_app();
+	$title = "htmlwidget";
+
+	logger('htmlchaninvoked2');
 
     $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/htmlwidget/htmlwidget.css' . '" media="all" />' . "\r\n";
 
@@ -53,6 +56,7 @@ function htmlwidget_network_mod_init(&$a,&$b) {
 
     if(! intval(get_pconfig(local_user(),'htmlwidget','htmlwidget_enable')))
         return;
+    logger('htmlnetinvoked');
 
     $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/htmlwidget/htmlwidget.css' . '" media="all" />' . "\r\n";
 

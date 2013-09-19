@@ -9,6 +9,7 @@
 
 function htmlwidget_load() {
 	register_hook('channel_mod_init', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_channel_mod_init');
+	register_hook('network_mod_init', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_network_mod_init');
 	register_hook('feature_settings', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_settings');
 	register_hook('feature_settings_post', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_settings_post');
 
@@ -16,6 +17,7 @@ function htmlwidget_load() {
 
 function htmlwidget_unload() {
 	unregister_hook('channel_mod_init', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_channel_mod_init');
+	unregister_hook('network_mod_init', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_network_mod_init');
 	unregister_hook('feature_settings', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_settings');
 	unregister_hook('feature_settings_post', 'addon/htmlwidget/htmlwidget.php', 'htmlwidget_settings_post');
 
@@ -23,6 +25,9 @@ function htmlwidget_unload() {
 
 
 function htmlwidget_channel_mod_init(&$a,&$b) {
+
+	$a = get_app();
+	$title = "htmlwidget";
 
     if(! intval(get_pconfig(local_user(),'htmlwidget','htmlwidget_enable')))
         return;
@@ -37,13 +42,34 @@ function htmlwidget_channel_mod_init(&$a,&$b) {
     $htmlwidget .= '</div><div class="clear"></div>';
 
     if (! intval(get_pconfig(local_user(), 'htmlwidget', 'htmlwidget_right'))) {
+	    $a->set_widget($title,$htmlwidget,$location = 'aside');
+    }	else {
+	    $a->set_widget($title,$htmlwidget,$location = 'right_aside');
+    }
+
+}
+
+function htmlwidget_network_mod_init(&$a,&$b) {
+
+    if(! intval(get_pconfig(local_user(),'htmlwidget','htmlwidget_enable')))
+        return;
+
+    $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/htmlwidget/htmlwidget.css' . '" media="all" />' . "\r\n";
+
+    $htmlwidget_content = get_pconfig(local_user(), 'htmlwidget', 'htmlwidget_content');
+    $htmlwidget = '<div id="htmlwidget_network" class="widget">';
+
+    $htmlwidget .= "$htmlwidget_content";
+
+    $htmlwidget .= '</div><div class="clear"></div>';
+
+    if (! intval(get_pconfig(local_user(), 'htmlwidget', 'htmlwidget_right'))) {
 	    $a->page['aside'] = $htmlwidget.$a->page['aside'];
     }	else {
 	    $a->page['right_aside'] = $htmlwidget.$a->page['right_aside'];
     }
 
 }
-
 
 function htmlwidget_settings_post($a,$s) {
 	if(! local_user() || (! x($_POST,'htmlwidget-settings-submit')))

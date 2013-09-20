@@ -1,0 +1,22 @@
+#redred-default-label,
+#redred-username-label,
+#redred-password-label,
+#redred-channel-label,
+#redred-enable-label {
+	float: left;
+	width: 250px;
+	margin-bottom: 5px;
+}
+
+#redred-checkbox {
+	float: left;
+}
+
+#redred-baseapi-label {
+	float: left;
+	width: 250px;
+}
+#redred-baseapi, #redred-username, #redred-password, #redred-channel {
+	float: left;
+	margin-bottom: 5px;
+}

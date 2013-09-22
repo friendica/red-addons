@@ -1,0 +1,9 @@
+#flattrwidget-thing-label, #flattrwidget-static-label, #flattrwidget-align-label, #flattrwidget-enable-label, #flattrwidget-user-label, #flattrwidget-thingtitle-label {
+    float: left;
+    width: 300px;
+    margin-top: 10px;
+}
+#flattr-widget {
+    text-align: center;
+    margin: 25px;
+}

@@ -4,12 +4,11 @@
  * Description: Pack of smileys that make master too AOLish.
  * Version: 1.04
  * Author: Thomas Willingham (based on Mike Macgirvin's Adult Smile template) 
- * All smileys from sites offering them as Public Domain
+ * Category: Post Tools
+ * Screenshot: None
+ * Depends: Core
+ * Recommends: None
  */
-
-/**
-
-*/
 
 function smiley_pack_load() {
 	register_hook('smilie', 'addon/smiley_pack/smiley_pack.php', 'smiley_pack_smilies');

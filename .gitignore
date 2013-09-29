@@ -19,3 +19,6 @@ report/
 .DS_Store
 
 /nbproject/private/
+
+#Kdevelop project files
+.kdev4

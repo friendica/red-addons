@@ -1,0 +1,10 @@
+
+#lastposts-settings-label, #lastposts-location-label, #lastposts-enable-label {
+	float: left;
+	width: 200px;
+	margin-bottom: 25px;
+}
+#lastposts-network {
+	float: left;
+}
+

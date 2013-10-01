@@ -32,8 +32,12 @@ function startpage_home_init($a, $b) {
 	$page = get_pconfig(local_user(),'system','startpage');
 	if(strlen($page)) {		
 		$slash = ((strpos($page,'/') === 0) ? true : false);
+// If we goaway to a z_root for the channel page, all clones will be redirected to the primary hub, so...
+		if(stristr($page,'channel'))
+			goaway ('$page');
+
 		if(stristr($page,'://'))
-			goaway($page);
+			goaway(z_root() . '/' . $page);
 		goaway($a->get_baseurl() . (($slash) ? '' : '/') . $page);
 	}
 	return;
@@ -58,12 +62,12 @@ function startpage_settings_post($a,$post) {
 		$page = trim($page,'/');
 
 		if($page == 'channel')
-			$page = z_root() .'/channel/' . $channel['channel_address'];
+			$page = 'channel/' . $channel['channel_address'];
 		elseif($page == '')
 			$page = '';
 		else
 			if(strpos($page,'http') !== 0)
-				$page = z_root() . '/' . $page;
+				$page = $page;
 
 		set_pconfig(local_user(),'system','startpage',$page);
 	}

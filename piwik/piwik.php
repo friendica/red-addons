@@ -28,13 +28,13 @@
  *     setting.
  */
 
-function piwik_install() {
+function piwik_load() {
 	register_hook('page_end', 'addon/piwik/piwik.php', 'piwik_analytics');
 
 	logger("installed piwik plugin");
 }
 
-function piwik_uninstall() {
+function piwik_unload() {
 	unregister_hook('page_end', 'addon/piwik/piwik.php', 'piwik_analytics');
 
 	logger("uninstalled piwik plugin");

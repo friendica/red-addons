@@ -146,6 +146,9 @@ function dwpost_send(&$a,&$b) {
     if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
         return;
 
+if(! perm_is_allowed($b['uid'],'','view_stream'))
+	return;
+
     if(! strstr($b['postopts'],'dwpost'))
         return;
 

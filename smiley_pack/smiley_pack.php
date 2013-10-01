@@ -388,6 +388,9 @@ function smiley_pack_smilies(&$a,&$b) {
 	$b['texts'][] = ':number1';
 	$b['icons'][] = '<img class="smiley" src="' . $a->get_baseurl() . '/addon/smiley_pack/icons/respect/number1.gif' . '" alt="' . ':number1' . '" />';
 
+	$b['texts'][] = ':towel';
+	$b['icons'][] = '<img class="smiley" src="' . $a->get_baseurl() . '/addon/smiley_pack/icons/respect/towel.gif' . '" alt="' . ':towel' . '" />';
+
 #Laugh smileys
 
 	$b['texts'][] = ':hahaha';

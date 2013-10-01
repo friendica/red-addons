@@ -99,6 +99,9 @@ function rtof_post_local(&$a,&$b) {
 	if($b['created'] != $b['edited'])
 		return;
 
+	if(! perm_is_allowed($b['uid'],'','view_stream'))
+		return;
+
 	if((local_user()) && (local_user() == $b['uid']) && (! $b['item_private'])) {
 
 		$rtof_post = get_pconfig(local_user(),'rtof','post');
@@ -129,7 +132,7 @@ function rtof_post_hook(&$a,&$b) {
 	if($b['mid'] != $b['parent_mid'])
 		return;
 
-	if(($b['item_flags'] & ITEM_DELETED) || $b['item_private'] || ($b['created'] !== $b['edited']))
+	if(($b['item_restrict'] & ITEM_DELETED) || $b['item_private'] || ($b['created'] !== $b['edited']))
 		return;
 
 

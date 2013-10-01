@@ -142,9 +142,6 @@ function libertree_send(&$a,&$b) {
     if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
         return;
 
-if(! perm_is_allowed($b['uid'],'','view_stream'))
-	return;
-
     if(! strstr($b['postopts'],'libertree'))
         return;
 
@@ -156,8 +153,8 @@ if(! perm_is_allowed($b['uid'],'','view_stream'))
 	$ltree_api_token = get_pconfig($b['uid'],'libertree','libertree_api_token');
 	$ltree_url = get_pconfig($b['uid'],'libertree','libertree_url');
 	$ltree_blog = "$ltree_url/api/v1/posts/create/?token=$ltree_api_token";
-	//$ltree_source = "[".$a->get_baseurl()."]";
-	$ltree_source = "RedMatrix";
+	$ltree_source = "[".$a->config['system']['sitename']."](".$a->get_baseurl().")";
+	// $ltree_source = "RedMatrix";
 	logger('sitename: ' . print_r($ltree_source,true));
 	if($ltree_url && $ltree_api_token && $ltree_blog && $ltree_source) {
 

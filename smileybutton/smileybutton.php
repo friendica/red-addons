@@ -3,7 +3,8 @@
  * Name: Smileybutton
  * Description: Adds a smileybutton to the Inputbox
  * Version: 0.1
- * Author: Johannes Schwab <http://friendica.jschwab.mooo.com/profile/ddorian>
+ * Author: Johannes Schwab , Christian Vogeley
+ * ToDo: Add this to comments, Allow to disable on webpages, nicer position of button
  */
 
 

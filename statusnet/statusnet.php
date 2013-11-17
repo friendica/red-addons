@@ -306,7 +306,7 @@ function statusnet_settings(&$a,&$s) {
             $s .= '<p></p><div class="clear"></div></div>';
             $s .= '<label id="statusnet-applicationname-label" for="statusnet-applicationname">'.t('StatusNet application name').'</label>';
             $s .= '<input id="statusnet-applicationname" type="text" name="statusnet-applicationname" size="35" /><br />';
-            $s .= '<p></p><div class="clear"></div></div>';
+            $s .= '<p></p><div class="clear"></div>';
             $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
 	} else {
 		/***

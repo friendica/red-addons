@@ -2,28 +2,29 @@
 
 /**
  * Name: WordPress Post Connector
- * Description: Post to WordPress (or anything else which uses blogger XMLRPC API)
+ * Description: Post to WordPress (or anything else which uses the wordpress XMLRPC API)
  * Version: 1.0
  * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
  */
 
 require_once('include/permissions.php');
+require_once('library/IXR_Library.php');
+
 
 function wppost_load () {
-    register_hook('post_local',           'addon/wppost/wppost.php', 'wppost_post_local');
-    register_hook('notifier_normal',      'addon/wppost/wppost.php', 'wppost_send');
-    register_hook('jot_networks',         'addon/wppost/wppost.php', 'wppost_jot_nets');
-    register_hook('feature_settings',      'addon/wppost/wppost.php', 'wppost_settings');
-    register_hook('feature_settings_post', 'addon/wppost/wppost.php', 'wppost_settings_post');
-
+    register_hook('post_local',              'addon/wppost/wppost.php', 'wppost_post_local');
+    register_hook('notifier_normal',         'addon/wppost/wppost.php', 'wppost_send');
+    register_hook('jot_networks',            'addon/wppost/wppost.php', 'wppost_jot_nets');
+    register_hook('feature_settings',        'addon/wppost/wppost.php', 'wppost_settings');
+    register_hook('feature_settings_post',   'addon/wppost/wppost.php', 'wppost_settings_post');
 }
+
 function wppost_unload () {
-    unregister_hook('post_local',       'addon/wppost/wppost.php', 'wppost_post_local');
-    unregister_hook('notifier_normal',  'addon/wppost/wppost.php', 'wppost_send');
-    unregister_hook('jot_networks',     'addon/wppost/wppost.php', 'wppost_jot_nets');
+    unregister_hook('post_local',            'addon/wppost/wppost.php', 'wppost_post_local');
+    unregister_hook('notifier_normal',       'addon/wppost/wppost.php', 'wppost_send');
+    unregister_hook('jot_networks',          'addon/wppost/wppost.php', 'wppost_jot_nets');
     unregister_hook('feature_settings',      'addon/wppost/wppost.php', 'wppost_settings');
     unregister_hook('feature_settings_post', 'addon/wppost/wppost.php', 'wppost_settings_post');
-
 }
 
 
@@ -96,12 +97,6 @@ function wppost_settings(&$a,&$s) {
     $s .= '<input id="wppost-bydefault" type="checkbox" name="wp_bydefault" value="1" ' . $def_checked . '/>';
     $s .= '</div><div class="clear"></div>';
 
-    $s .= '<div id="wppost-backlink-wrapper">';
-    $s .= '<label id="wppost-backlink-label" for="wppost-backlink">' . t('Provide a backlink to the Red post') . '</label>';
-    $s .= '<input id="wppost-backlink" type="checkbox" name="wp_backlink" value="1" ' . $back_checked . '/>';
-
-    $s .= '</div><div class="clear"></div>';
-
     /* provide a submit button */
 
     $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="wppost-submit" name="wppost-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
@@ -168,79 +163,43 @@ function wppost_send(&$a,&$b) {
 
     if($b['parent'] != $b['id'])
         return;
-	logger('Wordpress xpost invoked');
+	logger('Wordpress xpost invoked', LOGGER_DEBUG);
 
-	$wp_username = xmlify(get_pconfig($b['uid'],'wppost','wp_username'));
-	$wp_password = xmlify(get_pconfig($b['uid'],'wppost','wp_password'));
-	$wp_blog = get_pconfig($b['uid'],'wppost','wp_blog');
+	$wp_username = get_pconfig($b['uid'],'wppost','wp_username');
+	$wp_password = get_pconfig($b['uid'],'wppost','wp_password');
+	$wp_blog     = get_pconfig($b['uid'],'wppost','wp_blog');
 
 	if($wp_username && $wp_password && $wp_blog) {
 
 		require_once('include/bbcode.php');
-		require_once('include/html2plain.php');
 
-		$wptitle = trim($b['title']);
+		$data = array(
+			'post_title'   => trim($b['title']),
+			'post_content' => bbcode($b['body']),
+			'post_type'    => 'post',
+			'post_status'  => 'publish'
+		);
 
-//		// If the title is empty then try to guess
-//		if ($wptitle == '') {
-			// Take the description from the bookmark
+		$client = new IXR_Client($wp_blog);
 
-			// If no bookmark is found then take the first line
-//			if ($wptitle == '') {
-//				$title = html2plain(bbcode($b['body']), 0, true);
-//				$pos = strpos($title, "\n");
-//				if (($pos == 0) or ($pos > 60))
-//					$pos = 60;
+		$res = $client->query('wp.newPost',1,$wp_username,$wp_password,$data);
 
-//				$wptitle = substr($title, 0, $pos);
-//			}
-//		}
+		if(! $res) {
+			logger('wppost: failed.');
+			return;
+		}
 
-		$title = (($wptitle) ? '<title>' . $wptitle . '</title>' : '');
-		$post = $title . bbcode($b['body']);
+		$post_id = $client->getResponse();
 
-		$wp_backlink = intval(get_pconfig($b['uid'],'wppost','backlink'));
-		if($wp_backlink && $b['plink'])
-			$post .= EOL . EOL . '<a href="' . $b['plink'] . '">' 
-				. t('Read the original post and comment stream on Red') . '</a>' . EOL . EOL;
+		logger('wppost: returns post_id: ' . $post_id, LOGGER_DEBUG);
 
-		$post = xmlify($post);
-
-
-		$xml = <<< EOT
-<?xml version=\"1.0\" encoding=\"utf-8\"?>
-<methodCall>
-  <methodName>blogger.newPost</methodName>
-  <params>
-    <param><value><string/></value></param>
-    <param><value><string/></value></param>
-    <param><value><string>$wp_username</string></value></param>
-    <param><value><string>$wp_password</string></value></param>
-    <param><value><string>$post</string></value></param>
-    <param><value><int>1</int></value></param>
-  </params>
-</methodCall>
-
-EOT;
-
-		logger('wppost: data: ' . $xml, LOGGER_DATA);
-
-		if($wp_blog !== 'test')
-			$x = z_post_url($wp_blog,$xml);
-		logger('wppost: posted to wordpress: ' . print_r($x,true), LOGGER_DEBUG);
-		if($x['success']) {
-			$y = xml2array($x['body']);
-//			logger('wppost: posted to wordpress: ' . print_r($y,true), LOGGER_DEBUG);
-			// xmlrpc is wretched for doing this
-			$post_id = $y['methodresponse']['params']['param']['value']['int']['value'];
-			if($post_id) {
-				q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
-					intval($b['id']),
-					intval($b['uid']),
-					dbesc(dirname($wp_blog) . '/' . $post_id),
-					dbesc('wordpress')
-				);
-			}
+		if($post_id) {
+			q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
+				intval($b['id']),
+				intval($b['uid']),
+				dbesc(dirname($wp_blog) . '/' . $post_id),
+				dbesc('wordpress')
+			);
 		}
 	}
 }

@@ -148,7 +148,7 @@ function wppost_post_local(&$a,&$b) {
 
 function wppost_send(&$a,&$b) {
 
-    if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
+    if($b['item_restrict'] || $b['item_private'])
         return;
 
 	if(! perm_is_allowed($b['uid'],'','view_stream'))
@@ -157,9 +157,24 @@ function wppost_send(&$a,&$b) {
     if(! strstr($b['postopts'],'wppost'))
         return;
 
+	$edited = (($b['created'] !== $b['edited']) ? true : false);
+		
     if($b['parent'] != $b['id'])
         return;
+
 	logger('Wordpress xpost invoked', LOGGER_DEBUG);
+
+	if($edited) {
+		$r = q("select * from item_id where service = 'wordpress' and iid = %d and uid = %d limit 1",
+			intval($b['id']),
+			intval($b['uid'])
+		);
+		if(! $r)
+			return;
+
+		$wp_post_id = intval(basename($r[0]['sid']));
+	}
+
 
 	$wp_username = get_pconfig($b['uid'],'wppost','wp_username');
 	$wp_password = get_pconfig($b['uid'],'wppost','wp_password');
@@ -178,7 +193,10 @@ function wppost_send(&$a,&$b) {
 
 		$client = new IXR_Client($wp_blog);
 
-		$res = $client->query('wp.newPost',1,$wp_username,$wp_password,$data);
+		if($edited)
+			$res = $client->query('wp.editPost',1,$wp_username,$wp_password,$wp_post_id,$data);
+		else
+			$res = $client->query('wp.newPost',1,$wp_username,$wp_password,$data);
 
 		if(! $res) {
 			logger('wppost: failed.');

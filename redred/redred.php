@@ -10,6 +10,7 @@
  *   Red to Red
  */
 
+require_once('include/permissions.php');
 
 function redred_load() {
 	//  we need some hooks, for the configuration and for sending tweets
@@ -32,8 +33,8 @@ function redred_unload() {
 }
 
 function redred_jot_nets(&$a,&$b) {
-	if(! local_user())
-		return;
+    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+        return;
 
 	$redred_post = get_pconfig(local_user(),'redred','post');
 	if(intval($redred_post) == 1) {

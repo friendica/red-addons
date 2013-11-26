@@ -7,6 +7,8 @@
  * Author: Tony Baldwin <https://red.free-haven.org/channel/tony>
  */
 
+require_once('include/permissions.php');
+
 function libertree_load() {
     register_hook('post_local',           'addon/libertree/libertree.php', 'libertree_post_local');
     register_hook('notifier_normal',      'addon/libertree/libertree.php', 'libertree_send');
@@ -25,7 +27,7 @@ function libertree_unload() {
 
 
 function libertree_jot_nets(&$a,&$b) {
-    if(! local_user())
+    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
         return;
 
     $ltree_post = get_pconfig(local_user(),'libertree','post');
@@ -142,7 +144,7 @@ function libertree_send(&$a,&$b) {
     if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
         return;
 
-    if(! perm_is_allowed($b['uid'],'','view_stream'))
+    if(! perm_is_allowed($b['uid'],'','view_stream'))
 	    return;
 
     if(! strstr($b['postopts'],'libertree'))

@@ -9,6 +9,8 @@
  * Author: Cat Gray <https://free-haven.org/profile/catness>
  */
 
+require_once('include/permissions.php');
+
 function dwpost_load() {
     register_hook('post_local',           'addon/dwpost/dwpost.php', 'dwpost_post_local');
     register_hook('notifier_normal',      'addon/dwpost/dwpost.php', 'dwpost_send');
@@ -28,7 +30,7 @@ function dwpost_unload() {
 
 
 function dwpost_jot_nets(&$a,&$b) {
-    if(! local_user())
+    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
         return;
 
     $dw_post = get_pconfig(local_user(),'dwpost','post');
@@ -146,8 +148,8 @@ function dwpost_send(&$a,&$b) {
     if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
         return;
 
-if(! perm_is_allowed($b['uid'],'','view_stream'))
-	return;
+	if(! perm_is_allowed($b['uid'],'','view_stream'))
+		return;
 
     if(! strstr($b['postopts'],'dwpost'))
         return;

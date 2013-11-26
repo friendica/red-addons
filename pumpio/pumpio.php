@@ -5,8 +5,10 @@
  * Version: 0.1
  * Author: Michael Vogel <http://pirati.ca/profile/heluecht>
  */
-require('addon/pumpio/oauth/http.php');
-require('addon/pumpio/oauth/oauth_client.php');
+require_once('addon/pumpio/oauth/http.php');
+require_once('addon/pumpio/oauth/oauth_client.php');
+
+require_once('include/permissions.php');
 
 define('PUMPIO_DEFAULT_POLL_INTERVAL', 5); // given in minutes
 
@@ -157,7 +159,7 @@ function pumpio_connect($a) {
 }
 
 function pumpio_jot_nets(&$a,&$b) {
-    if(! local_user())
+    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
         return;
 
     $pumpio_post = get_pconfig(local_user(),'pumpio','post');
@@ -320,8 +322,8 @@ function pumpio_send(&$a,&$b) {
 	if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
 		return;
 
-if(! perm_is_allowed($b['uid'],'','view_stream'))
-	return;
+	if(! perm_is_allowed($b['uid'],'','view_stream'))
+		return;
 
 	if(! strstr($b['postopts'],'pumpio'))
 		return;

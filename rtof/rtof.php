@@ -10,6 +10,7 @@
  *   Red to Friendica 
  */
 
+require_once('include/permissions.php');
 
 function rtof_load() {
 	//  we need some hooks, for the configuration and for sending tweets
@@ -32,8 +33,8 @@ function rtof_unload() {
 }
 
 function rtof_jot_nets(&$a,&$b) {
-	if(! local_user())
-		return;
+    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+        return;
 
 	$rtof_post = get_pconfig(local_user(),'rtof','post');
 	if(intval($rtof_post) == 1) {

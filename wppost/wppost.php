@@ -7,6 +7,8 @@
  * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
  */
 
+require_once('include/permissions.php');
+
 function wppost_load () {
     register_hook('post_local',           'addon/wppost/wppost.php', 'wppost_post_local');
     register_hook('notifier_normal',      'addon/wppost/wppost.php', 'wppost_send');
@@ -26,7 +28,7 @@ function wppost_unload () {
 
 
 function wppost_jot_nets(&$a,&$b) {
-    if(! local_user())
+    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
         return;
 
     $wp_post = get_pconfig(local_user(),'wppost','post');
@@ -158,8 +160,8 @@ function wppost_send(&$a,&$b) {
     if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
         return;
 
-if(! perm_is_allowed($b['uid'],'','view_stream'))
-	return;
+	if(! perm_is_allowed($b['uid'],'','view_stream'))
+		return;
 
     if(! strstr($b['postopts'],'wppost'))
         return;

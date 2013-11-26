@@ -6,6 +6,8 @@
  * Author: Tobias Diekershoff <http://diekershoff.homeunix.net/friendika/profile/tobias>
  * Author: Michael Vogel <https://pirati.ca/profile/heluecht>
  */
+
+require_once('include/permissions.php');
  
 /*   StatusNet Plugin for Friendica
  *
@@ -128,8 +130,8 @@ function statusnet_unload() {
 }
 
 function statusnet_jot_nets(&$a,&$b) {
-	if(! local_user())
-		return;
+    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+        return;
 
 	$statusnet_post = get_pconfig(local_user(),'statusnet','post');
 	if(intval($statusnet_post) == 1) {
@@ -569,6 +571,9 @@ function statusnet_post_hook(&$a,&$b) {
 	 */
 
 	if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
+		return;
+
+	if(! perm_is_allowed($b['uid'],'','view_stream'))
 		return;
 
 	if(! strstr($b['postopts'],'statusnet'))

@@ -9,6 +9,8 @@
  * Author: Cat Gray <https://free-haven.org/profile/catness>
  */
 
+require_once('include/permissions.php');
+
 function ljpost_load() {
     register_hook('post_local',           'addon/ljpost/ljpost.php', 'ljpost_post_local');
     register_hook('notifier_normal',      'addon/ljpost/ljpost.php', 'ljpost_send');
@@ -28,7 +30,7 @@ function ljpost_unload() {
 
 
 function ljpost_jot_nets(&$a,&$b) {
-    if(! local_user())
+    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
         return;
 
     $lj_post = get_pconfig(local_user(),'ljpost','post');
@@ -144,8 +146,8 @@ function ljpost_send(&$a,&$b) {
     if($b['item_restrict'] || $b['item_private'] || ($b['created'] !== $b['edited']))
         return;
 
-if(! perm_is_allowed($b['uid'],'','view_stream'))
-	return;
+	if(! perm_is_allowed($b['uid'],'','view_stream'))
+		return;
 
     if(! strstr($b['postopts'],'ljpost'))
         return;

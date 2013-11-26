@@ -181,24 +181,22 @@ function wppost_send(&$a,&$b) {
 
 		$wptitle = trim($b['title']);
 
-		// If the title is empty then try to guess
-		if ($wptitle == '') {
+//		// If the title is empty then try to guess
+//		if ($wptitle == '') {
 			// Take the description from the bookmark
-			if(preg_match("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/is",$b['body'],$matches))
-				$wptitle = $matches[2];
 
 			// If no bookmark is found then take the first line
-			if ($wptitle == '') {
-				$title = html2plain(bbcode($b['body']), 0, true);
-				$pos = strpos($title, "\n");
-				if (($pos == 0) or ($pos > 60))
-					$pos = 60;
+//			if ($wptitle == '') {
+//				$title = html2plain(bbcode($b['body']), 0, true);
+//				$pos = strpos($title, "\n");
+//				if (($pos == 0) or ($pos > 60))
+//					$pos = 60;
 
-				$wptitle = substr($title, 0, $pos);
-			}
-		}
+//				$wptitle = substr($title, 0, $pos);
+//			}
+//		}
 
-		$title = '<title>' . (($wptitle) ? $wptitle : t('Post from Red')) . '</title>';
+		$title = (($wptitle) ? '<title>' . $wptitle . '</title>' : '');
 		$post = $title . bbcode($b['body']);
 
 		$wp_backlink = intval(get_pconfig($b['uid'],'wppost','backlink'));
@@ -228,9 +226,22 @@ EOT;
 		logger('wppost: data: ' . $xml, LOGGER_DATA);
 
 		if($wp_blog !== 'test')
-			$x = post_url($wp_blog,$xml);
-		logger('posted to wordpress: ' . (($x) ? $x : ''), LOGGER_DEBUG);
-
+			$x = z_post_url($wp_blog,$xml);
+		logger('wppost: posted to wordpress: ' . print_r($x,true), LOGGER_DEBUG);
+		if($x['success']) {
+			$y = xml2array($x['body']);
+//			logger('wppost: posted to wordpress: ' . print_r($y,true), LOGGER_DEBUG);
+			// xmlrpc is wretched for doing this
+			$post_id = $y['methodresponse']['params']['param']['value']['int']['value'];
+			if($post_id) {
+				q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
+					intval($b['id']),
+					intval($b['uid']),
+					dbesc(dirname($wp_blog) . '/' . $post_id),
+					dbesc('wordpress')
+				);
+			}
+		}
 	}
 }
 

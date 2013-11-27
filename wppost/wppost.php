@@ -188,10 +188,12 @@ function wppost_send(&$a,&$b) {
 			'post_title'   => trim($b['title']),
 			'post_content' => bbcode($b['body']),
 			'post_type'    => 'post',
-			'post_status'  => 'publish'
+			'post_status'  => 'publish',
+			'custom_fields' => array(array('key' => 'post_to_red', 'value' => '1'))
 		);
 
 		$client = new IXR_Client($wp_blog);
+
 
 		if($edited)
 			$res = $client->query('wp.editPost',1,$wp_username,$wp_password,$wp_post_id,$data);

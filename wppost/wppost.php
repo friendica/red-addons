@@ -175,6 +175,25 @@ function wppost_send(&$a,&$b) {
 		$wp_post_id = intval(basename($r[0]['sid']));
 	}
 
+	$tags = null;
+	$categories = null;
+
+	if(is_array($b['term']) && $b['term']) {
+		foreach($b['term'] as $term) {
+ 			if($term['type'] == TERM_CATEGORY)
+				$categories[] = $term['term'];
+			if($term['type'] == TERM_HASHTAG)
+				$tags[] = $term['term'];
+		}
+	}
+
+	$terms_names = array();
+	if($tags)
+		$terms_names['post_tag'] = $tags;
+	if($categories)
+		$terms_names['category'] = $categories;
+		
+
 
 	$wp_username = get_pconfig($b['uid'],'wppost','wp_username');
 	$wp_password = get_pconfig($b['uid'],'wppost','wp_password');
@@ -189,8 +208,11 @@ function wppost_send(&$a,&$b) {
 			'post_content' => bbcode($b['body']),
 			'post_type'    => 'post',
 			'post_status'  => 'publish',
-			'custom_fields' => array(array('key' => 'post_to_red', 'value' => '1'))
+			'custom_fields' => array(array('key' => 'post_from_red', 'value' => '1'))
 		);
+		if($terms_names)
+			$data['terms_names'] = $terms_names;
+
 
 		$client = new IXR_Client($wp_blog);
 

@@ -12,16 +12,18 @@ require_once('library/IXR_Library.php');
 
 
 function wppost_load () {
-    register_hook('post_local',              'addon/wppost/wppost.php', 'wppost_post_local');
-    register_hook('notifier_normal',         'addon/wppost/wppost.php', 'wppost_send');
-    register_hook('jot_networks',            'addon/wppost/wppost.php', 'wppost_jot_nets');
-    register_hook('feature_settings',        'addon/wppost/wppost.php', 'wppost_settings');
-    register_hook('feature_settings_post',   'addon/wppost/wppost.php', 'wppost_settings_post');
-    register_hook('drop_item',               'addon/wppost/wppost.php', 'wppost_drop_item');	
+	register_hook('post_local',              'addon/wppost/wppost.php', 'wppost_post_local');
+	register_hook('post_remote_end',         'addon/wppost/wppost.php', 'wppost_post_remote_end');
+	register_hook('notifier_normal',         'addon/wppost/wppost.php', 'wppost_send');
+	register_hook('jot_networks',            'addon/wppost/wppost.php', 'wppost_jot_nets');
+	register_hook('feature_settings',        'addon/wppost/wppost.php', 'wppost_settings');
+	register_hook('feature_settings_post',   'addon/wppost/wppost.php', 'wppost_settings_post');
+	register_hook('drop_item',               'addon/wppost/wppost.php', 'wppost_drop_item');	
 }
 
 function wppost_unload () {
-    unregister_hook('post_local',            'addon/wppost/wppost.php', 'wppost_post_local');
+	unregister_hook('post_local',            'addon/wppost/wppost.php', 'wppost_post_local');
+	unregister_hook('post_remote_end',       'addon/wppost/wppost.php', 'wppost_post_remote_end');
     unregister_hook('notifier_normal',       'addon/wppost/wppost.php', 'wppost_send');
     unregister_hook('jot_networks',          'addon/wppost/wppost.php', 'wppost_jot_nets');
     unregister_hook('feature_settings',      'addon/wppost/wppost.php', 'wppost_settings');
@@ -58,6 +60,10 @@ function wppost_settings(&$a,&$s) {
     $enabled = get_pconfig(local_user(),'wppost','post');
 
     $checked = (($enabled) ? ' checked="checked" ' : '');
+
+	$fwd_enabled = get_pconfig(local_user(), 'wppost','forward_comments');
+
+    $fwd_checked = (($fwd_enabled) ? ' checked="checked" ' : '');
 
     $def_enabled = get_pconfig(local_user(),'wppost','post_by_default');
 
@@ -97,6 +103,11 @@ function wppost_settings(&$a,&$s) {
     $s .= '<input id="wppost-bydefault" type="checkbox" name="wp_bydefault" value="1" ' . $def_checked . '/>';
     $s .= '</div><div class="clear"></div>';
 
+    $s .= '<div id="wppost-forward-wrapper">';
+    $s .= '<label id="wppost-forward-label" for="wppost-forward">' . t('Forward comments (requires post_to_red plugin)') . '</label>';
+    $s .= '<input id="wppost-forward" type="checkbox" name="wp_forward_comments" value="1" ' . $fwd_checked . '/>';
+    $s .= '</div><div class="clear"></div>';
+
     /* provide a submit button */
 
     $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="wppost-submit" name="wppost-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
@@ -111,6 +122,7 @@ function wppost_settings_post(&$a,&$b) {
 		set_pconfig(local_user(),'wppost','wp_username',trim($_POST['wp_username']));
 		set_pconfig(local_user(),'wppost','wp_password',trim($_POST['wp_password']));
 		set_pconfig(local_user(),'wppost','wp_blog',trim($_POST['wp_blog']));
+		set_pconfig(local_user(),'wppost','forward_comments',trim($_POST['wp_forward_comments']));
 		info( t('Wordpress Settings saved.') . EOL);
 	}
 }
@@ -231,6 +243,9 @@ function wppost_send(&$a,&$b) {
 
 		logger('wppost: returns post_id: ' . $post_id, LOGGER_DEBUG);
 
+		if($edited)
+			return;
+
 		if($post_id) {
 			q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
 				intval($b['id']),
@@ -241,6 +256,119 @@ function wppost_send(&$a,&$b) {
 		}
 	}
 }
+
+
+function wppost_post_remote_end(&$a,&$b) {
+
+	// We are only looking for public comments
+
+	if($b['mid'] === $b['parent_mid'])
+		return;
+
+    if($b['item_restrict'] || $b['item_private'])
+        return;
+
+	// Does the post owner have this plugin installed?
+
+    $wp_post   = intval(get_pconfig($b['uid'],'wppost','post'));
+	if(! $wp_post)
+		return;
+
+	// Are we allowed to forward comments?
+
+    $wp_forward_comments = intval(get_pconfig($b['uid'],'wppost','forward_comments'));
+	if(! $wp_forward_comments)
+		return;
+
+	// how about our stream permissions? 
+
+	if(! perm_is_allowed($b['uid'],'','view_stream'))
+		return;
+
+	// Now we have to get down and dirty. Was the parent shared with wordpress?
+
+	$r = q("select * from item_id where service = 'wordpress' and iid = %d and uid = %d limit 1",
+		intval($b['parent']),
+		intval($b['uid'])
+	);
+	if(! $r)
+		return;
+
+	$wp_parent_id = intval(basename($r[0]['sid']));
+
+	$x = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($b['author_xchan'])
+	);
+	if(! $x)
+		return;
+
+	logger('Wordpress xpost comment invoked', LOGGER_DEBUG);
+
+	$edited = (($b['created'] !== $b['edited']) ? true : false);
+		
+	if($edited) {
+		$r = q("select * from item_id where service = 'wordpress' and iid = %d and uid = %d limit 1",
+			intval($b['id']),
+			intval($b['uid'])
+		);
+		if(! $r)
+			return;
+
+		$wp_comment_id = intval(basename($r[0]['sid']));
+	}
+
+	$wp_username = get_pconfig($b['uid'],'wppost','wp_username');
+	$wp_password = get_pconfig($b['uid'],'wppost','wp_password');
+	$wp_blog     = get_pconfig($b['uid'],'wppost','wp_blog');
+
+	if($wp_username && $wp_password && $wp_blog) {
+
+		require_once('include/bbcode.php');
+
+		$data = array(
+			'author' => $x[0]['xchan_name'],
+			'author_email' => $x[0]['xchan_addr'],
+			'author_url' => $x[0]['xchan_url'],
+			'content' => bbcode($b['body']),
+			'approved' => 1
+		);
+		if($edited)
+			$data['comment_id'] = $wp_comment_id;
+
+		$client = new IXR_Client($wp_blog);
+
+		// this will fail if the post_to_red plugin isn't installed on the wordpress site
+
+		$res = $client->query('red.Comment',1,$wp_username,$wp_password,$wp_parent_id,$data);
+
+		if(! $res) {
+			logger('wppost: comment failed.');
+			return;
+		}
+
+
+		$post_id = $client->getResponse();
+
+		logger('wppost: comment returns post_id: ' . $post_id, LOGGER_DEBUG);
+
+		// edited just returns true
+
+		if($edited)
+			return;
+
+		if($post_id) {
+			q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
+				intval($b['id']),
+				intval($b['uid']),
+				dbesc(dirname($wp_blog) . '/' . $post_id),
+				dbesc('wordpress')
+			);
+		}
+	}
+}
+
+
+
 
 
 function wppost_drop_item(&$a,&$b) {

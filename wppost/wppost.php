@@ -334,6 +334,8 @@ function wppost_post_remote_end(&$a,&$b) {
 		);
 		if($edited)
 			$data['comment_id'] = $wp_comment_id;
+		else
+			$data['red_avatar'] = $x[0]['xchan_photo_m'];
 
 		$client = new IXR_Client($wp_blog);
 

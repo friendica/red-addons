@@ -396,7 +396,10 @@ function wppost_drop_item(&$a,&$b) {
 
 		$client = new IXR_Client($wp_blog);
 
-		$res = $client->query('wp.deletePost',1,$wp_username,$wp_password,$post_id);
+		if($b['item']['id'] == $b['item']['parent']) 
+			$res = $client->query('wp.deletePost',1,$wp_username,$wp_password,$post_id);
+		else	
+			$res = $client->query('wp.deleteComment',1,$wp_username,$wp_password,$post_id);
 
 		if(! $res) {
 			logger('wppost: delete failed.');

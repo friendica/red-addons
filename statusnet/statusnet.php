@@ -174,7 +174,8 @@ function statusnet_settings_post ($a,$post) {
                 foreach ( $globalsn as $asn) {
                     if ($asn['apiurl'] == $_POST['statusnet-preconf-apiurl'] ) {
                         $apibase = $asn['apiurl'];
-                        $c = fetch_url( $apibase . 'statusnet/version.xml' );
+                        $x = z_fetch_url( $apibase . 'statusnet/version.xml' );
+						$c = $x['body'];
                         if (strlen($c) > 0) {
                             set_pconfig(local_user(), 'statusnet', 'consumerkey', $asn['consumerkey'] );
                             set_pconfig(local_user(), 'statusnet', 'consumersecret', $asn['consumersecret'] );
@@ -192,7 +193,8 @@ function statusnet_settings_post ($a,$post) {
                 //  we'll check the API Version for that, if we don't get one we'll try to fix the path but will
                 //  resign quickly after this one try to fix the path ;-)
                 $apibase = $_POST['statusnet-baseapi'];
-                $c = fetch_url( $apibase . 'statusnet/version.xml' );
+                $x = z_fetch_url( $apibase . 'statusnet/version.xml' );
+				$c = $x['body'];
                 if (strlen($c) > 0) {
                     //  ok the API path is correct, let's save the settings
                     set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
@@ -202,7 +204,9 @@ function statusnet_settings_post ($a,$post) {
                 } else {
                     //  the API path is not correct, maybe missing trailing / ?
                     $apibase = $apibase . '/';
-                    $c = fetch_url( $apibase . 'statusnet/version.xml' );
+					
+                    $x = z_fetch_url( $apibase . 'statusnet/version.xml' );
+					$c = $x['body'];
                     if (strlen($c) > 0) {
                         //  ok the API path is now correct, let's save the settings
                         set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);

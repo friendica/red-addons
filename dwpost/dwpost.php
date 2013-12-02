@@ -220,8 +220,8 @@ EOT;
 		logger('dwpost: data: ' . $xml, LOGGER_DATA);
 
 		if($dw_blog !== 'test')
-			$x = post_url($dw_blog,$xml,array("Content-Type: text/xml"));
-		logger('posted to dreamwidth: ' . ($x) ? $x : '', LOGGER_DEBUG);
+			$x = z_post_url($dw_blog,$xml,array('headers' => array("Content-Type: text/xml")));
+		logger('posted to dreamwidth: ' . print_r($x,true), LOGGER_DEBUG);
 
 	}
 }

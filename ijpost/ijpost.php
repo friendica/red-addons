@@ -208,7 +208,7 @@ function ijpost_send(&$a,&$b) {
 <member><name>ver</name><value><int>1</int></value></member>
 <member><name>props</name>
 <value><struct>
-<member><name>useragent</name><value><string>Friendica</string></value></member>
+<member><name>useragent</name><value><string>RedMatrix</string></value></member>
 <member><name>taglist</name><value><string>$tags</string></value></member>
 </struct></value></member>
 </struct></value>
@@ -220,8 +220,8 @@ EOT;
 		logger('ijpost: data: ' . $xml, LOGGER_DATA);
 
 		if($ij_blog !== 'test')
-			$x = post_url($ij_blog,$xml,array("Content-Type: text/xml"));
-		logger('posted to insanejournal: ' . ($x) ? $x : '', LOGGER_DEBUG);
+			$x = z_post_url($ij_blog,$xml,array('headers' => array("Content-Type: text/xml")));
+		logger('posted to insanejournal: ' . print_r($x,true), LOGGER_DEBUG);
 
 	}
 }

@@ -218,7 +218,7 @@ function ljpost_send(&$a,&$b) {
 				<struct>
 					<member>
 						<name>useragent</name>
-						<value><string>Friendica</string></value>
+						<value><string>RedMatrix</string></value>
 					</member>
 					<member>
 						<name>taglist</name>
@@ -237,8 +237,8 @@ EOT;
 		logger('ljpost: data: ' . $xml, LOGGER_DATA);
 
 		if($lj_blog !== 'test')
-			$x = post_url($lj_blog,$xml,array("Content-Type: text/xml"));
-		logger('posted to livejournal: ' . ($x) ? $x : '', LOGGER_DEBUG);
+			$x = z_post_url($lj_blog,$xml,array('headers' => array("Content-Type: text/xml")));
+		logger('posted to livejournal: ' . print_r($x,true), LOGGER_DEBUG);
 
 	}
 }

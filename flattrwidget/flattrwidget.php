@@ -11,18 +11,20 @@
  */
 
 function flattrwidget_load() {
-	register_hook('channel_mod_aside', 'addon/flattrwidget/flattrwidget.php', 'flattrwidget_channel_mod_aside');
+	register_hook('construct_page', 'addon/flattrwidget/flattrwidget.php', 'flattrwidget_construct_page');
 	register_hook('feature_settings', 'addon/flattrwidget/flattrwidget.php', 'flattrwidget_settings');
 	register_hook('feature_settings_post', 'addon/flattrwidget/flattrwidget.php', 'flattrwidget_settings_post');
 }
 
 function flattrwidget_unload() {
-	unregister_hook('channel_mod_aside', 'addon/flattrwidget/flattrwidget.php', 'flattrwidget_channel_mod_aside');
+	unregister_hook('construct_page', 'addon/flattrwidget/flattrwidget.php', 'flattrwidget_construct_page');
 	unregister_hook('feature_settings', 'addon/flattrwidget/flattrwidget.php', 'flattrwidget_settings');
 	unregister_hook('feature_settings_post', 'addon/flattrwidget/flattrwidget.php', 'flattrwidget_settings_post');
 }
 
-function flattrwidget_channel_mod_aside(&$a,&$b) {
+function flattrwidget_construct_page(&$a,&$b) {
+    if (! $b['module']=='channel')
+	return;
     $id = $a->profile['profile_uid'];
     $enable = intval(get_pconfig($id,'flattrwidget','enable'));
     if (! $enable)
@@ -54,7 +56,11 @@ function flattrwidget_channel_mod_aside(&$a,&$b) {
     //  put the widget content together
     $flattrwidget = '<div id="flattr-widget">'.$code.'</div>';
     //  place the widget into the selected aside area
-    $a->set_widget( $title, $flattrwidget, $lr);
+    if ($lr=='right_aside') {
+	$b['layout']['region_right_aside'] = $flattrwidget . $b['layout']['region_right_aside'];
+    } else {
+	$b['layout']['region_aside'] = $flattrwidget . $b['layout']['region_aside'];
+    }
 }
 function flattrwidget_settings_post($a,$s) {
     if(! local_user() || (! x($_POST,'flattrwidget-settings-submit')))

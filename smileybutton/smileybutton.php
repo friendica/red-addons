@@ -89,7 +89,6 @@ function show_button($a, &$b) {
 		':facepalm',
 		':like',
 		':dislike',
-                '~friendica',
                 'red#'
 
 	);
@@ -116,7 +115,6 @@ function show_button($a, &$b) {
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="red" />'
 	);
 	

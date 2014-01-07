@@ -160,7 +160,7 @@ function rtof_post_hook(&$a,&$b) {
 	$postdata = array('status' => $b['body'], 'title' => $b['title'], 'message_id' => $b['mid'], 'source' => 'Red Matrix');
 
 	if(strlen($b['body'])) {
-		$ret = z_post_url($api . 'statuses/update', $postdata, 0, array('http_auth' => $username . ':' . $password));
+		$ret = z_post_url($api . 'statuses/update', $postdata, 0, array('http_auth' => $username . ':' . $password, 'novalidate' => 1));
 		if($ret['success'])
 			logger('rtof: returns: ' . print_r($ret['body'],true));
 		else

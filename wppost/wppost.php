@@ -4,7 +4,7 @@
  * Name: WordPress Post Connector
  * Description: Post to WordPress (or anything else which uses the wordpress XMLRPC API)
  * Version: 1.0
- * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
+ * Author: Mike Macgirvin <zot:mike@zothub.com>
  */
 
 require_once('include/permissions.php');

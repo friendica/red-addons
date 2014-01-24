@@ -39,7 +39,7 @@ function openstreetmap_location($a, &$item) {
 	*/
 	$tmsserver = get_config('openstreetmap','tmsserver');
 	if(! $tmsserver)
-		$tmsserver = 'http://openstreetmap.org';
+		$tmsserver = 'http://nominatim.openstreetmap.org';
 	$zoom = get_config('openstreetmap','zoom');
 	if(! $zoom)
 		$zoom = 17;
@@ -48,23 +48,7 @@ function openstreetmap_location($a, &$item) {
 	$coord = '';
 
 	
-//	if($item['location'] && !$item['coord']) { //if only a location is given, find the lat-lon
-
-// performance hog - we need a better way to do this.
-
-//		$geo_account='guest';
-//		$s = z_fetch_url('http://api.geonames.org/search?maxRows=1&fuzzy=0.8&q=' . urlencode($item['location'])  . '&username=' . $geo_account);
-
-//		if($s['success']){
-//			$xml = parse_xml_string($s['body']);
-
-//			if($xml->geoname->lat && $xml->geoname->lng){
-//				$item['coord'] = $xml->geoname->lat . ' ' . $xml->geoname->lng;
-//			}
-//		}
-//	}
-
-	$location = (($item['location']) ? $item['location'] : '');
+	$location = $item['location'];
 
 	$location = (($location && (! $item['coord'])) ? '<a target="map" title="' . $item['location'] . '" href="'.$tmsserver.'?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : $location);
 

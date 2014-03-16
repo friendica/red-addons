@@ -18,7 +18,7 @@ function random_channel_home_unload() {
 }
 
 function random_channel_select(){
-        $r = q("select channel_address from channel where channel_r_stream = 1 order by rand() limit 1");
+        $r = q("select channel_address from channel where channel_r_stream = 1 and channel_address != 'sys' order by rand() limit 1");
 if($r)
         return $r[0]['channel_address'];
 return '';

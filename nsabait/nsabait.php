@@ -82,8 +82,7 @@ function nsabait_post_hook($a, &$item) {
 	if(! $active)
 		return;
 
-	$words = file_get_contents('addon/nsabait/wordlist.txt');
-	$nsabait = explode(',',$words);
+	$nsabait = file('addon/nsabait/words.txt');
 	shuffle($nsabait);
 	$used = array();
 

@@ -34,6 +34,9 @@ function nsfw_extract_photos($body) {
 	$new_body = '';
 	
 	$img_start = strpos($body,'src="data:');
+	if(! $img_start)
+		return $body;
+
 	$img_end = (($img_start !== false) ? strpos(substr($body,$img_start),'>') : false);
 
 	$cnt = 0;
@@ -130,9 +133,24 @@ function nsfw_prepare_body(&$a,&$b) {
 
 		foreach($arr as $word) {
 			$word = trim($word);
+			$author = '';
+
 			if(! strlen($word)) {
 				continue;
 			}
+
+			$orig_word = $word;
+
+			if(strpos($word,'::') !== false) {
+				$author = substr($word,0,strpos($word,'::'));
+				$word = substr($word,strpos($word,'::')+2);
+			}			
+			if($author && stripos($b['item']['author']['xchan_name'],$author) === false)
+				continue;
+
+			if(! $word)
+				$found = true;
+
 			if(strpos($word,'/') === 0) {
 				if(preg_match($word,$body)) {
 					$found = true;
@@ -159,6 +177,6 @@ function nsfw_prepare_body(&$a,&$b) {
 	}
 	if($found) {
 		$rnd = random_string(8);
-		$b['html'] = '<div id="nsfw-wrap-' . $rnd . '" class="fakelink" onclick=openClose(\'nsfw-' . $rnd . '\'); >' . sprintf( t('%s - Click to open/close'),$word ) . '</div><div id="nsfw-' . $rnd . '" style="display: none; " >' . $b['html'] . '</div>';  
+		$b['html'] = '<div id="nsfw-wrap-' . $rnd . '" class="fakelink" onclick=openClose(\'nsfw-' . $rnd . '\'); >' . sprintf( t('%s - Click to open/close'),$orig_word ) . '</div><div id="nsfw-' . $rnd . '" style="display: none; " >' . $b['html'] . '</div>';  
 	}
 }

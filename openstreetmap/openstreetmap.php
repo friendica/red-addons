@@ -55,12 +55,12 @@ function openstreetmap_location($a, &$item) {
 	if($item['coord']) {
 		$coords = explode(' ', $item['coord']);
 		if(count($coords) > 1) {
-			$coord = '<a target="map" class="OSMMapLink" title="' . $item['coord'] . '" href="'.$tmsserver.'?lat=' . urlencode($coords[0]) . '&lon=' . urlencode($coords[1]) . '&zoom='.$zoom.'"> Map </a>' ;
+			$coord = '<a target="map" class="OSMMapLink" title="' . $item['coord'] . '" href="'.$tmsserver.'?lat=' . urlencode($coords[0]) . '&lon=' . urlencode($coords[1]) . '&zoom='.$zoom.'">Map</a>' ;
 		}
 	}
 	if(strlen($coord)) {
 		if($location)
-			$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
+			$location .= '&nbsp;<span class="smalltext">(' . $coord . ')</span>';
 		else
 			$location = '<span class="smalltext">' . $coord . '</span>';
 	}

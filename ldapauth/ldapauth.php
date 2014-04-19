@@ -60,7 +60,7 @@ function ldapauth_hook_authenticate($a,&$b) {
 			$acct = create_account(array('email' => $mail, 'password' => random_string()));			
 			if($acct['success']) {
 				logger('ldapauth: Created account for ' . $b['username'] . ' using ' . $mail);
-				note(t('You were recognized as local LDAP-user and an account was created for you.'));
+				info(t('You were recognized as local LDAP-user and an account was created for you.'));
 				$b['user_record'] = $acct['account'];
 				$b['authenticated'] = 1;
 			}

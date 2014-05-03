@@ -49,6 +49,9 @@ function visage_magic_auth($a, &$b) {
 	
 	$nick = $matches[3];
 
+	if($_SERVER['HTTP_DNT'] == '1')
+		return;
+
 	$c = q("select channel_id, channel_hash from channel where channel_address = '%s' limit 1",
 		dbesc($nick)
 	);

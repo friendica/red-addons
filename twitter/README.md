@@ -3,13 +3,13 @@ Twitter Plugin
 
 Main authors Tobias Diekershoff and Michael Vogel.
 
-With this addon to friendica you can give your user the possibility to post
+With this addon to Red you can give your user the possibility to post
 their *public* messages to Twitter. The messages will be strapped their rich
 context and shortened to 140 characters length if necessary. If shortening of
 the message was performed a link will be added to the Tweet pointing to the
 original message on your server.
 
-The addon can also mirror a users Tweets into the ~friendica wall.
+The addon can also mirror a users Tweets into the Red wall.
 
 There is a similar addon for forwarding public messages to
 [StatusNet](http://status.net).
@@ -17,7 +17,7 @@ There is a similar addon for forwarding public messages to
 Requirements
 ------------
 
-To use this plugin you have to register an application for your friendica
+To use this plugin you have to register an application for your Red
 instance on Twitter with
 * read and write access
 * don't set a callback URL
@@ -35,7 +35,8 @@ message was longer than 140 characters requires it, that you have *PHP5+* and
 Where to find
 -------------
 
-In the friendica addon git repository /twitter/, this directory contains
+In the friendica red-addons git repository /twitter/, this directory 
+contains
 all required PHP files (including the [Twitter OAuth library][1] by Abraham
 Williams, MIT licensed and the [Slinky library][2] by Beau Lebens, BSD license),
 a CSS file for styling of the user configuration and an image to _Sign in with
@@ -100,14 +101,15 @@ friendica account.
 
 After this step was successful the user now has the following config options.
 
-* **Allow posting to StatusNet** If you want your _public postings_ being
+* **Allow posting to Twitter** If you want your _public postings_ being
   optionally posted to your associated Twitter account as well, you need to
   check this box.
-* **Send public postings to StatusNet by default** if you want to have _all_
+* **Send public postings to Twitter by default** if you want to have _all_
   your public postings being send to your Twitter account you need to check
   this button as well. Otherwise you have to enable the relay of your postings
   in the ACL dialog (click the lock button) before posting an entry.
-* **Mirror all posts from statusnet that are no replies or repeated messages**
+* **Mirror all posts from Twitter that are not replies or repeated 
+messages**
   if you want your postings from Twitter also appear in your friendica
   postings, check this box. Replies to other people postings, repostings and your own
   postings that were send from friendica wont be mirrored into your friendica
@@ -119,8 +121,8 @@ After this step was successful the user now has the following config options.
   posting. Optionally you can check this box to have the shortening of the
   message use an optimization algorithm. _TODO add infos how this is
   optimized_
-* **Send linked #-tags and @-names to StatusNet** if you want your #-tags and
-  @-mentions linked to the friendica network, check this box. If you want to
+* **Send linked #-tags and @-names to Twitter** if you want your #-tags and
+  @-mentions linked to the Red network, check this box. If you want to
   have Twitter handle these things for the relayed end of the posting chain,
   uncheck it.
 * **Clear OAuth configuration** if you want to remove the currently associated
@@ -132,7 +134,8 @@ After this step was successful the user now has the following config options.
 License
 =======
 
-The _StatusNet Connector_ is licensed under the [3-clause BSD license][3] see the
+The _Twitter Connector_ is licensed under the [3-clause BSD license][3] see 
+the
 LICENSE file in the addons directory.
 
 [3]: http://opensource.org/licenses/BSD-3-Clause

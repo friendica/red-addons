@@ -54,7 +54,7 @@ function nsabait_unload() {
 
 
 
-function nsabait_post_hook($a, &$item) {
+function nsabait_post_hook($a, &$req) {
 	/**
 	 *
 	 * An item was posted on the local system.
@@ -69,10 +69,13 @@ function nsabait_post_hook($a, &$item) {
 	if(! local_user())   /* non-zero if this is a logged in user of this system */
 		return;
 
-	if(local_user() != $item['profile_uid'])    /* Does this person own the post? */
+	if(local_user() != $req['profile_uid'])    /* Does this person own the post? */
 		return;
 
-	if($item['parent'])   /* If the item has a parent, this is a comment or something else, not a status post. */
+	if($req['parent'])   /* If the req has a parent, this is a comment or something else, not a status post. */
+		return;
+
+	if($req['namespace'] || $req['remote_id'] || $req['post_id'])
 		return;
 
 	/* Retrieve our personal config setting */
@@ -86,7 +89,7 @@ function nsabait_post_hook($a, &$item) {
 	shuffle($nsabait);
 	$used = array();
 
-	$item['body'] .= "\n";
+	$req['body'] .= "\n";
 
 	for($x = 0; $x < 5; $x ++) {
 		$y = mt_rand(0,count($nsabait));
@@ -96,7 +99,7 @@ function nsabait_post_hook($a, &$item) {
 		}
 		$used[] = strtolower(trim($nsabait[$y]));
 
-		$item['body'] .= ' #' . str_replace(' ','_',trim($nsabait[$y]));
+		$req['body'] .= ' #' . str_replace(' ','_',trim($nsabait[$y]));
 	}
 
 	return;

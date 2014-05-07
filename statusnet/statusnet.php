@@ -130,10 +130,11 @@ function statusnet_unload() {
 }
 
 function statusnet_jot_nets(&$a,&$b) {
-    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream'))) 
         return;
 
 	$statusnet_post = get_pconfig(local_user(),'statusnet','post');
+
 	if(intval($statusnet_post) == 1) {
 		$statusnet_defpost = get_pconfig(local_user(),'statusnet','post_by_default');
 		$selected = ((intval($statusnet_defpost) == 1) ? ' checked="checked" ' : '');
@@ -217,7 +218,7 @@ function statusnet_settings_post ($a,$post) {
                         notice( t('We could not contact the StatusNet API with the Path you entered.').EOL );
                     }
                 }
-                goaway($a->get_baseurl().'/settings/connectors');
+                goaway($a->get_baseurl().'/settings/featured');
             } else {
     	        if (isset($_POST['statusnet-pin'])) {
                 	//  if the user supplied us with a PIN from StatusNet, let the magic of OAuth happen
@@ -235,7 +236,7 @@ function statusnet_settings_post ($a,$post) {
                                         set_pconfig(local_user(),'statusnet', 'post', 1);
                                         set_pconfig(local_user(),'statusnet', 'post_taglinks', 1);
                     //  reload the Addon Settings page, if we don't do it see Bug #42
-                    goaway($a->get_baseurl().'/settings/connectors');
+                    goaway($a->get_baseurl().'/settings/featured');
 				} else {
 					//  if no PIN is supplied in the POST variables, the user has changed the setting
 					//  to post a dent for every new __public__ posting to the wall

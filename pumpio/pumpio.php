@@ -167,7 +167,8 @@ function pumpio_jot_nets(&$a,&$b) {
         $pumpio_defpost = get_pconfig(local_user(),'pumpio','post_by_default');
         $selected = ((intval($pumpio_defpost) == 1) ? ' checked="checked" ' : '');
         $b .= '<div class="profile-jot-net"><input type="checkbox" name="pumpio_enable"' . $selected . ' value="1" /> '
-            . t('Post to pumpio') . '</div>';
+			. '<img src="addon/pumpio/pumpio.png" title="' . t('Post to Pump.io') . '" />' . '</div>';
+
     }
 }
 

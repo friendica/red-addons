@@ -41,7 +41,7 @@ function redred_jot_nets(&$a,&$b) {
 		$redred_defpost = get_pconfig(local_user(),'redred','post_by_default');
 		$selected = ((intval($redred_defpost) == 1) ? ' checked="checked" ' : '');
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="redred_enable"' . $selected . ' value="1" /> ' 
-			. t('Post to Red') . '</div>';
+			. '<img src="addon/redred/rhash-32.png" title="' . t('Post to Red') . '" />' . '</div>';
 	}
 }
 

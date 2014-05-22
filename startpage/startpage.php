@@ -114,10 +114,10 @@ function startpage_settings(&$a,&$s) {
 	$s .= '<div class="settings-block">';
 	$s .= '<h3>' . t('Startpage Settings') . '</h3>';
 	$s .= '<div id="startpage-page-wrapper">';
-	$s .= '<label id="startpage-page-label" for="startpage-page">' . t('Home page to load after login  - leave blank for matrix page') . '</label>';
+	$s .= '<label id="startpage-page-label" for="startpage-page">' . t('Home page to load after login  - leave blank for Apps page') . '</label>';
 	$s .= '<input id="startpage-page" type="text" name="startpage" value="' . $page . '" />';
 	$s .= '</div><div class="clear"></div>';
-	$s .= '<div id="startpage-desc">' . t('Examples: &quot;channel&quot; or &quot;notifications/system&quot;') . '</div>';
+	$s .= '<div id="startpage-desc">' . t('Examples: &quot;network&quot; or &quot;channel&quot; or &quot;notifications/system&quot;') . '</div>';
 
 	/* provide a submit button */
 

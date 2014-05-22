@@ -105,13 +105,13 @@ function irc_content(&$a) {
 	if($autochans)
 		$channels = $autochans;
 	else
-		$channels = ((x($_GET,'channels')) ? $_GET['channels'] : 'friendica');
+		$channels = ((x($_GET,'channels')) ? $_GET['channels'] : 'redmatrix');
 
 /* add the chatroom frame and some html */
   $o .= <<< EOT
 <h2>IRC chat</h2>
 <p><a href="http://tldp.org/HOWTO/IRC/beginners.html" target="_blank">A beginner's guide to using IRC. [en]</a></p>
-<iframe src="//webchat.freenode.net?channels=$channels" width="600" height="600"></iframe>
+<iframe src="//webchat.freenode.net?channels=$channels" width="100%" height="600"></iframe>
 EOT;
 
 return $o;

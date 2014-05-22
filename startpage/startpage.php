@@ -29,7 +29,11 @@ function startpage_home_init($a, $b) {
 	if(! local_user())
 		return;
 
-	$page = get_pconfig(local_user(),'system','startpage');
+	$channel = $a->get_channel();
+	$page = $channel['channel_startpage'];
+	if(! $page)
+		$page = get_pconfig(local_user(),'system','startpage');
+
 	if(strlen($page)) {		
 		$slash = ((strpos($page,'/') === 0) ? true : false);
 // If we goaway to a z_root for the channel page, all clones will be redirected to the primary hub, so...
@@ -69,7 +73,12 @@ function startpage_settings_post($a,$post) {
 			if(strpos($page,'http') !== 0)
 				$page = $page;
 
+		$r = q("update channel set channel_startpage = '%s' where channel_id = %d limit 1",
+			dbesc($page),
+			intval(local_user())
+		);
 		set_pconfig(local_user(),'system','startpage',$page);
+
 	}
 }
 
@@ -94,7 +103,10 @@ function startpage_settings(&$a,&$s) {
 
 	/* Get the current state of our config variable */
 
-	$page = get_pconfig(local_user(),'system','startpage');
+	$channel = $a->get_channel();
+	$page = $channel['channel_startpage'];
+	if(! $page)
+		$page = get_pconfig(local_user(),'system','startpage');
 
 
 	/* Add some HTML to the existing form */

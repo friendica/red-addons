@@ -293,13 +293,18 @@ $o = '';
 
 $o .=  <<< EOT
 
+<style>
+td, th {
+	padding: 5px;
+}
+</style>
 <h3>Calculator</h3>
 <br /><br />
 <table>
 <tbody><tr><td> 
-<table bgcolor="#af9999" border="1">
+<table style="background-color: #af9999;" border="1">
 <tbody><tr><td>
-<table border="1" cellpadding="2" cellspacing="2">
+<table border="1" style="padding: 2px;" cellpadding="2" cellspacing="2">
 <form name="calc">
 <!--
 <TR><TD VALIGN=top colspan=6 ALIGN="center"> <H2>Calculator</H2> </TD>

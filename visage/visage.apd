@@ -1,0 +1,5 @@
+url: $baseurl/visage
+requires: local_user
+name: Visitors
+photo: $baseurl/addon/visage/visage.png
+

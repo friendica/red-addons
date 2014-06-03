@@ -21,7 +21,7 @@ function moremoods_moods($a,&$b) {
 	$b['horny'] = t('horny');
 	$b['stoned'] = t('stoned');
 	$b['fucked up'] = t('fucked up');
-	$b['clusterfucked'] = t('clusterfucked']);
+	$b['clusterfucked'] = t('clusterfucked');
 	$b['crazy'] = t('crazy');
 	$b['hurt'] = t('hurt');
 	$b['sleepy'] = t('sleepy');

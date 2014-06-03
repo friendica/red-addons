@@ -21,6 +21,7 @@ function moremoods_moods($a,&$b) {
 	$b['horny'] = t('horny');
 	$b['stoned'] = t('stoned');
 	$b['fucked up'] = t('fucked up');
+	$b['clusterfucked'] = t('clusterfucked']);
 	$b['crazy'] = t('crazy');
 	$b['hurt'] = t('hurt');
 	$b['sleepy'] = t('sleepy');
@@ -31,4 +32,11 @@ function moremoods_moods($a,&$b) {
 	$b['in lust'] = t('in lust');
 	$b['naked'] = t('naked');
 	$b['stinky'] = t('stinky');
+	$b['sweaty'] = t('sweaty');
+	$b['bleeding out'] = t('bleeding out');
+	$b['victorious'] = t('victorious');
+	$b['defeated'] = t('defeated');
+	$b['envious'] = t('envious');
+	$b['jealous'] = t('jealous');
+	
 }

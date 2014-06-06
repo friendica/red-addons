@@ -152,7 +152,7 @@ function pumpio_connect($a) {
 
         if($success) {
 		$o .= t("You are now authenticated to pumpio.");
-		$o .= '<br /><a href="'.$a->get_baseurl().'/settings/connectors">'.t("return to the connector page").'</a>';
+		$o .= '<br /><a href="'.$a->get_baseurl().'/settings/featured">'.t("return to the featured settings page").'</a>';
 	}
 
 	return($o);

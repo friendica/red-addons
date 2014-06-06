@@ -36,10 +36,19 @@ function openstreetmap_location($a, &$item) {
 
 	/*
 	 * Get the configuration variables from the .htconfig file.
-	*/
+	 * Separate the coordinate server from the text-string to map tile server since they apparently use 
+	 * different URL conventions.
+	 */
+
 	$tmsserver = get_config('openstreetmap','tmsserver');
 	if(! $tmsserver)
 		$tmsserver = 'http://nominatim.openstreetmap.org';
+
+	$coordserver = get_config('openstreetmap','coordserver');
+	if(! $coordserver)
+		$coordserver = 'http://openstreetmap.org';
+
+
 	$zoom = get_config('openstreetmap','zoom');
 	if(! $zoom)
 		$zoom = 17;
@@ -55,7 +64,7 @@ function openstreetmap_location($a, &$item) {
 	if($item['coord']) {
 		$coords = explode(' ', $item['coord']);
 		if(count($coords) > 1) {
-			$coord = '<a target="map" class="OSMMapLink" title="' . $item['coord'] . '" href="'.$tmsserver.'?lat=' . urlencode($coords[0]) . '&lon=' . urlencode($coords[1]) . '&zoom='.$zoom.'">Map</a>' ;
+			$coord = '<a target="map" class="OSMMapLink" title="' . $item['coord'] . '" href="'.$coordserver.'?lat=' . urlencode($coords[0]) . '&lon=' . urlencode($coords[1]) . '&zoom='.$zoom.'">Map</a>' ;
 		}
 	}
 	if(strlen($coord)) {

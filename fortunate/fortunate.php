@@ -16,6 +16,8 @@ function fortunate_unload() {
 	unregister_hook('page_end', 'addon/fortunate/fortunate.php', 'fortunate_fetch');
 }
 
+function fortunate_module(){}
+
 
 function fortunate_fetch(&$a,&$b) {
 
@@ -32,3 +34,10 @@ function fortunate_fetch(&$a,&$b) {
 
 }
 
+function fortunate_content(&$a) {
+
+//	$o = '';
+//	fortunate_fetch($a,$o);
+//	return $o;
+
+}

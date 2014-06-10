@@ -97,6 +97,8 @@ function do_query($table,$length,$numlines,$adult,$cat,$limit,$lang,$pattern,$re
    }
   }
 
+  $order = (($patsql && $limit == 1) ? "" : "ORDER BY RAND($rnd)" );
+
   $result = @$db->query("SELECT `text`, `category` FROM `fortune` 
                          $typesql
                          $adultsql
@@ -105,7 +107,7 @@ function do_query($table,$length,$numlines,$adult,$cat,$limit,$lang,$pattern,$re
                          $patsql
                          $regexsql
                          $eqsql
-                         ORDER BY RAND($rnd) 
+                         $order
                          LIMIT $limit");
 
   if($result->num_rows) {

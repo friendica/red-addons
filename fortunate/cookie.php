@@ -32,13 +32,13 @@ if(strlen($_GET['lang']))
   $lang = @$db->real_escape_string($_GET['lang']);
 
 if(strlen($_GET['pattern']))
-  $pattern = @$db->real_escape_string(urldecode($_GET['pattern']));
+  $pattern = @$db->real_escape_string($_GET['pattern']);
 
 if(strlen($_GET['regex']))
-  $regex = @$db->real_escape_string(urldecode($_GET['regex']));
+  $regex = @$db->real_escape_string($_GET['regex']);
 
 if(strlen($_GET['db']))
-  $table = @$db->real_escape_string(urldecode($_GET['db']));
+  $table = @$db->real_escape_string($_GET['db']);
 else
   $table = '';
 
@@ -71,7 +71,7 @@ function do_query($table,$length,$numlines,$adult,$cat,$limit,$lang,$pattern,$re
 
   $patsql = '';
   if(strlen($pattern))
-    $patsql = " AND MATCH text AGAINST ('$pattern' IN BOOLEAN MODE) ";
+    $patsql = " AND MATCH text AGAINST ('$pattern') ";
 
   $regexsql = '';
   if(strlen($regex))
@@ -141,7 +141,7 @@ function do_stats($table,$length,$numlines,$adult,$cat,$limit,$lang,$pattern,$re
 
   $patsql = '';
   if(strlen($pattern))
-    $patsql = " AND MATCH text AGAINST ('$pattern' IN BOOLEAN MODE) ";
+    $patsql = " AND MATCH text AGAINST ('$pattern') ";
 
   $regexsql = '';
   if(strlen($regex))

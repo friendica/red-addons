@@ -74,6 +74,10 @@ function randpost_enotify_store(&$a,&$b) {
 		':like'
 	);
 
+
+	// TODO: if you really want to freak somebody out, add a relevance search function to mod_zotfeed and
+	// use somebody's own words from long ago to craft a reply to them....
+
 	require_once('include/bbcode.php');
 	require_once('include/html2plain.php');
 

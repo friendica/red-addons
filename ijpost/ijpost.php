@@ -163,11 +163,11 @@ function ijpost_send(&$a,&$b) {
 
 	$tz = 'UTC';
 
-	$x = q("select timezone from user where uid = %d limit 1",
+	$x = q("select channel_timezone from channel where channel_id = %d limit 1",
 		intval($b['uid'])
 	);
-	if($x && strlen($x[0]['timezone']))
-		$tz = $x[0]['timezone'];	
+	if($x && strlen($x[0]['channel_timezone']))
+		$tz = $x[0]['channel_timezone'];	
 
 	$ij_username = get_pconfig($b['uid'],'ijpost','ij_username');
 	$ij_password = get_pconfig($b['uid'],'ijpost','ij_password');

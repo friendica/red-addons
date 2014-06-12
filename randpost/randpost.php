@@ -47,8 +47,24 @@ function randpost_enotify_store(&$a,&$b) {
 	if(! $p)
 		return;
 
+
 	if($p[0]['item_flags'] & ITEM_OBSCURED)
 		return;
+
+
+	// This conversation is boring me.
+
+	$limit = mt_rand(5,20);
+	$h = q("select id from item where author_xchan = '%s' and parent_mid = '%s' and uid = %d",
+		dbesc($c[0]['channel_hash']),
+		dbesc($b['item']['parent_mid']),
+		intval($b['uid'])
+	);
+	if($h && count($h) > $limit)
+		return;
+ 
+	
+	// Be gracious and not obnoxious if thanked
 
 	$replies = array(
 		t('You\'re welcome.'),
@@ -80,27 +96,24 @@ function randpost_enotify_store(&$a,&$b) {
 		$reply = $replies[mt_rand(0,count($replies)-1)];
 	}
 
-	require_once('include/html2bbcode.php');
  
-	$url = 'http://' . $fort_server . '/cookie.php?f=&lang=any&off=a&pattern=' . urlencode($pattern);
-
-// logger('randpost: ' . $url);
-
-	$s = z_fetch_url($url);
-
-	if($s['success'] && (! $s['body']))
-		$s = z_fetch_url('http://' . $fort_server . '/cookie.php');
-
-	if((! $s['success']) || (! $s['body']))
-		return;
-
 	$x = array();
-
 
 	if($reply) {
 		$x['body'] = $mention . $reply;
 	}
 	else {
+		require_once('include/html2bbcode.php');
+		$url = 'http://' . $fort_server . '/cookie.php?f=&lang=any&off=a&pattern=' . urlencode($pattern);
+
+		$s = z_fetch_url($url);
+
+		if($s['success'] && (! $s['body']))
+			$s = z_fetch_url('http://' . $fort_server . '/cookie.php');
+
+		if((! $s['success']) || (! $s['body']))
+			return;
+
 		// if it might be a quote make it a quote
 		if(strpos($s['body'],'--'))
 			$x['body'] = $mention . '[quote]' . html2bbcode($s['body']) . '[/quote]';

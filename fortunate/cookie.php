@@ -67,7 +67,7 @@ function do_query($table,$length,$numlines,$adult,$cat,$limit,$lang,$pattern,$re
     $lengthsql .=
     " AND (LENGTH(`text`) - LENGTH(REPLACE(`text`,\"\n\",\"\"))) <= $numlines ";
 
-  $langsql = " AND lang = '$lang' ";
+  $langsql = (($lang === 'any') ? '' : " AND lang = '$lang' ");
 
   $patsql = '';
   if(strlen($pattern))

@@ -126,7 +126,7 @@ function randpost_enotify_store(&$a,&$b) {
 	$x['author_xchan'] = $c[0]['channel_hash'];
 	$x['owner_xchan'] = $b['item']['owner_xchan'];
 
-	$x['item_flags'] = ITEM_ORIGIN|ITEM_WALL|ITEM_VERIFIED;
+	$x['item_flags'] = ITEM_ORIGIN|ITEM_VERIFIED;
 
 	// You can't pass a Turing test if you reply in milliseconds. 
 	// Also I believe we've got ten minutes fudge before we declare a post as time traveling.

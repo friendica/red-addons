@@ -4,6 +4,11 @@
 
 <br />
 
+<img src="addon/donate/tipping.jpg" alt="Donations" />
+
+<br />
+<br />
+
 <form method="post" action="https://www.paypal.com/cgi-bin/webscr">
 <input type="hidden" value="_donations" name="cmd">
 

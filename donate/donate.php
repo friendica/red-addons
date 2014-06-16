@@ -25,7 +25,7 @@ array('Mike Macgirvin','mike@macgirvin.com',t('Project Creator and Tech Lead')),
 );
 
 
-$text .= t('The RedMatrix is provided by volunteers giving their time and expertise, and often paying out of pocket.') . EOL;
+$text .= t('The RedMatrix is provided primarily by volunteers giving their time and expertise - and often paying out of pocket for services they share with others.') . EOL;
 $text .= t('There is no corporate funding and no ads, and we do not collect and sell your personal information.') . EOL;
 $text .= t('Help support our work. Your donations keep servers and services running and also helps us provide feature development and bugfixes.');
 

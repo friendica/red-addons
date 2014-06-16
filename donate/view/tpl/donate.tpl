@@ -28,20 +28,37 @@
 <input type="submit" name="submit" value="{{$onetime}}" class="btn btn-default" />
 </form>
 
-{{if 0}}
+<br /><br /><br />
+
+<p>
 {{$repeat}}
+</p>
+<p>
+{{$note}}
+</p>
+
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_s-xclick" />
 <input type="hidden" name="hosted_button_id" value="FHV36KE28CYM8" />
 <br />
-<input type="hidden" name="on0" value="Recurring Donation Options" />Recurring Donation Options<br />
+<input type="hidden" name="on0" value="Recurring Donation Options" />
 <select name="os0">
-	<option value="Option 1">Option 1 : $3.00USD - monthly</option>
-	<option value="Option 2">Option 2 : $5.00USD - monthly</option>
+	<option value="Option 1">Option 1 : $ 3.00USD - monthly</option>
+	<option value="Option 2">Option 2 : $ 5.00USD - monthly</option>
 	<option value="Option 3">Option 3 : $10.00USD - monthly</option>
 	<option value="Option 4">Option 4 : $20.00USD - monthly</option>
 </select>
-<p>
+<br />
+<br />
+<br />
 <input type="hidden" name="currency_code" value="USD" />
-<input type="image" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" alt="PayPal - The safer, easier way to pay online!" /><img src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" alt="" width="1" height="1" border="0" /></p></form>
-{{/if}}
+<input type="submit" name="submit" value="{{$subscribe}}" class="btn btn-default" />
+</form>
+
+<br /><br />
+{{$thanks}}
+<ul>
+{{foreach $sponsors as $s}}
+<li>{{$s}}</li>
+{{/foreach}}
+</ul>

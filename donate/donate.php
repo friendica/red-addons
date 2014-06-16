@@ -12,13 +12,9 @@ function load(){}
 function unload(){}
 function donate_module(){}
 
-
-
-
-
-
-
 function donate_content(&$a) {
+
+/* Format - array( display name, paypal id, description of services or skills you provide to the matrix) */
 
 $contributors = array(
 array('The RedMatrix Project', 'max@macgirvin.com', t('Project Servers and Resources')),

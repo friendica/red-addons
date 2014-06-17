@@ -324,7 +324,7 @@ function jappixmini_settings(&$a, &$s) {
     $s .= '<label for="jappixmini-autoapprove">'.t('Approve subscription requests from RedMatrix contacts automatically').'</label>';
     $s .= ' <input id="jappixmini-autoapprove" type="checkbox" name="jappixmini-autoapprove" value="1"'.$autoapprove.' />';
     $s .= '<br />';
-    $s .= '<label for="jappixmini-autosubscribe">'.t('Subscribe to Friendica contacts automatically').'</label>';
+    $s .= '<label for="jappixmini-autosubscribe">'.t('Subscribe to RedMatrix connections automatically').'</label>';
     $s .= ' <input id="jappixmini-autosubscribe" type="checkbox" name="jappixmini-autosubscribe" value="1"'.$autosubscribe.' />';
     $s .= '<br />';
     $s .= '<label for="jappixmini-purge">'.t('Purge internal list of jabber addresses of contacts').'</label>';

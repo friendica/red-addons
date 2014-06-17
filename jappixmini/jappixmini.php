@@ -379,7 +379,7 @@ function jappixmini_settings_post(&$a,&$b) {
 	if(! local_user()) return;
 	$uid = local_user();
 
-	$account_id = get_app()->get_account_id();
+	$account_id = get_account_id();
 	if(! $account_id)
 		return;
 

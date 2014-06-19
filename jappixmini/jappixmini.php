@@ -548,7 +548,7 @@ function jappixmini_cron(&$a, $d) {
 		$uid = $row["uid"];
 
 		// for each user, go through list of contacts
-		$contacts = q("SELECT * FROM `abook` left join xchan on abook+xchan = xchan_hash WHERE `abook_channel`=%d AND not (abook_flags & %d)",
+		$contacts = q("SELECT * FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel`=%d AND not (abook_flags & %d)",
 			intval($uid),
 			intval(ABOOK_FLAG_SELF)
 		);

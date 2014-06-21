@@ -469,8 +469,8 @@ function smiley_pack_smilies(&$a,&$b) {
 	$b['texts'][] = ':marine';
 	$b['icons'][] = '<img class="smiley" src="' . $a->get_baseurl() . '/addon/smiley_pack/icons/fight/marine.gif' . '" alt="' . ':marine' . '" />';
 
-	$b['texts'][] = ':sabre';
-	$b['icons'][] = '<img class="smiley" src="' . $a->get_baseurl() . '/addon/smiley_pack/icons/fight/sabre.gif' . '" alt="' . ':sabre' . '" />';
+	$b['texts'][] = ':sword';
+	$b['icons'][] = '<img class="smiley" src="' . $a->get_baseurl() . '/addon/smiley_pack/icons/fight/sabre.gif' . '" alt="' . ':sword' . '" />';
 
 	$b['texts'][] = ':tank';
 	$b['icons'][] = '<img class="smiley" src="' . $a->get_baseurl() . '/addon/smiley_pack/icons/fight/tank.gif' . '" alt="' . ':tank' . '" />';

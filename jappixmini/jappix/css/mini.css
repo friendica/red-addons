@@ -80,7 +80,7 @@ Last revision: 16/01/12
 	outline-style: none;
 	display: block;
 	padding: 6px;
-	height: 13px;
+	height: 24px;
 }
 
 #jappix_mini a.jm_pane:hover {
@@ -168,7 +168,7 @@ Last revision: 16/01/12
 #jappix_mini div.jm_actions {
 	background-color: #565d5e;
 	border-bottom: 1px solid #3a3a3a;
-	height: 14px;
+	height: 24px;
 	padding: 4px 6px;
 	font-weight: bold;
 	overflow: hidden;

@@ -336,5 +336,3 @@ if($file && $type) {
 // The request is not correct
 header('Status: 400 Bad Request', true, 400);
 exit('HTTP/1.1 400 Bad Request');
-
-?>

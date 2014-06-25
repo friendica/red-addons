@@ -557,8 +557,6 @@ function jappixmini_cron(&$a, $d) {
 			$dfrn_id = $contact_row["abook_hash"];
 			if ($dfrn_id) {
 				$key = $contact_row["abook_pubkey"];
-				$encrypt_func = openssl_public_encrypt;
-				$decrypt_func = openssl_public_decrypt;
 			} 
 
 			// check if jabber address already present
@@ -590,7 +588,7 @@ function jappixmini_cron(&$a, $d) {
 
 			// sign address
 			$signed_address = "";
-			$encrypt_func($address, $signed_address, $key);
+			openssl_public_encrypt($address, $signed_address, $key);
 
 			// construct request url
 			$signed_address_hex = bin2hex($signed_address);
@@ -612,7 +610,7 @@ function jappixmini_cron(&$a, $d) {
 
 				// decrypt address
 				$decrypted_address = "";
-				$decrypt_func($encrypted_address, $decrypted_address, $key);
+				openssl_public_decrypt($encrypted_address, $decrypted_address, $key);
 				if (!$decrypted_address) throw new Exception();
 			} catch (Exception $e) {
 				$decrypted_address = "";

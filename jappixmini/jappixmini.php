@@ -556,7 +556,7 @@ function jappixmini_cron(&$a, $d) {
 		foreach ($contacts as $contact_row) {
 			$dfrn_id = $contact_row["abook_hash"];
 			if ($dfrn_id) {
-				$key = $contact_row["abook_pubkey"];
+				$key = $contact_row["xchan_pubkey"];
 			} 
 
 			// check if jabber address already present
@@ -596,10 +596,10 @@ function jappixmini_cron(&$a, $d) {
 
 			try {
 				// send request
-				$answer_json = fetch_url($url);
+				$answer_json = z_fetch_url($url);
 
 				// parse answer
-				$answer = json_decode($answer_json);
+				$answer = json_decode($answer_json['body']);
 				if ($answer->status != "ok") throw new Exception();
 
 				$encrypted_address_hex = $answer->encrypted_address;

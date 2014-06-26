@@ -484,7 +484,7 @@ function jappixmini_script(&$a,&$s) {
         $key = $row['k'];
 	$pos = strpos($key, ":");
 	$dfrn_id = substr($key, $pos+1);
-        $r = q("SELECT `abook_name` FROM `abook` WHERE `abook_channel`=$uid AND `abook_hash`='%s')",
+        $r = q("SELECT `abook_name` FROM `abook` WHERE `abook_channel`=$uid AND `abook_hash`='%s'",
 		dbesc($dfrn_id)
 	);
 	$name = $r[0]["abook_name"];

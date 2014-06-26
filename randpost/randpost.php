@@ -51,7 +51,6 @@ function randpost_enotify_store(&$a,&$b) {
 	if($p[0]['item_flags'] & ITEM_OBSCURED)
 		return;
 
-
 	// This conversation is boring me.
 
 	$limit = mt_rand(5,20);
@@ -82,6 +81,8 @@ function randpost_enotify_store(&$a,&$b) {
 	require_once('include/html2plain.php');
 
 	if($b['item'] && $b['item']['body']) {
+		if(stristr($b['item']['body'],'nocomment'))
+			return;
 		$txt = preg_replace('/\@\[z(.*?)\[\/zrl\]/','',$b['item']['body']);
 		$txt = html2plain(bbcode($txt));
 		$pattern = substr($txt,0,255);

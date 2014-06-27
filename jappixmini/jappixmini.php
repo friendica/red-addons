@@ -227,6 +227,9 @@ function jappixmini_init(&$a) {
 }
 
 function jappixmini_settings(&$a, &$s) {
+
+	head_add_css('addon/jappixmini/jappixmini.css');
+
     // addon settings for a user
 
     $activate = get_pconfig(local_user(),'jappixmini','activate');
@@ -303,7 +306,7 @@ function jappixmini_settings(&$a, &$s) {
     $s .= ' <input id="jappixmini-server" type="text" name="jappixmini-server" value="'.$server.'" />';
     $s .= '<br />';
 
-    if (defaultbosh == "") {
+    if ($defaultbosh == "") {
 	$s .= '<label for="jappixmini-bosh">'.t('Jabber BOSH host').'</label>';
 	$s .= ' <input id="jappixmini-bosh" type="text" name="jappixmini-bosh" value="'.$bosh.'" />';
 	$s .= '<br />';
@@ -329,7 +332,7 @@ function jappixmini_settings(&$a, &$s) {
     $s .= '<br />';
     $s .= '<label for="jappixmini-purge">'.t('Purge internal list of jabber addresses of contacts').'</label>';
     $s .= ' <input id="jappixmini-purge" type="checkbox" name="jappixmini-purge" value="1" />';
-    $s .= '<br />';
+    $s .= '<br /><div class="clear"></div>';
     if ($info_text) $s .= '<br />Configuration help:<p style="margin-left:2em;">'.$info_text.'</p>';
     $s .= '<br />Status:<p style="margin-left:2em;">Addon knows '.$address_cnt.' Jabber addresses of '.$contact_cnt.' Friendica contacts (takes some time, usually 10 minutes, to update).</p>';
     $s .= '<input type="submit" name="jappixmini-submit" value="' . t('Save Settings') . '" />';

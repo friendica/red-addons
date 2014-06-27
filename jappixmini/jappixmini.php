@@ -542,7 +542,7 @@ function jappixmini_cron(&$a, $d) {
 	set_config("jappixmini", "last_cron_execution", $d);
 
 	// go through list of users with jabber enabled
-	$users = q("SELECT `uid` FROM `pconfig` WHERE `cat`='jappixmini' AND (`k`='autosubscribe' OR `k`='autoapprove') AND `v`='1'");
+	$users = q("SELECT uid FROM pconfig WHERE cat = 'jappixmini' AND ( k = 'autosubscribe' OR k = 'autoapprove') AND v = '1' group by uid ");
 	logger("jappixmini: Update list of contacts' jabber accounts for ".count($users)." users.");
 
 	if(! count($users))

@@ -558,9 +558,8 @@ function jappixmini_cron(&$a, $d) {
 		);
 
 		foreach ($contacts as $contact_row) {
-			logger('jappixmini: checking ' . $contact_row['xchan_name'] . ' for uid ' . $uid);
 
-			$dfrn_id = $contact_row["abook_hash"];
+			$dfrn_id = $contact_row["abook_xchan"];
 			if ($dfrn_id) {
 				$key = $contact_row["xchan_pubkey"];
 			} 
@@ -577,6 +576,9 @@ function jappixmini_cron(&$a, $d) {
 				// is not older than a week
 				if ($now-$timestamp<3600*24*7) continue;
 			}
+
+			logger('jappixmini: checking ' . $contact_row['xchan_name'] . ' for uid ' . $uid);
+
 
 			// construct base retrieval address
 			$pos = strpos($contact_row['xchan_connurl'], "/poco/");
@@ -626,9 +628,9 @@ function jappixmini_cron(&$a, $d) {
 				$decrypted_address = "";
 			}
 
+			
 			// save address
 			set_pconfig($uid, "jappixmini", "id:$dfrn_id", "$now:$decrypted_address");
-
 
 		}
 	}

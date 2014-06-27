@@ -558,6 +558,8 @@ function jappixmini_cron(&$a, $d) {
 		);
 
 		foreach ($contacts as $contact_row) {
+			logger('jappixmini: checking ' . $contact_row['xchan_name'] . ' for uid ' . $uid);
+
 			$dfrn_id = $contact_row["abook_hash"];
 			if ($dfrn_id) {
 				$key = $contact_row["xchan_pubkey"];
@@ -622,6 +624,8 @@ function jappixmini_cron(&$a, $d) {
 
 			// save address
 			set_pconfig($uid, "jappixmini", "id:$dfrn_id", "$now:$decrypted_address");
+
+
 		}
 	}
 }

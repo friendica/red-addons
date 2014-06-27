@@ -302,12 +302,12 @@ function jappixmini_settings(&$a, &$s) {
     $s .= '<label for="jappixmini-username">'.t('Jabber username').'</label>';
     $s .= ' <input id="jappixmini-username" type="text" name="jappixmini-username" value="'.$username.'" />';
     $s .= '<br />';
-    $s .= '<label for="jappixmini-server">'.t('Jabber server').'</label>';
+    $s .= '<label for="jappixmini-server">'.t('Jabber server name').'</label>';
     $s .= ' <input id="jappixmini-server" type="text" name="jappixmini-server" value="'.$server.'" />';
     $s .= '<br />';
 
     if ($defaultbosh == "") {
-	$s .= '<label for="jappixmini-bosh">'.t('Jabber BOSH host').'</label>';
+	$s .= '<label for="jappixmini-bosh">'.t('Jabber BOSH host URL').'</label>';
 	$s .= ' <input id="jappixmini-bosh" type="text" name="jappixmini-bosh" value="'.$bosh.'" />';
 	$s .= '<br />';
     }

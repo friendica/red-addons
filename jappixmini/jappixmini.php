@@ -552,7 +552,7 @@ function jappixmini_cron(&$a, $d) {
 		$uid = $row["uid"];
 
 		// for each user, go through list of contacts
-		$contacts = q("SELECT * FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel`=%d AND not (abook_flags & %d)",
+		$contacts = q("SELECT * FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel`=%d AND not (abook_flags & %d) order by rand()",
 			intval($uid),
 			intval(ABOOK_FLAG_SELF)
 		);
@@ -603,6 +603,10 @@ function jappixmini_cron(&$a, $d) {
 			try {
 				// send request
 				$answer_json = z_fetch_url($url);
+
+				if(! $answer_json['success']) {
+					logger('jappixmini: failed fetch ' . $url);
+				}
 
 				// parse answer
 				$answer = json_decode($answer_json['body']);

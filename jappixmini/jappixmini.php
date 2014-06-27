@@ -173,7 +173,7 @@ function jappixmini_init(&$a) {
 	if (!$dfrn_id) killme();
 
 
-	$r = q("SELECT * FROM abook WHERE LENGTH(`abook_pubkey`) AND `abook_xchan`='%s' LIMIT 1",
+	$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE LENGTH(`xchan_pubkey`) AND `abook_xchan`='%s' LIMIT 1",
 		dbesc($dfrn_id)
 	);
 	if (! $r) killme();
@@ -482,21 +482,22 @@ function jappixmini_script(&$a,&$s) {
     $rows = q("SELECT * FROM `pconfig` WHERE `uid`=$uid AND `cat`='jappixmini' AND `k` LIKE 'id:%%'");
     foreach ($rows as $row) {
         $key = $row['k'];
-	$pos = strpos($key, ":");
-	$dfrn_id = substr($key, $pos+1);
-        $r = q("SELECT `abook_name` FROM `abook` WHERE `abook_channel`=$uid AND `abook_hash`='%s'",
-		dbesc($dfrn_id)
-	);
-	$name = $r[0]["abook_name"];
+		$pos = strpos($key, ":");
+		$dfrn_id = substr($key, $pos+1);
+        $r = q("SELECT xchan_name FROM xchan WHERE xchan_hash = '%s' limit 1",
+			dbesc($dfrn_id)
+		);
+		$name = $r[0]["xchan_name"];
 
         $value = $row['v'];
         $pos = strpos($value, ":");
         $address = substr($value, $pos+1);
-	if (!$address) continue;
-	if (!$name) $name = $address;
+		if (!$address) continue;
+		if (!$name) $name = $address;
 
-	$contacts[$address] = $name;
+		$contacts[$address] = $name;
     }
+
     $contacts_json = json_encode($contacts);
     $contacts_hash = sha1($contacts_json);
 

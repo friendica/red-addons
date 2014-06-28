@@ -40,7 +40,7 @@ function jappixmini_addon_get_client_secret(callback) {
 		var div = document.getElementById("#jappixmini-password-query-div");
 
 		if (!div) {
-			div = $('<div id="jappixmini-password-query-div" style="position:fixed;padding:1em;background-color:#F00;color:#fff;top:50px;left:650px;">Retype your Friendica password for chatting:<br></div>');
+			div = $('<div id="jappixmini-password-query-div" style="position:fixed;padding:1em;background-color:#F00;color:#fff;top:50px;left:650px;">Retype your RedMatrix password for chatting:<br></div>');
 
 			var input = $('<input type="password" id="jappixmini-password-query-input">')
 			div.append(input);
@@ -112,16 +112,16 @@ function jappixmini_manage_roster(contacts, contacts_hash, autoapprove, autosubs
 		if (autoapprove && contacts[xid]!==undefined) {
 			// approve known address
 			approve = true;
-			console.log("Approve known Friendica contact "+xid+".");
+			console.log("Approve known RedMatrix contact "+xid+".");
 		}
-		else if (autoapprove && pstatus && pstatus.indexOf("Friendica")!=-1) {
+		else if (autoapprove && pstatus && pstatus.indexOf("RedMatrix")!=-1) {
 			// Unknown address claims to be a Friendica contact.
 			// This is probably because the other side knows our
 			// address, but we do not know the other side yet.
 			// But it's only a matter of time, so wait - do not
 			// approve yet and do not annoy the user by asking.
 			approve = false;
-			console.log("Do not approve unknown Friendica contact "+xid+" - wait instead.");
+			console.log("Do not approve unknown RedMatrix contact "+xid+" - wait instead.");
 		}
 		else {
 			// In all other cases, ask the user.
@@ -175,14 +175,14 @@ function jappixmini_manage_roster(contacts, contacts_hash, autoapprove, autosubs
 				var group_text = $(this).text();
 				if (group_text) groups.push(group_text);
 			});
-			if ($.inArray("Friendica", groups)==-1) {
+			if ($.inArray("RedMatrix", groups)==-1) {
 				group_missing = true;
-				groups.push("Friendica");
+				groups.push("RedMatrix");
 			}
 
 			if (group_missing || name!=contacts[xid]) {
 				sendRoster(xid, null, contacts[xid], groups);
-				console.log("Added "+xid+" to Friendica group and set name to "+contacts[xid]+".");
+				console.log("Added "+xid+" to RedMatrix group and set name to "+contacts[xid]+".");
 			}
 
 			// authorize if necessary
@@ -202,9 +202,9 @@ function jappixmini_manage_roster(contacts, contacts_hash, autoapprove, autosubs
 			presence.setTo(xid);
 			presence.setType("subscribe");
 
-			// must contain the word "~Friendica" so the other side knows
+			// must contain the word "~RedMatrix" so the other side knows
 			// how to handle this
-			presence.setStatus("I'm "+MINI_NICKNAME+" from ~Friendica.\n[machine-generated message]");
+			presence.setStatus("I'm "+MINI_NICKNAME+" from ~RedMatrix.\n[machine-generated message]");
 
 			con.send(presence);
 			console.log("Subscribed to "+xid+" automatically.");
@@ -215,7 +215,7 @@ function jappixmini_manage_roster(contacts, contacts_hash, autoapprove, autosubs
 			var iqQuery = iq.setQuery(NS_ROSTER);
 			var item = iqQuery.appendChild(iq.buildNode('item', {'xmlns': NS_ROSTER, 'jid': xid}));
 			item.setAttribute('name', contacts[xid]);
-			item.appendChild(iq.buildNode('group', {'xmlns': NS_ROSTER}, "Friendica"));
+			item.appendChild(iq.buildNode('group', {'xmlns': NS_ROSTER}, "RedMatrix"));
 			con.send(iq);
 			console.log("Added "+xid+" ("+contacts[xid]+") to roster.");
 		}

@@ -343,7 +343,7 @@ function jappixmini_settings(&$a, &$s) {
     $s .= ' <input id="jappixmini-purge" type="checkbox" name="jappixmini-purge" value="1" />';
     $s .= '<br /><div class="clear"></div>';
     if ($info_text) $s .= '<br />Configuration help:<p style="margin-left:2em;">'.$info_text.'</p>';
-    $s .= '<br />Status:<p style="margin-left:2em;">Addon knows '.$address_cnt.' Jabber addresses of '.$contact_cnt.' Friendica contacts (takes some time, usually 10 minutes, to update).</p>';
+    $s .= '<br />Status:<p style="margin-left:2em;">Addon knows '.$address_cnt.' Jabber addresses of '.$contact_cnt.' RedMatrix contacts (takes some time, usually 10 minutes, to update).</p>';
     $s .= '<input type="submit" name="jappixmini-submit" value="' . t('Save Settings') . '" />';
     $s .= ' <input type="button" value="'.t('Add contact').'" onclick="jappixmini_addon_subscribe();" />';
 
@@ -416,7 +416,7 @@ function jappixmini_settings_post(&$a,&$b) {
         	}
 
 			if (! $valid) {
-				info("Wrong friendica password!");
+				info("RedMatrix password not valid.");
 				return;
 			}
 		}

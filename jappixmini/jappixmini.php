@@ -166,56 +166,64 @@ function jappixmini_plugin_admin_post(&$a) {
 
 function jappixmini_module() {}
 function jappixmini_init(&$a) {
-	// module page where other Friendica sites can submit Jabber addresses to and also can query Jabber addresses
-        // of local users
 
-	$dfrn_id = $_REQUEST["dfrn_id"];
-	if (!$dfrn_id) killme();
+	require_once('include/Contact.php');
 
+	// module page where other Friendica sites can submit Jabber addresses to and also 
+	// can query Jabber addresses of local users
 
-	$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE LENGTH(`xchan_pubkey`) AND `abook_xchan`='%s' LIMIT 1",
-		dbesc($dfrn_id)
+	$address = base64url_decode($_REQUEST['address']);
+	$requestor = $_REQUEST['requestor'];
+	$requestee = $_REQUEST['requestee'];
+
+	if(! $address || ! $requestor || ! $requestee)
+		killme();
+
+	$channel = channelx_by_hash($requestee);
+	if (! $channel) 
+		killme();
+
+	$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d
+		and not ( abook_flags & %d ) and xchan_hash = '%s' limit 1",
+		intval($channel['channel_id']),
+		intval(ABOOK_FLAG_SELF),
+		dbesc($requestor)
 	);
-	if (! $r) killme();
+	if(! $r)
+		killme();
 
-	$encrypt_func = openssl_public_encrypt;
-	$decrypt_func = openssl_public_decrypt;
-	$key = $r[0]["abook_pubkey"];
-
-	$uid = $r[0]["abook_channel"];
+	$req = $r[0];
 
 	// save the Jabber address we received
 	try {
-		$signed_address_hex = $_REQUEST["signed_address"];
-		$signed_address = hex2bin($signed_address_hex);
 
 		$trusted_address = "";
-		$decrypt_func($signed_address, $trusted_address, $key);
+		openssl_public_decrypt($address, $trusted_address, $req['xchan_pubkey']);
 
 		$now = intval(time());
-		set_pconfig($uid, "jappixmini", "id:$dfrn_id", "$now:$trusted_address");
+		set_pconfig($channel['channel_id'], "jappixmini", "id:$requestor", "$now:$trusted_address");
 	} catch (Exception $e) {
 
 	}
 
 	// do not return an address if user deactivated plugin
-	$activated = get_pconfig($uid, 'jappixmini', 'activate');
+	$activated = get_pconfig($channel['channel_id'], 'jappixmini', 'activate');
 	if (!$activated) killme();
 
 	// return the requested Jabber address
 	try {
-		$username = get_pconfig($uid, 'jappixmini', 'username');
-		$server = get_pconfig($uid, 'jappixmini', 'server');
+		$username = get_pconfig($channel['channel_id'], 'jappixmini', 'username');
+		$server = get_pconfig($channel['channel_id'], 'jappixmini', 'server');
 		$address = "$username@$server";
 
 		$encrypted_address = "";
-		$encrypt_func($address, $encrypted_address, $key);
+		openssl_private_encrypt($address, $encrypted_address, $channel['channel_prvkey']);
 
-		$encrypted_address_hex = bin2hex($encrypted_address);
+		$encoded = base64url_encode($encrypted_address);
 
 		$answer = Array(
 			"status"=>"ok",
-			"encrypted_address"=>$encrypted_address_hex
+			"address"=>$encoded
 		);
 
 		$answer_json = json_encode($answer);
@@ -224,6 +232,7 @@ function jappixmini_init(&$a) {
 	} catch (Exception $e) {
 		killme();
 	}
+
 }
 
 function jappixmini_settings(&$a, &$s) {
@@ -537,12 +546,17 @@ function jappixmini_login(&$a, &$o) {
 }
 
 function jappixmini_cron(&$a, $d) {
+
+	require_once('include/Contact.php');
+
 	// For autosubscribe/autoapprove, we need to maintain a list of jabber addresses of our contacts.
 
 	set_config("jappixmini", "last_cron_execution", $d);
 
 	// go through list of users with jabber enabled
+
 	$users = q("SELECT uid FROM pconfig WHERE cat = 'jappixmini' AND ( k = 'autosubscribe' OR k = 'autoapprove') AND v = '1' group by uid ");
+
 	logger("jappixmini: Update list of contacts' jabber accounts for ".count($users)." users.");
 
 	if(! count($users))
@@ -557,15 +571,18 @@ function jappixmini_cron(&$a, $d) {
 			intval(ABOOK_FLAG_SELF)
 		);
 
+		$channel = channelx_by_n($uid);
+		if(! $channel)
+			continue;
+
 		foreach ($contacts as $contact_row) {
 
-			$dfrn_id = $contact_row["abook_xchan"];
-			if ($dfrn_id) {
-				$key = $contact_row["xchan_pubkey"];
-			} 
+			$xchan_hash = $contact_row["abook_xchan"];
+			$pubkey = $contact_row["xchan_pubkey"];
+	
 
 			// check if jabber address already present
-			$present = get_pconfig($uid, "jappixmini", "id:".$dfrn_id);
+			$present = get_pconfig($uid, "jappixmini", "id:" . $xchan_hash);
 			$now = intval(time());
 			if ($present) {
 				// $present has format "timestamp:jabber_address"
@@ -574,17 +591,18 @@ function jappixmini_cron(&$a, $d) {
 
 				// do not re-retrieve jabber address if last retrieval
 				// is not older than a week
-				if ($now-$timestamp<3600*24*7) continue;
+				if ($now-$timestamp<3600*24*7)
+					continue;
 			}
 
-			logger('jappixmini: checking ' . $contact_row['xchan_name'] . ' for uid ' . $uid);
-
+			logger('jappixmini: checking ' . $contact_row['xchan_name'] . ' for channel ' . $channel['channel_name']);
 
 			// construct base retrieval address
 			$pos = strpos($contact_row['xchan_connurl'], "/poco/");
-			if ($pos===false) continue;
+			if($pos===false) 
+				continue;
 
-			$base = substr($request, 0, $pos)."/jappixmini?role=$role";
+			$url = substr($contact_row['xchan_connurl'], 0, $pos)."/jappixmini?f=";
 
 			// construct own address
 			$username = get_pconfig($uid, 'jappixmini', 'username');
@@ -596,41 +614,46 @@ function jappixmini_cron(&$a, $d) {
 
 			// sign address
 			$signed_address = "";
-			openssl_public_encrypt($address, $signed_address, $key);
+			openssl_private_encrypt($address, $signed_address, $channel['channel_prvkey']);
 
 			// construct request url
-			$signed_address_hex = bin2hex($signed_address);
-			$url = $base."&signed_address=$signed_address_hex&dfrn_id=".urlencode($dfrn_id);
+			$signed_address_hex = base64url_encode($signed_address);
+			
+			$postvars = array(
+				'address' => $signed_address,
+				'requestor' => $channel['xchan_hash'],
+				'requestee' => $contact_row['xchan_hash']
+			);
+
 
 			try {
 				// send request
-				$answer_json = z_fetch_url($url);
-
+				$answer_json = z_post_url($url,$postvars);
+logger('jappixmini: url response: ' . print_r($answer_json,true));
 				if(! $answer_json['success']) {
-					logger('jappixmini: failed fetch ' . $url);
+					logger('jappixmini: failed z_post_url ' . $url);
 				}
 
 				// parse answer
-				$answer = json_decode($answer_json['body']);
-				if ($answer->status != "ok") throw new Exception();
+				$answer = json_decode($answer_json['body'],true);
+				if ($answer['status'] != "ok") 
+					throw new Exception();
 
-				$encrypted_address_hex = $answer->encrypted_address;
-				if (!$encrypted_address_hex) throw new Exception();
-
-				$encrypted_address = hex2bin($encrypted_address_hex);
-				if (!$encrypted_address) throw new Exception();
+				$address = base64url_decode($answer['address']);
+				if (! $address)
+					throw new Exception();
 
 				// decrypt address
 				$decrypted_address = "";
-				openssl_public_decrypt($encrypted_address, $decrypted_address, $key);
-				if (!$decrypted_address) throw new Exception();
+				openssl_public_decrypt($address, $decrypted_address, $pubkey);
+				if (!$decrypted_address) 
+					throw new Exception();
 			} catch (Exception $e) {
 				$decrypted_address = "";
 			}
-
 			
 			// save address
-			set_pconfig($uid, "jappixmini", "id:$dfrn_id", "$now:$decrypted_address");
+			set_pconfig($uid, "jappixmini", "id:" . $xchan_hash, "$now:$decrypted_address");
 
 		}
 	}

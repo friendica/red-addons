@@ -31,7 +31,7 @@ function likebanner_content(&$a) {
 	$o .= '<input type="text" name="addr" size="32" value="' . $_REQUEST['addr'] . '" />';
 	$o .= '<br /><br />' . t('Fontsize (px):');
 	$o .= '<br /><br />';
-	$o .= '<input type="text" name="size" size="32" value="' . $_REQUEST['size'] . '" /><br /><br />';
+	$o .= '<input type="text" name="size" size="32" value="' . (($_REQUEST['size']) ? $_REQUEST['size'] : 28) . '" /><br /><br />';
 	$o .= '<input type="submit" name="submit" value="' . t('Submit'). '" /></form><br /><br/>';
 
 	if($_REQUEST['addr']) {

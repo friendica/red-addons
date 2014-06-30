@@ -788,7 +788,7 @@ function createMini(domain, user, password) {
 				'<div class="jm_starter">' + 
 					'<div class="jm_roster">' + 
 						'<div class="jm_actions">' + 
-							'<a class="jm_logo jm_images" href="https://mini.jappix.com/" target="_blank"></a>' + 
+							'<a class="jm_logo jm_images"></a>' + 
 							'<a class="jm_one-action jm_join jm_images" title="' + _e("Join a chat") + '" href="#"></a>' + 
 						'</div>' + 
 						

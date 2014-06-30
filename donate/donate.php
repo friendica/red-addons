@@ -37,6 +37,7 @@ $sponsors = array(
 'Michael',
 'Troilus',
 'Steve',
+'Jakob Jensen'
 );
 
 

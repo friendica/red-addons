@@ -572,7 +572,7 @@ function jappixmini_cron(&$a, $d) {
 		);
 
 		$channel = channelx_by_n($uid);
-		if(! $channel)
+		if((! $channel) || (! $contacts))
 			continue;
 
 		foreach ($contacts as $contact_row) {
@@ -632,6 +632,11 @@ function jappixmini_cron(&$a, $d) {
 logger('jappixmini: url response: ' . print_r($answer_json,true));
 				if(! $answer_json['success']) {
 					logger('jappixmini: failed z_post_url ' . $url);
+					throw new Exception();
+				}
+				if($answer_json['return_code'] == 404) {
+					logger('jappixmini: failed z_post_url (404)' . $url);
+					throw new Exception();
 				}
 
 				// parse answer
@@ -654,7 +659,6 @@ logger('jappixmini: url response: ' . print_r($answer_json,true));
 			
 			// save address
 			set_pconfig($uid, "jappixmini", "id:" . $xchan_hash, "$now:$decrypted_address");
-
 		}
 	}
 }

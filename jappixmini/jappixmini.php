@@ -210,6 +210,10 @@ function jappixmini_init(&$a) {
 	$activated = get_pconfig($channel['channel_id'], 'jappixmini', 'activate');
 	if (!$activated) killme();
 
+	if(! perm_is_allowed($channel['channel_id'],$req['xchan_hash'],'chat'))
+		killme();
+
+
 	// return the requested Jabber address
 	try {
 		$username = get_pconfig($channel['channel_id'], 'jappixmini', 'username');

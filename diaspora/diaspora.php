@@ -287,23 +287,23 @@ function diaspora_send(&$a,&$b) {
 		$body = str_ireplace("[quote", "\n\n[quote", $body);
 		$body = str_ireplace("[/quote]", "[/quote]\n\n", $body);
 
-		// Removal of tags and mentions
+		// protect tags and mentions from hijacking
+
+		$new_tag     = html_entity_decode('&#x22d5;',ENT_COMPAT,'UTF-8');
+		$new_mention = html_entity_decode('&#xff20;',ENT_COMPAT,'UTF-8');
+
 		// #-tags
-		$body = preg_replace('/#\[url\=(\w+.*?)\](\w+.*?)\[\/url\]/i', '#$2', $body);
- 		// @-mentions
-		$body = preg_replace('/@\[url\=(\w+.*?)\](\w+.*?)\[\/url\]/i', '@$2', $body);
-
-		$body = preg_replace('/#\[zrl\=(\w+.*?)\](\w+.*?)\[\/zrl\]/i', '#$2', $body);
- 		// @-mentions
-		$body = preg_replace('/@\[zrl\=(\w+.*?)\](\w+.*?)\[\/zrl\]/i', '@$2', $body);
-
-
+		$body = preg_replace('/#\[url/i', $new_tag . '[url', $body);
+		$body = preg_replace('/#\[zrl/i', $new_tag . '[zrl', $body);
+		// @-mentions
+		$body = preg_replace('/@\[url/i', $new_mention . '[url', $body);
+		$body = preg_replace('/@\[zrl/i', $new_mention . '[zrl', $body);
 
 		// remove multiple newlines
 		do {
 			$oldbody = $body;
-                        $body = str_replace("\n\n\n", "\n\n", $body);
-                } while ($oldbody != $body);
+			$body = str_replace("\n\n\n", "\n\n", $body);
+		} while ($oldbody != $body);
 
 		// convert to markdown
 		$body = bb2diaspora($body, false, true);

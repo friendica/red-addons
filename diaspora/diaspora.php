@@ -239,7 +239,7 @@ function diaspora_post_local(&$a,&$b) {
 
 
 function diaspora_send(&$a,&$b) {
-	$hostname = $a->get_hostname();
+	$hostname = 'redmatrix ' . '(' . $a->get_hostname() . ')';
 
 	logger('diaspora_send: invoked');
 

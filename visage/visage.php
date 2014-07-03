@@ -49,7 +49,7 @@ function visage_magic_auth($a, &$b) {
 	
 	$nick = $matches[3];
 
-	if($_SERVER['HTTP_DNT'] == '1')
+	if($_SERVER['HTTP_DNT'] == '1' || intval($_SESSION['DNT']))
 		return;
 
 	$c = q("select channel_id, channel_hash from channel where channel_address = '%s' limit 1",

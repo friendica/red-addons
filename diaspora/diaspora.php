@@ -287,6 +287,10 @@ function diaspora_send(&$a,&$b) {
 		$body = str_ireplace("[quote", "\n\n[quote", $body);
 		$body = str_ireplace("[/quote]", "[/quote]\n\n", $body);
 
+		// strip bookmark indicators
+
+		$body = preg_replace('/#\^\[(zu)rl/i', '[$1rl', $body);
+
 		// protect tags and mentions from hijacking
 
 		$new_tag     = html_entity_decode('&#x22d5;',ENT_COMPAT,'UTF-8');

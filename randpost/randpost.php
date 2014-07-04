@@ -54,7 +54,8 @@ function randpost_enotify_store(&$a,&$b) {
 	// This conversation is boring me.
 
 	$limit = mt_rand(5,20);
-	$h = q("select id from item where author_xchan = '%s' and parent_mid = '%s' and uid = %d",
+
+	$h = q("select id, body from item where author_xchan = '%s' and parent_mid = '%s' and uid = %d",
 		dbesc($c[0]['channel_hash']),
 		dbesc($b['item']['parent_mid']),
 		intval($b['uid'])
@@ -101,7 +102,6 @@ function randpost_enotify_store(&$a,&$b) {
 		$reply = $replies[mt_rand(0,count($replies)-1)];
 	}
 
- 
 	$x = array();
 
 	if($reply) {
@@ -109,21 +109,42 @@ function randpost_enotify_store(&$a,&$b) {
 	}
 	else {
 		require_once('include/html2bbcode.php');
-		$url = 'http://' . $fort_server . '/cookie.php?f=&lang=any&off=a&pattern=' . urlencode($pattern);
 
-		$s = z_fetch_url($url);
+		$valid = false;
 
-		if($s['success'] && (! $s['body']))
-			$s = z_fetch_url('http://' . $fort_server . '/cookie.php');
+		do {
+			$url = 'http://' . $fort_server . '/cookie.php?f=&lang=any&off=a&pattern=' . urlencode($pattern);
 
-		if((! $s['success']) || (! $s['body']))
-			return;
+			$s = z_fetch_url($url);
 
-		// if it might be a quote make it a quote
-		if(strpos($s['body'],'--'))
-			$x['body'] = $mention . '[quote]' . html2bbcode($s['body']) . '[/quote]';
-		else
-			$x['body'] = $mention . html2bbcode($s['body']);
+			if($s['success'] && (! $s['body']))
+				$s = z_fetch_url('http://' . $fort_server . '/cookie.php');
+
+			if((! $s['success']) || (! $s['body']))
+				return;
+
+			// if it might be a quote make it a quote
+			if(strpos($s['body'],'--'))
+				$x['body'] = $mention . '[quote]' . html2bbcode($s['body']) . '[/quote]';
+			else
+				$x['body'] = $mention . html2bbcode($s['body']);
+
+			$found_text = false;
+
+			if($h) {
+				foreach($h as $hh) {
+					if(stripos($hh['body'],$x['body']) !== false) {
+						$pattern = '';
+						$found_text = true;
+						break;
+					}
+				}
+			}
+			if(! $found_text)
+				$valid = true;
+
+		}
+		while(! $valid);
 	}
 
 	if($mention) {

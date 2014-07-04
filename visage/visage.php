@@ -49,7 +49,7 @@ function visage_magic_auth($a, &$b) {
 	
 	$nick = $matches[3];
 
-	if($_SERVER['HTTP_DNT'] == '1' || intval($_SESSION['DNT']))
+	if($_SERVER['HTTP_DNT'] === '1' || intval($_SESSION['DNT']))
 		return;
 
 	$c = q("select channel_id, channel_hash from channel where channel_address = '%s' limit 1",
@@ -86,10 +86,22 @@ function visage_content(&$a) {
 	if(! local_user())
 		return;
 
+
 	$o = '<h3>' . t('Recent Channel/Profile Viewers') . '</h3>';
+
+	// let's play fair.
+
+	require_once('include/identity.php');
+
+	if(! is_public_profile())
+		return $o;
+
 	$x = get_pconfig(local_user(),'visage','visitors');
-	if((! $x) || (! is_array($x)))
-		return;
+	if((! $x) || (! is_array($x))) {
+		$o .= t('No entries.');
+		return $o;
+	}
+
 	$chans = '';
 	for($n = 0; $n < count($x); $n ++) {
 		if($chans)

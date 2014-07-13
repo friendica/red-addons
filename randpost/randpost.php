@@ -125,9 +125,9 @@ function randpost_enotify_store(&$a,&$b) {
 
 			// if it might be a quote make it a quote
 			if(strpos($s['body'],'--'))
-				$x['body'] = $mention . '[quote]' . html2bbcode($s['body']) . '[/quote]';
+				$x['body'] = '[quote]' . html2bbcode($s['body']) . '[/quote]';
 			else
-				$x['body'] = $mention . html2bbcode($s['body']);
+				$x['body'] = html2bbcode($s['body']);
 
 			$found_text = false;
 
@@ -148,6 +148,8 @@ function randpost_enotify_store(&$a,&$b) {
 	}
 
 	if($mention) {
+		$x['body'] = $mention . $x['body'];
+
 		$x['term'] = array(array(
 			'uid' => $c[0]['channel_id'],
 			'type' => TERM_MENTION,

@@ -241,7 +241,7 @@ function diaspora_post_local(&$a,&$b) {
 function diaspora_send(&$a,&$b) {
 	$hostname = 'redmatrix ' . '(' . $a->get_hostname() . ')';
 
-	logger('diaspora_send: invoked');
+	logger('diaspora_send: invoked',LOGGER_DEBUG);
 
     if($b['mid'] != $b['parent_mid'])
         return;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Name: Randpost
- * Description: Make random posts/replies
+ * Description: Make random posts/replies (requires fortunate and/or a fortunate server)
  * Version: 1.0
  * Author: Mike Macgirvin
  */
@@ -39,6 +39,7 @@ function randpost_enotify_store(&$a,&$b) {
 	if(! $c)
 		return;
 
+	$my_conversation = false;
 
 	$p = q("select id, item_flags from item where parent_mid = mid and parent_mid = '%s' and uid = %d limit 1",
 		dbesc($b['item']['parent_mid']),
@@ -47,8 +48,32 @@ function randpost_enotify_store(&$a,&$b) {
 	if(! $p)
 		return;
 
+	$p = fetch_post_tags($p,true);
 
 	if($p[0]['item_flags'] & ITEM_OBSCURED)
+		return;
+
+
+	if($b['type'] == NOTIFY_TAGSELF)
+		$my_conversation = true;
+	elseif($p[0]['author_xchan'] === $c[0]['channel_hash'])
+		$my_conversation = true;
+	elseif($p[0]['term']) {
+		$v = get_terms_of_type($p[0]['term'],TERM_MENTION);
+		$link = normalise_link($a->get_baseurl() . '/channel/' . $c[0]['channel_address']);
+		if($v) {
+			foreach($v as $vv) {
+				if(link_compare($vv['url'],$link)) {			
+					$my_conversation = true;
+					break;
+				}
+			}
+		}				
+	}
+	
+	// don't hijack somebody else's conversation, but respond (once) if invited to. 
+
+	if(! $my_conversation)
 		return;
 
 	// This conversation is boring me.
@@ -62,6 +87,7 @@ function randpost_enotify_store(&$a,&$b) {
 	);
 	if($h && count($h) > $limit)
 		return;
+
  
 	
 	// Be gracious and not obnoxious if thanked

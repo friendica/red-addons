@@ -23,12 +23,23 @@ function likebanner_init(&$a) {
 
 function likebanner_content(&$a) {
 
+	if(local_user()) {
+		$channel = $a->get_channel();
+	}
+	else 
+		$channel = null;
+
 	$o = '<h1>Like Banner</h1>';
+
+	$def = $_REQUEST['addr'];
+	if($channel && (! $def)) {
+		$def = $channel['xchan_addr'];
+	}
 
 	$o .= '<form action="likebanner" method="get" >';
 	$o .= t('Your Webbie:');
 	$o .= '<br /><br />';
-	$o .= '<input type="text" name="addr" size="32" value="' . $_REQUEST['addr'] . '" />';
+	$o .= '<input type="text" name="addr" size="32" value="' . $def . '" />';
 	$o .= '<br /><br />' . t('Fontsize (px):');
 	$o .= '<br /><br />';
 	$o .= '<input type="text" name="size" size="32" value="' . (($_REQUEST['size']) ? $_REQUEST['size'] : 28) . '" /><br /><br />';
@@ -36,6 +47,22 @@ function likebanner_content(&$a) {
 
 	if($_REQUEST['addr']) {
 		$o .= '<img style="border: 1px solid #000;" src="likebanner/show/?f=&addr=' . urlencode($_REQUEST['addr']) . '&size=' . $_REQUEST['size'] . '" alt="banner" />';
+
+		if($channel) {
+			$p = q("select profile_guid from profile where uid = %d and is_default = 1 limit 1",
+				intval($channel['channel_id'])
+			);
+			if($p) {
+				$link = z_root() . '/like/profile/' . $channel['channel_address'] . '/' . $p[0]['profile_guid'] . '?f=&verb=like&interactive=1';
+				$o .= EOL . EOL . t('Link:') . EOL . '<input type="text" size="64" onclick="this.select();" value="' . $link . '" />';
+
+				$html = '<a href="' . $link . '" ><img src="' . z_root() . '/likebanner?f=&addr=' . $def . '&size=' . $_REQUEST['size'] . '" alt="' . t('Like us on RedMatrix') . '" /></a>';
+
+				$o .= EOL . EOL . t('Embed:') . EOL . '<input type="text" size="64" onclick="this.select();" value="' . htmlspecialchars($html,ENT_QUOTES,'UTF-8') . '" />'; 
+
+
+			}
+		}
 	}
 	
 	return $o;

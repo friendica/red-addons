@@ -41,7 +41,7 @@ function randpost_enotify_store(&$a,&$b) {
 
 	$my_conversation = false;
 
-	$p = q("select id, item_flags from item where parent_mid = mid and parent_mid = '%s' and uid = %d limit 1",
+	$p = q("select id, item_flags, author_xchan from item where parent_mid = mid and parent_mid = '%s' and uid = %d limit 1",
 		dbesc($b['item']['parent_mid']),
 		intval($b['uid'])
 	);

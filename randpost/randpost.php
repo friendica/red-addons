@@ -234,9 +234,9 @@ function randpost_fetch(&$a,&$b) {
 //			logger('randpost');
 
 			// cronhooks run every 10-15 minutes typically
-			// try to keep posting limited and infrequent.
+			// try to keep from posting frequently.
 
-			$test = mt_rand(0,50);
+			$test = mt_rand(0,100);
 			if($test == 25) {
 				$c = q("select * from channel where channel_id = %d limit 1",
 					intval($rr['uid'])

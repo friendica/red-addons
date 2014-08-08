@@ -333,10 +333,11 @@ function twitter_shortenmsg($b, $shortlink = false) {
 
 	$max_char = 140;
 
-	$b['body'] = bb_CleanPictureLinks($b['body']);
+//	$b['body'] = bb_CleanPictureLinks($b['body']);
 
 	// Looking for the first image
-	$cleaned_body = api_clean_plain_items($b['body']);
+//	$cleaned_body = api_clean_plain_items($b['body']);
+	$cleaned_body = $b['body'];
 	$image = '';
 	if(preg_match("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/is",$cleaned_body,$matches))
 		$image = $matches[3];
@@ -385,7 +386,7 @@ function twitter_shortenmsg($b, $shortlink = false) {
 	//$body = preg_replace("/\[share(.*?)\](.*?)\[\/share\]/ism","\n\n$2\n\n",$body);
 
 	// At first convert the text to html
-	$html = bbcode(api_clean_plain_items($body), false, false);
+	$html = bbcode($body, false, false);
 
 	// Then convert it to plain text
 	$msg = trim(html2plain($html, 0, true));
@@ -509,10 +510,10 @@ function twitter_shortenmsg($b, $shortlink = false) {
 	// Looking if the link points to an image
 	$img_str = fetch_url($orig_link);
 
-	$tempfile = tempnam(get_config("system","temppath"), "cache");
-	file_put_contents($tempfile, $img_str);
-	$mime = image_type_to_mime_type(exif_imagetype($tempfile));
-	unlink($tempfile);
+//	$tempfile = tempnam(get_config("system","temppath"), "cache");
+//	file_put_contents($tempfile, $img_str);
+//	$mime = image_type_to_mime_type(exif_imagetype($tempfile));
+//	unlink($tempfile);
 
 	if (($image == $orig_link) OR (substr($mime, 0, 6) == "image/"))
 		return(array("msg"=>$msg, "image"=>$orig_link));

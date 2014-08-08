@@ -28,7 +28,7 @@ function fortunate_fetch(&$a,&$b) {
 	$a->page['htmlhead'] .= '<link rel="stylesheet" type="text/css" href="' 
 		. $a->get_baseurl() . '/addon/fortunate/fortunate.css' . '" media="all" />' . "\r\n";
 
-	$s = z_fetch_url('http://' . $fort_server . '/cookie.php?numlines=2&equal=1&rand=' . mt_rand());
+	$s = z_fetch_url('http://' . $fort_server . '/cookie.php?numlines=4&equal=1&rand=' . mt_rand());
 	if($s['success'])
 		$b .= '<div class="fortunate">' . $s['body'] . '</div>';
 

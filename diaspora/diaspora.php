@@ -289,7 +289,10 @@ function diaspora_send(&$a,&$b) {
 
 		// strip bookmark indicators
 
-		$body = preg_replace('/#\^\[(zu)rl/i', '[$1rl', $body);
+		$body = preg_replace('/\#\^\[([zu])rl/i', '[$1rl', $body);
+
+		$body = preg_replace('/\#\^http/i', 'http', $body);
+
 
 		// protect tags and mentions from hijacking
 
@@ -297,11 +300,11 @@ function diaspora_send(&$a,&$b) {
 		$new_mention = html_entity_decode('&#xff20;',ENT_COMPAT,'UTF-8');
 
 		// #-tags
-		$body = preg_replace('/#\[url/i', $new_tag . '[url', $body);
-		$body = preg_replace('/#\[zrl/i', $new_tag . '[zrl', $body);
+		$body = preg_replace('/\#\[url/i', $new_tag . '[url', $body);
+		$body = preg_replace('/\#\[zrl/i', $new_tag . '[zrl', $body);
 		// @-mentions
-		$body = preg_replace('/@\[url/i', $new_mention . '[url', $body);
-		$body = preg_replace('/@\[zrl/i', $new_mention . '[zrl', $body);
+		$body = preg_replace('/\@\[url/i', $new_mention . '[url', $body);
+		$body = preg_replace('/\@\[zrl/i', $new_mention . '[zrl', $body);
 
 		// remove multiple newlines
 		do {

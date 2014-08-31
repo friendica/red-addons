@@ -48,6 +48,12 @@
  *     we do not need "Twitter as login". When you've registered the app you get the
  *     OAuth Consumer key and secret pair for your application/site.
  *
+ *     Activate the plugin from the plugins section of your admin panel.  When you have
+ *     done so, add your consumer key and consumer secret in the Plugin Features section 
+ *     of the admin page. A link to this section will appear on the sidebar of the admin page
+ *     called 'twitter'.
+ *
+ *   Alternatively: (old way - may not work any more)
  *     Add this key pair to your global .htconfig.php or use the admin panel.
  *
  *     $a->config['twitter']['consumerkey'] = 'your consumer_key here';
@@ -773,6 +779,7 @@ function twitter_plugin_admin_post(&$a){
 	info( t('Settings updated.'). EOL );
 }
 function twitter_plugin_admin(&$a, &$o){
+logger('Twitter admin');
 	$t = get_markup_template( "admin.tpl", "addon/twitter/" );
 
 	$o = replace_macros($t, array(

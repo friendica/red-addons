@@ -14,6 +14,8 @@ The addon can also mirror a users Tweets into the Red wall.
 There is a similar addon for forwarding public messages to
 [StatusNet](http://status.net).
 
+**NOTE: This plug-in does *NOT* work yet. We are waiting for someone to fix it.**
+
 Requirements
 ------------
 

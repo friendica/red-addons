@@ -605,8 +605,8 @@ function twitter_post_hook(&$a,&$b) {
 		logger('twitter: we have customer key and oauth stuff, going to send.', LOGGER_DEBUG);
 
 		// If it's a repeated message from twitter then do a native retweet and exit
-		if (twitter_is_retweet($a, $b['uid'], $b['body']))
-			return;
+//		if (twitter_is_retweet($a, $b['uid'], $b['body']))
+//			return;
 
 		require_once('library/twitteroauth.php');
 		require_once('include/bbcode.php');

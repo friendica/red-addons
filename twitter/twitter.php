@@ -2,9 +2,10 @@
 /**
  * Name: Twitter Connector
  * Description: Relay public postings to a connected Twitter account
- * Version: 1.0.4
+ * Version: 1.1r
  * Author: Tobias Diekershoff <https://f.diekershoff.de/profile/tobias>
  * Author: Michael Vogel <https://pirati.ca/profile/heluecht>
+ * Author: Mike Macgirvin <https://zothub.com/channel/mike>
  *
  * Copyright (c) 2011-2013 Tobias Diekershoff, Michael Vogel
  * All rights reserved.
@@ -173,16 +174,8 @@ function twitter_settings(&$a,&$s) {
 	$checked = (($enabled) ? ' checked="checked" ' : '');
 	$defenabled = get_pconfig(local_user(),'twitter','post_by_default');
 	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
-	$linksenabled = get_pconfig(local_user(),'twitter','post_taglinks');
-	$linkschecked = (($linksenabled) ? ' checked="checked" ' : '');
-	$mirrorenabled = get_pconfig(local_user(),'twitter','mirror_posts');
-	$mirrorchecked = (($mirrorenabled) ? ' checked="checked" ' : '');
-	$shorteningenabled = get_pconfig(local_user(),'twitter','intelligent_shortening');
-	$shorteningchecked = (($shorteningenabled) ? ' checked="checked" ' : '');
-	$importenabled = get_pconfig(local_user(),'twitter','import');
-	$importchecked = (($importenabled) ? ' checked="checked" ' : '');
-	$create_userenabled = get_pconfig(local_user(),'twitter','create_user');
-	$create_userchecked = (($create_userenabled) ? ' checked="checked" ' : '');
+//	$shorteningenabled = get_pconfig(local_user(),'twitter','intelligent_shortening');
+// $shorteningchecked = (($shorteningenabled) ? ' checked="checked" ' : '');
 
 	$s .= '<span id="settings_twitter_inflated" class="settings-block fakelink" style="display: block;" onclick="openClose(\'settings_twitter_expanded\'); openClose(\'settings_twitter_inflated\');">';
 	$s .= '<h3>'. t('Twitter Settings') .'</h3>';
@@ -248,25 +241,9 @@ function twitter_settings(&$a,&$s) {
 			$s .= '<input id="twitter-default" type="checkbox" name="twitter-default" value="1" ' . $defchecked . '/>';
 			$s .= '<div class="clear"></div>';
 
-			$s .= '<label id="twitter-mirror-label" for="twitter-mirror">'.t('Mirror all posts from twitter that are no replies').'</label>';
-			$s .= '<input id="twitter-mirror" type="checkbox" name="twitter-mirror" value="1" '. $mirrorchecked . '/>';
-			$s .= '<div class="clear"></div>';
-
-			$s .= '<label id="twitter-shortening-label" for="twitter-shortening">'.t('Shortening method that optimizes the tweet').'</label>';
-			$s .= '<input id="twitter-shortening" type="checkbox" name="twitter-shortening" value="1" '. $shorteningchecked . '/>';
-			$s .= '<div class="clear"></div>';
-
-			$s .= '<label id="twitter-sendtaglinks-label" for="twitter-sendtaglinks">'.t('Send linked #-tags and @-names to Twitter').'</label>';
-			$s .= '<input id="twitter-sendtaglinks" type="checkbox" name="twitter-sendtaglinks" value="1" '. $linkschecked . '/>';
-			$s .= '</div><div class="clear"></div>';
-
-			$s .= '<label id="twitter-import-label" for="twitter-import">'.t('Import the remote timeline').'</label>';
-			$s .= '<input id="twitter-import" type="checkbox" name="twitter-import" value="1" '. $importchecked . '/>';
-			$s .= '<div class="clear"></div>';
-
-			$s .= '<label id="twitter-create_user-label" for="twitter-create_user">'.t('Automatically create contacts').'</label>';
-			$s .= '<input id="twitter-create_user" type="checkbox" name="twitter-create_user" value="1" '. $create_userchecked . '/>';
-			$s .= '<div class="clear"></div>';
+//			$s .= '<label id="twitter-shortening-label" for="twitter-shortening">'.t('Shortening method that optimizes the tweet').'</label>';
+//			$s .= '<input id="twitter-shortening" type="checkbox" name="twitter-shortening" value="1" '. $shorteningchecked . '/>';
+//			$s .= '<div class="clear"></div>';
 
 			$s .= '<div id="twitter-disconnect-wrapper">';
 			$s .= '<label id="twitter-disconnect-label" for="twitter-disconnect">'. t('Clear OAuth configuration') .'</label>';
@@ -772,10 +749,8 @@ function twitter_post_hook(&$a,&$b) {
 function twitter_plugin_admin_post(&$a){
 	$consumerkey	=	((x($_POST,'consumerkey'))		? notags(trim($_POST['consumerkey']))	: '');
 	$consumersecret	=	((x($_POST,'consumersecret'))	? notags(trim($_POST['consumersecret'])): '');
-        $applicationname = ((x($_POST, 'applicationname')) ? notags(trim($_POST['applicationname'])):'');
 	set_config('twitter','consumerkey',$consumerkey);
 	set_config('twitter','consumersecret',$consumersecret);
-	set_config('twitter','application_name',$applicationname);
 	info( t('Settings updated.'). EOL );
 }
 function twitter_plugin_admin(&$a, &$o){
@@ -785,9 +760,8 @@ logger('Twitter admin');
 	$o = replace_macros($t, array(
 		'$submit' => t('Save Settings'),
 								// name, label, value, help, [extra values]
-		'$consumerkey' => array('consumerkey', t('Consumer key'),  get_config('twitter', 'consumerkey' ), ''),
-                '$consumersecret' => array('consumersecret', t('Consumer secret'),  get_config('twitter', 'consumersecret' ), ''),
-                '$applicationname' => array('applicationname', t('Name of the Twitter Application'), get_config('twitter','application_name'),t('set this to avoid mirroring postings from ~friendica back to ~friendica'))
+		'$consumerkey' => array('consumerkey', t('API key'),  get_config('twitter', 'consumerkey' ), ''),
+                '$consumersecret' => array('consumersecret', t('API secret'),  get_config('twitter', 'consumersecret' ), '')
 	));
 }
 

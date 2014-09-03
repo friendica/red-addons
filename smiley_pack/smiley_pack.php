@@ -402,6 +402,9 @@ function smiley_pack_smilies(&$a,&$b) {
 	$b['texts'][] = ':rofl';
 	$b['icons'][] = '<img class="smiley" src="' . $a->get_baseurl() . '/addon/smiley_pack/icons/laugh/rofl.gif' . '" alt="' . ':rofl' . '" />';
 
+	$b['texts'][] = ':snicker';
+	$b['icons'][] = '<img class="smiley" src="' . $a->get_baseurl() . '/addon/smiley_pack/icons/laugh/snicker.jpeg' . '" alt="' . ':snicker' . '" />';
+
 #Music smileys
 
 	$b['texts'][] = ':drums';

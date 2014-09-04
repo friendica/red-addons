@@ -23,9 +23,6 @@ function morechoice_unload() {
 	unregister_hook('sexpref_selector', 'addon/morechoice/morechoice.php', 'morechoice_sexpref_selector');
 	unregister_hook('marital_selector', 'addon/morechoice/morechoice.php', 'morechoice_marital_selector');
 
-// We need to leave this here for a while, because we now have a situation where people can end up with an orphaned hook.
-	unregister_hook('poke_verbs', 'addon/morechoice/morechoice.php', 'morechoice_poke_verbs');
-
 }
 
 // We aren't going to bother translating these to other languages. 

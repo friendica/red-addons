@@ -208,7 +208,8 @@ function libertree_send(&$a,&$b) {
 		//	'token' => $ltree_api_token
 		);
 
-		$result = z_post_url($ltree_blog,$params);
+		$level = 0;
+		$result = z_post_url($ltree_blog,$params,$level,array('novalidate' => true));
 		logger('libertree: ' . print_r($result,true));
 
 	}

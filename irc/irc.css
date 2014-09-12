@@ -1,7 +1,7 @@
 /* irc css */
 #irc-auto-label, #irc-pop-label{
 	float: left;
-	width: 200px;
+	width: 350px;
 	margin-top: 10px;
 }
 
@@ -10,6 +10,6 @@
 	margin-top: 10px;
 }
 
-#irc-submit {
+#irc-submit, #settings-irc-wrapper {
 	margin-top: 15px;
 }

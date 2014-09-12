@@ -1,9 +1,11 @@
-
+#settings-startpage-wrapper {
+margin-top: 15px;
+}
 
 
 #startpage-page-label {
 	float: left;
-	width: 200px;
+	width: 350px;
 	margin-bottom: 25px;
 }
 

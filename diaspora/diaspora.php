@@ -33,8 +33,7 @@ function diaspora_jot_nets(&$a,&$b) {
     if(intval($diaspora_post) == 1) {
         $diaspora_defpost = get_pconfig(local_user(),'diaspora','post_by_default');
         $selected = ((intval($diaspora_defpost) == 1) ? ' checked="checked" ' : '');
-        $b .= '<div class="profile-jot-net"><input type="checkbox" name="diaspora_enable"' . $selected . ' value="1" /> '
-          .  '<img src="addon/diaspora/diaspora.png" title="' . t('Post to Diaspora') . '" />' . '</div>';
+        $b .= '<div class="profile-jot-net"><input type="checkbox" name="diaspora_enable"' . $selected . ' value="1" /> <img src="addon/diaspora/diaspora.png" /> ' . t('Post to Diaspora') . '</div>';
     }
 }
 
@@ -145,13 +144,9 @@ function diaspora_settings(&$a,&$s) {
 
 	/* Add some HTML to the existing form */
 
-	$s .= '<span id="settings_diaspora_inflated" class="settings-block fakelink" style="display: block;" onclick="openClose(\'settings_diaspora_expanded\'); openClose(\'settings_diaspora_inflated\');">';
-	$s .= '<img class="connector'.$css.'" src="addon/diaspora/diaspora.png" /><h3 class="connector">'. t('Diaspora Export').'</h3>';
-	$s .= '</span>';
-	$s .= '<div id="settings_diaspora_expanded" class="settings-block" style="display: none;">';
-	$s .= '<span class="fakelink" onclick="openClose(\'settings_diaspora_expanded\'); openClose(\'settings_diaspora_inflated\');">';
-	$s .= '<img class="connector'.$css.'" src="addon/diaspora/diaspora.png" /><h3 class="connector">'. t('Diaspora Export').'</h3>';
-	$s .= '</span>';
+   $s .= '<div class="settings-block">';
+   $s .= '<button class="btn btn-default" data-target="#settings-diaspora-wrapper" data-toggle="collapse" type="button"><img src="addon/diaspora/diaspora.png" /> ' . t('Diaspora Post Settings') . '</button>';
+   $s .= '<div id="settings-diaspora-wrapper" class="collapse well">';
 
 	if ($status) {
 		$s .= '<div id="diaspora-status-wrapper"><strong>';
@@ -186,7 +181,7 @@ function diaspora_settings(&$a,&$s) {
 
 	/* provide a submit button */
 
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" id="diaspora-submit" name="diaspora-submit" class="settings-submit" value="' . t('Save Settings') . '" /></div></div>';
+	$s .= '<div class="settings-submit-wrapper" ><input type="submit" id="diaspora-submit" name="diaspora-submit" class="settings-submit" value="' . t('Save Diaspora Settings') . '" /></div></div></div>';
 
 }
 

@@ -1,4 +1,6 @@
-
+#settings-gnusocial-wrapper {
+	margin-top: 12px;
+}
 
 #statusnet-avatar {
 	float: left;
@@ -12,7 +14,7 @@
 }
 #statusnet-disconnect-label {
 	float: left;
-	width: 250px;
+	width: 350px;
 	margin-bottom: 25px;
 }
 #statusnet-disconnect {
@@ -27,7 +29,7 @@
 #statusnet-pin-label,
 #statusnet-enable-label {
 	float: left;
-	width: 250px;
+	width: 350px;
 	margin-bottom: 5px;
 }
 
@@ -42,7 +44,7 @@
 
 #statusnet-consumerkey-label {
 	float: left;
-	width: 250px;
+	width: 350px;
 	margin-bottom: 8px;
 }
 #statusnet-consumerkey {
@@ -51,7 +53,7 @@
 }
 #statusnet-consumersecret-label {
 	float: left;
-	width: 250px;
+	width: 350px;
 	margin-bottom: 8px;
 }
 #statusnet-consumersecret {
@@ -60,7 +62,7 @@
 }
 #statusnet-baseapi-label {
 	float: left;
-	width: 250px;
+	width: 350px;
 	margin-bottom: 25px;
 }
 #statusnet-baseapi {

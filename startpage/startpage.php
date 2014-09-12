@@ -111,16 +111,17 @@ function startpage_settings(&$a,&$s) {
 
 	/* Add some HTML to the existing form */
 
-	$s .= '<div class="settings-block">';
-	$s .= '<h3>' . t('Startpage Settings') . '</h3>';
+   $s .= '<div class="settings-block">';
+   $s .= '<button class="btn btn-default" data-target="#settings-startpage-wrapper" data-toggle="collapse" type="button">' . t('Startpage Settings') . '</button>';
+   $s .= '<div id="settings-startpage-wrapper" class="collapse well">';
+    
 	$s .= '<div id="startpage-page-wrapper">';
 	$s .= '<label id="startpage-page-label" for="startpage-page">' . t('Home page to load after login  - leave blank for Apps page') . '</label>';
-	$s .= '<input id="startpage-page" type="text" name="startpage" value="' . $page . '" />';
+	$s .= '<input id="startpage-page" type="text" name="startpage" value="' . $page . '" /><div id="startpage-desc">&nbsp;&nbsp;&nbsp;' . t('Examples: &quot;network&quot; or &quot;channel&quot; or &quot;notifications/system&quot;') . '</div>';
 	$s .= '</div><div class="clear"></div>';
-	$s .= '<div id="startpage-desc">' . t('Examples: &quot;network&quot; or &quot;channel&quot; or &quot;notifications/system&quot;') . '</div>';
 
 	/* provide a submit button */
 
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="startpage-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
+	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="startpage-submit" class="settings-submit" value="' . t('Submit Startpage Settings') . '" /></div></div></div>';
 
 }

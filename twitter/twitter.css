@@ -1,4 +1,6 @@
-
+#settings-twitter-wrapper {
+	margin-top: 15px;
+}
 
 #twitter-avatar {
 	float: left;
@@ -12,7 +14,7 @@
 }
 #twitter-disconnect-label {
 	float: left;
-	width: 250px;
+	width: 350px;
 	margin-bottom: 25px;
 }
 
@@ -28,7 +30,7 @@
 #twitter-create_user-label,
 #twitter-pin-label {
         float: left;
-        width: 250px;
+        width: 350px;
         margin-bottom: 10px;
 }
 

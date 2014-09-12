@@ -1,7 +1,7 @@
 
 #nsfw-label, #nsfw-enable-label {
 	float: left;
-	width: 300px;
+	width: 350px;
 	margin-top: 10px;
 }
 
@@ -10,7 +10,7 @@
 	margin-top: 10px;
 }
 
-#nsfw-submit {
+#nsfw-submit, #settings-nsfw-wrapper {
 	margin-top: 15px;
 }
 

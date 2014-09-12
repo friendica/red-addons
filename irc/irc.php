@@ -41,8 +41,9 @@ function irc_addon_settings(&$a,&$s) {
 	$sitechats = get_config('irc','sitechats'); /* popular channels */
 	$autochans = get_config('irc','autochans');  /* auto connect chans */
 
-	$s .= '<div class="settings-block">';
-	$s .= '<h3>' . t('IRC Settings') . '</h3>';
+   $s .= '<div class="settings-block">';
+   $s .= '<button class="btn btn-default" data-target="#settings-irc-wrapper" data-toggle="collapse" type="button">' . t('IRC Settings') . '</button>';
+   $s .= '<div id="settings-irc-wrapper" class="collapse well">';
 	$s .= '<div id="irc-chans">';
 	$s .= '<label id="irc-auto-label" for="autochans">' . t('Channel(s) to auto connect (comma separated)') . '</label>';
 	$s .= '<input id="irc-autochans" type="text" name="autochans" value="' . $autochans .'" />';
@@ -53,7 +54,7 @@ function irc_addon_settings(&$a,&$s) {
 	$s .= '<input id="irc-sitechats" type="text" name="sitechats" value="' . $sitechats.'" />';
 	$s .= '</div><div class="clear"></div>';
 
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" id="irc-submit" name="irc-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
+	$s .= '<div class="settings-submit-wrapper" ><input type="submit" id="irc-submit" name="irc-submit" class="settings-submit" value="' . t('Submit IRC Settings') . '" /></div></div></div>';
 
 	return;
 

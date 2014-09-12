@@ -50,13 +50,15 @@ function superblock_addon_settings(&$a,&$s) {
 		$words = '';
 
     $s .= '<div class="settings-block">';
-    $s .= '<h3>' . t('"Superblock" Settings') . '</h3>';
+    $s .= '<button class="btn btn-default" data-target="#settings-superblock-wrapper" data-toggle="collapse" type="button">' . t('"Superblock" Settings') . '</button>';
+    $s .= '<div id="settings-superblock-wrapper" class="collapse well">';
+    
     $s .= '<div id="superblock-wrapper">';
     $s .= '<label id="superblock-label" for="superblock-words">' . t('Comma separated profile URLS to block') . ' </label>';
     $s .= '<textarea id="superblock-words" type="text" name="superblock-words" >' . htmlspecialchars($words) . '</textarea>';
     $s .= '</div><div class="clear"></div>';
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="superblock-submit" name="superblock-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
+    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="superblock-submit" name="superblock-submit" class="settings-submit" value="' . t('Submit Superblock Settings') . '" /></div></div></div>';
 
 	return;
 

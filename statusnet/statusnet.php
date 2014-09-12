@@ -1,7 +1,7 @@
 <?php
 /**
- * Name: StatusNet Connector
- * Description: Relay public postings to a connected StatusNet account
+ * Name: GNU social Connector
+ * Description: Relay public postings to a connected GNU social account (formerly StatusNet)
  * Version: 1.0.5
  * Author: Tobias Diekershoff <http://diekershoff.homeunix.net/friendika/profile/tobias>
  * Author: Michael Vogel <https://pirati.ca/profile/heluecht>
@@ -9,7 +9,7 @@
 
 require_once('include/permissions.php');
  
-/*   StatusNet Plugin for RedMatrix
+/*   GNU social Plugin for RedMatrix
  *
  *   Author: Tobias Diekershoff
  *           tobias.diekershoff@gmx.net
@@ -17,9 +17,8 @@ require_once('include/permissions.php');
  *   License:3-clause BSD license
  *
  *   Configuration:
- *     To activate the plugin itself add it to the $a->config['system']['addon']
- *     setting. After this, your user can configure their Twitter account settings
- *     from "Settings -> Plugin Settings".
+ *     After activating this addon, your user can configure their Twitter account settings
+ *     from "Settings -> Feature settings".
  *
  *     Requirements: PHP5, curl [Slinky library]
  *
@@ -27,7 +26,7 @@ require_once('include/permissions.php');
  */
 
 /***
- * We have to alter the TwitterOAuth class a little bit to work with any StatusNet
+ * We have to alter the TwitterOAuth class a little bit to work with any GNU social/StatusNet
  * installation abroad. Basically it's only make the API path variable and be happy.
  *
  * Thank you guys for the Twitter compatible API!
@@ -139,7 +138,7 @@ function statusnet_jot_nets(&$a,&$b) {
 		$statusnet_defpost = get_pconfig(local_user(),'statusnet','post_by_default');
 		$selected = ((intval($statusnet_defpost) == 1) ? ' checked="checked" ' : '');
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="statusnet_enable"' . $selected . ' value="1" /> ' 
-			. '<img src="addon/statusnet/statusnet.png" title="' . t('Post to StatusNet') . '" />' . '</div>';
+			. '<img src="addon/statusnet/gnusocial.png" /> ' . t('Post to GNU social') . '</div>';
 	}
 }
 
@@ -167,7 +166,7 @@ function statusnet_settings_post ($a,$post) {
 	} else {
             if (isset($_POST['statusnet-preconf-apiurl'])) {
                 /***
-                 * If the user used one of the preconfigured StatusNet server credentials
+                 * If the user used one of the preconfigured GNU social server credentials
                  * use them. All the data are available in the global config.
                  * Check the API Url never the less and blame the admin if it's not working ^^
                  */
@@ -190,7 +189,7 @@ function statusnet_settings_post ($a,$post) {
                 goaway($a->get_baseurl().'/settings/featured');
             } else {
             if (isset($_POST['statusnet-consumersecret'])) {
-                //  check if we can reach the API of the StatusNet server
+                //  check if we can reach the API of the GNU social server
                 //  we'll check the API Version for that, if we don't get one we'll try to fix the path but will
                 //  resign quickly after this one try to fix the path ;-)
                 $apibase = $_POST['statusnet-baseapi'];
@@ -215,13 +214,13 @@ function statusnet_settings_post ($a,$post) {
                         set_pconfig(local_user(), 'statusnet', 'baseapi', $apibase );
                     } else {
                         //  still not the correct API base, let's do noting
-                        notice( t('We could not contact the StatusNet API with the Path you entered.').EOL );
+                        notice( t('We could not contact the GNU social API with the Path you entered.').EOL );
                     }
                 }
                 goaway($a->get_baseurl().'/settings/featured');
             } else {
     	        if (isset($_POST['statusnet-pin'])) {
-                	//  if the user supplied us with a PIN from StatusNet, let the magic of OAuth happen
+                	//  if the user supplied us with a PIN from GNU social, let the magic of OAuth happen
                     $api     = get_pconfig(local_user(), 'statusnet', 'baseapi');
 					$ckey    = get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
 					$csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
@@ -245,7 +244,7 @@ function statusnet_settings_post ($a,$post) {
                                         set_pconfig(local_user(),'statusnet','post_taglinks',intval($_POST['statusnet-sendtaglinks']));
 					set_pconfig(local_user(), 'statusnet', 'mirror_posts', intval($_POST['statusnet-mirror']));
 					set_pconfig(local_user(), 'statusnet', 'intelligent_shortening', intval($_POST['statusnet-shortening']));
-					info( t('StatusNet settings updated.') . EOL);
+					info( t('GNU social settings updated.') . EOL);
         	}}}}
 }
 function statusnet_settings(&$a,&$s) {
@@ -266,17 +265,12 @@ function statusnet_settings(&$a,&$s) {
 	$enabled = get_pconfig(local_user(), 'statusnet', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
 	$defenabled = get_pconfig(local_user(),'statusnet','post_by_default');
-        $defchecked = (($defenabled) ? ' checked="checked" ' : '');
-        $linksenabled = get_pconfig(local_user(),'statusnet','post_taglinks');
-        $linkschecked = (($linksenabled) ? ' checked="checked" ' : '');
-
-	$mirrorenabled = get_pconfig(local_user(),'statusnet','mirror_posts');
-	$mirrorchecked = (($mirrorenabled) ? ' checked="checked" ' : '');
-	$shorteningenabled = get_pconfig(local_user(),'statusnet','intelligent_shortening');
-	$shorteningchecked = (($shorteningenabled) ? ' checked="checked" ' : '');
+//	$shorteningenabled = get_pconfig(local_user(),'statusnet','intelligent_shortening');
+//	$shorteningchecked = (($shorteningenabled) ? ' checked="checked" ' : '');
 
 	$s .= '<div class="settings-block">';
-	$s .= '<h3>'. t('StatusNet Posting Settings').'</h3>';
+   $s .= '<button class="btn btn-default" data-target="#settings-gnusocial-wrapper" data-toggle="collapse" type="button"><img src="addon/statusnet/gnusocial.png" /> ' . t('GNU social Post Settings') . '</button>';
+   $s .= '<div id="settings-gnusocial-wrapper" class="collapse well">';
 
 	if ( (!$ckey) && (!$csecret) ) {
 		/***
@@ -284,23 +278,23 @@ function statusnet_settings(&$a,&$s) {
                  */
             $globalsn = get_config('statusnet', 'sites');
             /***
-             * lets check if we have one or more globally configured StatusNet
+             * lets check if we have one or more globally configured GNU social
              * server OAuth credentials in the configuration. If so offer them
              * with a little explanation to the user as choice - otherwise
              * ignore this option entirely.
              */
             if (! $globalsn == null) {
-                $s .= '<h4>' . t('Globally Available StatusNet OAuthKeys') . '</h4>';
-                $s .= '<p>'. t("There are preconfigured OAuth key pairs for some StatusNet servers available. If you are useing one of them, please use these credentials. If not feel free to connect to any other StatusNet instance \x28see below\x29.") .'</p>';
+                $s .= '<h4>' . t('Globally Available GNU social OAuthKeys') . '</h4>';
+                $s .= '<p>'. t("There are preconfigured OAuth key pairs for some GNU social servers available. If you are using one of them, please use these credentials. If not feel free to connect to any other GNU social instance \x28see below\x29.") .'</p>';
                 $s .= '<div id="statusnet-preconf-wrapper">';
                 foreach ($globalsn as $asn) {
                     $s .= '<input type="radio" name="statusnet-preconf-apiurl" value="'. $asn['apiurl'] .'">'. $asn['sitename'] .'<br />';
                 }
                 $s .= '<p></p><div class="clear"></div></div>';
-                $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+                $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div>';
             }
             $s .= '<h4>' . t('Provide your own OAuth Credentials') . '</h4>';
-            $s .= '<p>'. t('No consumer key pair for StatusNet found. Register your RedMatrix Account as an desktop client on your StatusNet account, copy the consumer key pair here and enter the API base root.<br />Before you register your own OAuth key pair ask the administrator if there is already a key pair for this RedMatrix installation at your favorited StatusNet installation.') .'</p>';
+            $s .= '<p>'. t('No consumer key pair for GNU social found. Register your RedMatrix Account as an desktop client on your GNU social account, copy the consumer key pair here and enter the API base root.<br />Before you register your own OAuth key pair ask the administrator if there is already a key pair for this RedMatrix installation at your favourite GNU social installation.') .'</p>';
             $s .= '<div id="statusnet-consumer-wrapper">';
             $s .= '<label id="statusnet-consumerkey-label" for="statusnet-consumerkey">'. t('OAuth Consumer Key') .'</label>';
             $s .= '<input id="statusnet-consumerkey" type="text" name="statusnet-consumerkey" size="35" /><br />';
@@ -311,17 +305,17 @@ function statusnet_settings(&$a,&$s) {
             $s .= '<label id="statusnet-baseapi-label" for="statusnet-baseapi">'. t("Base API Path \x28remember the trailing /\x29") .'</label>';
             $s .= '<input id="statusnet-baseapi" type="text" name="statusnet-baseapi" size="35" /><br />';
             $s .= '<p></p><div class="clear"></div></div>';
-            $s .= '<label id="statusnet-applicationname-label" for="statusnet-applicationname">'.t('StatusNet application name').'</label>';
+            $s .= '<label id="statusnet-applicationname-label" for="statusnet-applicationname">'.t('GNU social application name').'</label>';
             $s .= '<input id="statusnet-applicationname" type="text" name="statusnet-applicationname" size="35" /><br />';
             $s .= '<p></p><div class="clear"></div>';
-            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div>';
 	} else {
 		/***
 		 * ok we have a consumer key pair now look into the OAuth stuff
 		 */
 		if ( (!$otoken) && (!$osecret) ) {
 			/***
-			 * the user has not yet connected the account to statusnet
+			 * the user has not yet connected the account to GNU social
 			 * get a temporary OAuth key/secret pair and display a button with
 			 * which the user can request a PIN to connect the account to a
 			 * account at statusnet
@@ -332,22 +326,22 @@ function statusnet_settings(&$a,&$s) {
 			/***
 			 *  make some nice form
 			 */
-			$s .= '<p>'. t('To connect to your StatusNet account click the button below to get a security code from StatusNet which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to StatusNet.') .'</p>';
-			$s .= '<a href="'.$connection->getAuthorizeURL($token,False).'" target="_statusnet"><img src="addon/statusnet/signinwithstatusnet.png" alt="'. t('Log in with StatusNet') .'"></a>';
+			$s .= '<p>'. t('To connect to your GNU social account click the button below to get a security code from GNU social which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to GNU social.') .'</p>';
+			$s .= '<a href="'.$connection->getAuthorizeURL($token,False).'" target="_statusnet"><img src="addon/statusnet/signinwithgnusocial.png" alt="'. t('Log in with GNU social') .'"></a>';
 			$s .= '<div id="statusnet-pin-wrapper">';
-			$s .= '<label id="statusnet-pin-label" for="statusnet-pin">'. t('Copy the security code from StatusNet here') .'</label>';
+			$s .= '<label id="statusnet-pin-label" for="statusnet-pin">'. t('Copy the security code from GNU social here') .'</label>';
 			$s .= '<input id="statusnet-pin" type="text" name="statusnet-pin" />';
 			$s .= '<input id="statusnet-token" type="hidden" name="statusnet-token" value="'.$token.'" />';
 			$s .= '<input id="statusnet-token2" type="hidden" name="statusnet-token2" value="'.$request_token['oauth_token_secret'].'" />';
 			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div>';
 			$s .= '<h4>'.t('Cancel Connection Process').'</h4>';
 			$s .= '<div id="statusnet-cancel-wrapper">';
-			$s .= '<p>'.t('Current StatusNet API is').': '.$api.'</p>';
-			$s .= '<label id="statusnet-cancel-label" for="statusnet-cancel">'. t('Cancel StatusNet Connection') . '</label>';
+			$s .= '<p>'.t('Current GNU social API is').': '.$api.'</p>';
+			$s .= '<label id="statusnet-cancel-label" for="statusnet-cancel">'. t('Cancel GNU social Connection') . '</label>';
 			$s .= '<input id="statusnet-cancel" type="checkbox" name="statusnet-disconnect" value="1" />';
 			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
+			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div>';
 		} else {
 			/***
 			 *  we have an OAuth key / secret pair for the user
@@ -356,38 +350,31 @@ function statusnet_settings(&$a,&$s) {
 			$connection = new StatusNetOAuth($api,$ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
 			$s .= '<div id="statusnet-info" ><img id="statusnet-avatar" src="'.$details->profile_image_url.'" /><p id="statusnet-info-block">'. t('Currently connected to: ') .'<a href="'.$details->statusnet_profile_url.'" target="_statusnet">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
-			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings can be posted to the associated StatusNet account. You can choose to do so by default (here) or for every posting separately in the posting options when writing the entry.') .'</p>';
+			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings can be posted to the associated GNU social account. You can choose to do so by default (here) or for every posting separately in the posting options when writing the entry.') .'</p>';
                         if ($a->user['hidewall']) {
-                            $s .= '<p>'. t('<strong>Note</strong>: Due your privacy settings (<em>Hide your profile details from unknown viewers?</em>) the link potentially included in public postings relayed to StatusNet will lead the visitor to a blank page informing the visitor that the access to your profile has been restricted.') .'</p>';
+                            $s .= '<p>'. t('<strong>Note</strong>: Due your privacy settings (<em>Hide your profile details from unknown viewers?</em>) the link potentially included in public postings relayed to GNU social will lead the visitor to a blank page informing the visitor that the access to your profile has been restricted.') .'</p>';
                         }
 			$s .= '<div id="statusnet-enable-wrapper">';
-			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'. t('Allow posting to StatusNet') .'</label>';
+			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'. t('Allow posting to GNU social') .'</label>';
 			$s .= '<input id="statusnet-checkbox" type="checkbox" name="statusnet-enable" value="1" ' . $checked . '/>';
 			$s .= '<div class="clear"></div>';
-			$s .= '<label id="statusnet-default-label" for="statusnet-default">'. t('Send public postings to StatusNet by default') .'</label>';
+			$s .= '<label id="statusnet-default-label" for="statusnet-default">'. t('Send public postings to GNU social by default') .'</label>';
 			$s .= '<input id="statusnet-default" type="checkbox" name="statusnet-default" value="1" ' . $defchecked . '/>';
 			$s .= '<div class="clear"></div>';
 
-			$s .= '<label id="statusnet-mirror-label" for="statusnet-mirror">'.t('Mirror all posts from statusnet that are no replies or repeated messages').'</label>';
-			$s .= '<input id="statusnet-mirror" type="checkbox" name="statusnet-mirror" value="1" '. $mirrorchecked . '/>';
-			$s .= '<div class="clear"></div>';
-
-			$s .= '<label id="statusnet-shortening-label" for="statusnet-shortening">'.t('Shortening method that optimizes the post').'</label>';
-			$s .= '<input id="statusnet-shortening" type="checkbox" name="statusnet-shortening" value="1" '. $shorteningchecked . '/>';
-			$s .= '<div class="clear"></div>';
-
-                        $s .= '<label id="statusnet-sendtaglinks-label" for="statusnet-sendtaglinks">'.t('Send linked #-tags and @-names to StatusNet').'</label>';
-                        $s .= '<input id="statusnet-sendtaglinks" type="checkbox" name="statusnet-sendtaglinks" value="1" '. $linkschecked . '/>';
-			$s .= '</div><div class="clear"></div>';
+// 		FIXME: Doesn't seem to work. But maybe we don't want it all.
+//			$s .= '<label id="statusnet-shortening-label" for="statusnet-shortening">'.t('Shortening method that optimizes the post').'</label>';
+//			$s .= '<input id="statusnet-shortening" type="checkbox" name="statusnet-shortening" value="1" '. $shorteningchecked . '/>';
+//			$s .= '<div class="clear"></div>';
 
 			$s .= '<div id="statusnet-disconnect-wrapper">';
                         $s .= '<label id="statusnet-disconnect-label" for="statusnet-disconnect">'. t('Clear OAuth configuration') .'</label>';
                         $s .= '<input id="statusnet-disconnect" type="checkbox" name="statusnet-disconnect" value="1" />';
 			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit') . '" /></div>'; 
+			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div>'; 
 		}
 	}
-        $s .= '</div><div class="clear"></div>';
+        $s .= '</div></div><div class="clear"></div></div>';
 }
 
 
@@ -612,7 +599,7 @@ function statusnet_post_hook(&$a,&$b) {
 		$dent = new StatusNetOAuth($api,$ckey,$csecret,$otoken,$osecret);
                 $max_char = $dent->get_maxlength(); // max. length for a dent
                 // we will only work with up to two times the length of the dent
-                // we can later send to StatusNet. This way we can "gain" some
+                // we can later send to GNU social. This way we can "gain" some
                 // information during shortening of potential links but do not
                 // shorten all the links in a 200000 character long essay.
 
@@ -712,7 +699,7 @@ function statusnet_post_hook(&$a,&$b) {
                     logger('statusnet_post send, result: ' . print_r($result, true).
                            "\nmessage: ".$msg, LOGGER_DEBUG."\nOriginal post: ".print_r($b, true)."\nPost Data: ".print_r($postdata, true));
                     if ($result->error) {
-                        logger('Send to StatusNet failed: "' . $result->error . '"');
+                        logger('Send to GNU social failed: "' . $result->error . '"');
                     }
                 }
 		if ($tempfile != "")

@@ -34,8 +34,7 @@ function libertree_jot_nets(&$a,&$b) {
     if(intval($ltree_post) == 1) {
         $ltree_defpost = get_pconfig(local_user(),'libertree','post_by_default');
         $selected = ((intval($ltree_defpost) == 1) ? ' checked="checked" ' : '');
-        $b .= '<div class="profile-jot-net"><input type="checkbox" name="libertree_enable"' . $selected . ' value="1" /> '
-            . t('Post to libertree') . '</div>';
+        $b .= '<div class="profile-jot-net"><input type="checkbox" name="libertree_enable"' . $selected . ' value="1" /> <img src="addon/libertree/libertree.png" /> ' . t('Post to Libertree') . '</div>';
     }
 }
 
@@ -66,7 +65,9 @@ function libertree_settings(&$a,&$s) {
     /* Add some HTML to the existing form */
 
     $s .= '<div class="settings-block">';
-    $s .= '<h3>' . t('libertree Post Settings') . '</h3>';
+    $s .= '<button class="btn btn-default" data-target="#settings-libertree-wrapper" data-toggle="collapse" type="button"><img src="addon/libertree/libertree.png" /> ' . t('Libertree Post Settings') . '</button>';
+    $s .= '<div id="settings-libertree-wrapper" class="collapse well">';
+    
     $s .= '<div id="libertree-enable-wrapper">';
     $s .= '<label id="libertree-enable-label" for="libertree-checkbox">' . t('Enable Libertree Post Plugin') . '</label>';
     $s .= '<input id="libertree-checkbox" type="checkbox" name="libertree" value="1" ' . $checked . '/>';
@@ -89,7 +90,7 @@ function libertree_settings(&$a,&$s) {
 
     /* provide a submit button */
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="libertree-submit" name="libertree-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
+    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="libertree-submit" name="libertree-submit" class="settings-submit" value="' . t('Submit Libertree Settings') . '" /></div></div></div>';
 
 }
 

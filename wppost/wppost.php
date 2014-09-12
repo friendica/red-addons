@@ -40,8 +40,7 @@ function wppost_jot_nets(&$a,&$b) {
     if(intval($wp_post) == 1) {
         $wp_defpost = get_pconfig(local_user(),'wppost','post_by_default');
         $selected = ((intval($wp_defpost) == 1) ? ' checked="checked" ' : '');
-        $b .= '<div class="profile-jot-net"><input type="checkbox" name="wppost_enable" ' . $selected . ' value="1" /> '
-			. '<img src="addon/wppost/wordpress-logo.png" title="' . t('Post to WordPress') . '" />' . '</div>';
+        $b .= '<div class="profile-jot-net"><input type="checkbox" name="wppost_enable" ' . $selected . ' value="1" /> <img src="addon/wppost/wordpress-logo.png" /> ' . t('Post to WordPress') . '</div>';
 
     }
 }
@@ -78,7 +77,9 @@ function wppost_settings(&$a,&$s) {
     /* Add some HTML to the existing form */
 
     $s .= '<div class="settings-block">';
-    $s .= '<h3>' . t('WordPress Post Settings') . '</h3>';
+    $s .= '<button class="btn btn-default" data-target="#settings-wordpress-wrapper" data-toggle="collapse" type="button"><img src="addon/wppost/wordpress-logo.png" /> ' . t('WordPress Post Settings') . '</button>';
+    $s .= '<div id="settings-wordpress-wrapper" class="collapse well">';
+    
     $s .= '<div id="wppost-enable-wrapper">';
     $s .= '<label id="wppost-enable-label" for="wppost-checkbox">' . t('Enable WordPress Post Plugin') . '</label>';
     $s .= '<input id="wppost-checkbox" type="checkbox" name="wppost" value="1" ' . $checked . '/>';
@@ -111,7 +112,7 @@ function wppost_settings(&$a,&$s) {
 
     /* provide a submit button */
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="wppost-submit" name="wppost-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
+    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="wppost-submit" name="wppost-submit" class="settings-submit" value="' . t('Submit WordPress Post Settings') . '" /></div></div></div>';
 
 }
 

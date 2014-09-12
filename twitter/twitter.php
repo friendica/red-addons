@@ -95,8 +95,7 @@ function twitter_jot_nets(&$a,&$b) {
 	if(intval($tw_post) == 1) {
 		$tw_defpost = get_pconfig(local_user(),'twitter','post_by_default');
 		$selected = ((intval($tw_defpost) == 1) ? ' checked="checked" ' : '');
-		$b .= '<div class="profile-jot-net"><input type="checkbox" name="twitter_enable"' . $selected . ' value="1" /> ' 
-			. t('Post to Twitter') . '</div>';
+		$b .= '<div class="profile-jot-net"><input type="checkbox" name="twitter_enable"' . $selected . ' value="1" /> <img src="addon/twitter/twitter.png" /> ' . t('Post to Twitter') . '</div>';
 	}
 }
 
@@ -120,10 +119,7 @@ function twitter_settings_post ($a,$post) {
 		del_pconfig(local_user(), 'twitter', 'post_by_default');
 		del_pconfig(local_user(), 'twitter', 'post_taglinks');
 		del_pconfig(local_user(), 'twitter', 'lastid');
-		del_pconfig(local_user(), 'twitter', 'mirror_posts');
 		del_pconfig(local_user(), 'twitter', 'intelligent_shortening');
-		del_pconfig(local_user(), 'twitter', 'import');
-		del_pconfig(local_user(), 'twitter', 'create_user');
 		del_pconfig(local_user(), 'twitter', 'own_id');
 	} else {
 	if (isset($_POST['twitter-pin'])) {
@@ -177,14 +173,10 @@ function twitter_settings(&$a,&$s) {
 //	$shorteningenabled = get_pconfig(local_user(),'twitter','intelligent_shortening');
 // $shorteningchecked = (($shorteningenabled) ? ' checked="checked" ' : '');
 
-	$s .= '<span id="settings_twitter_inflated" class="settings-block fakelink" style="display: block;" onclick="openClose(\'settings_twitter_expanded\'); openClose(\'settings_twitter_inflated\');">';
-	$s .= '<h3>'. t('Twitter Settings') .'</h3>';
-	$s .= '</span>';
-	$s .= '<div id="settings_twitter_expanded" class="settings-block" style="display: none;">';
-	$s .= '<span class="fakelink" onclick="openClose(\'settings_twitter_expanded\'); openClose(\'settings_twitter_inflated\');">';
-	$s .= '<h3>'. t('Twitter Settings') .'</h3>';
-	$s .= '</span>';
-
+   $s .= '<div class="settings-block">';
+   $s .= '<button class="btn btn-default" data-target="#settings-twitter-wrapper" data-toggle="collapse" type="button"><img src="addon/twitter/twitter.png" /> ' . t('Twitter Post Settings') . '</button>';
+   $s .= '<div id="settings-twitter-wrapper" class="collapse well">';
+   
 	if ( (!$ckey) && (!$csecret) ) {
 		/***
 		 * no global consumer keys
@@ -217,7 +209,7 @@ function twitter_settings(&$a,&$s) {
 			$s .= '<input id="twitter-token" type="hidden" name="twitter-token" value="'.$token.'" />';
 			$s .= '<input id="twitter-token2" type="hidden" name="twitter-token2" value="'.$request_token['oauth_token_secret'].'" />';
             $s .= '</div><div class="clear"></div>';
-            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="twitter-submit" class="settings-submit" value="' . t('Save Settings') . '" /></div>';
+            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="twitter-submit" class="settings-submit" value="' . t('Submit Twitter Settings') . '" /></div>';
 		} else {
 			/***
 			 *  we have an OAuth key / secret pair for the user
@@ -241,6 +233,7 @@ function twitter_settings(&$a,&$s) {
 			$s .= '<input id="twitter-default" type="checkbox" name="twitter-default" value="1" ' . $defchecked . '/>';
 			$s .= '<div class="clear"></div>';
 
+// 		FIXME: Doesn't seem to work. But maybe we don't want this at all.
 //			$s .= '<label id="twitter-shortening-label" for="twitter-shortening">'.t('Shortening method that optimizes the tweet').'</label>';
 //			$s .= '<input id="twitter-shortening" type="checkbox" name="twitter-shortening" value="1" '. $shorteningchecked . '/>';
 //			$s .= '<div class="clear"></div>';
@@ -249,10 +242,10 @@ function twitter_settings(&$a,&$s) {
 			$s .= '<label id="twitter-disconnect-label" for="twitter-disconnect">'. t('Clear OAuth configuration') .'</label>';
 			$s .= '<input id="twitter-disconnect" type="checkbox" name="twitter-disconnect" value="1" />';
 			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="twitter-submit" class="settings-submit" value="' . t('Save Settings') . '" /></div>'; 
+			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="twitter-submit" class="settings-submit" value="' . t('Submit Twitter Settings') . '" /></div>'; 
 		}
 	}
-	$s .= '</div><div class="clear"></div>';
+	$s .= '</div><div class="clear"></div></div>';
 }
 
 
@@ -758,7 +751,7 @@ logger('Twitter admin');
 	$t = get_markup_template( "admin.tpl", "addon/twitter/" );
 
 	$o = replace_macros($t, array(
-		'$submit' => t('Save Settings'),
+		'$submit' => t('Submit Settings'),
 								// name, label, value, help, [extra values]
 		'$consumerkey' => array('consumerkey', t('API key'),  get_config('twitter', 'consumerkey' ), ''),
                 '$consumersecret' => array('consumersecret', t('API secret'),  get_config('twitter', 'consumersecret' ), '')

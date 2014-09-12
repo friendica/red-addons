@@ -4,7 +4,7 @@
 #redred-channel-label,
 #redred-enable-label {
 	float: left;
-	width: 250px;
+	width: 350px;
 	margin-bottom: 5px;
 }
 
@@ -14,9 +14,13 @@
 
 #redred-baseapi-label {
 	float: left;
-	width: 250px;
+	width: 350px;
 }
 #redred-baseapi, #redred-username, #redred-password, #redred-channel {
 	float: left;
 	margin-bottom: 5px;
+}
+
+#settings-redred-wrapper {
+	margin-top: 15px;
 }

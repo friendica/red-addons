@@ -1,7 +1,6 @@
-
 #diaspora-enable-label, #diaspora-username-label, #diaspora-password-label, #diaspora-url-label, #diaspora-bydefault-label {
 	float: left;
-	width: 200px;
+	width: 350px;
 	margin-top: 10px;
 }
 
@@ -10,7 +9,7 @@
 	margin-top: 10px;
 }
 
-#diaspora-submit {
+#diaspora-submit, #settings-diaspora-wrapper {
 	margin-top: 15px;
 }
 

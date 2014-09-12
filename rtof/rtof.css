@@ -3,7 +3,7 @@
 #rtof-password-label,
 #rtof-enable-label {
 	float: left;
-	width: 250px;
+	width: 350px;
 	margin-bottom: 5px;
 }
 
@@ -13,9 +13,13 @@
 
 #rtof-baseapi-label {
 	float: left;
-	width: 250px;
+	width: 350px;
 }
 #rtof-baseapi, #rtof-username, #rtof-password {
 	float: left;
 	margin-bottom: 5px;
+}
+
+#settings-rtof-wrapper {
+	margin-top: 15px;
 }

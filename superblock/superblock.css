@@ -1,18 +1,18 @@
 
 #superblock-label {
 	float: left;
-	width: 300px;
+	width: 350px;
 	margin-top: 10px;
 }
 
 #superblock-words {
 	float: left;
 	margin-top: 10px;
-	width: 400px;
+	width: 450px;
 	height: 150px;
 }
 
-#superblock-submit {
+#superblock-submit, #settings-superblock-wrapper {
 	margin-top: 15px;
 }
 

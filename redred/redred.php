@@ -41,7 +41,7 @@ function redred_jot_nets(&$a,&$b) {
 		$redred_defpost = get_pconfig(local_user(),'redred','post_by_default');
 		$selected = ((intval($redred_defpost) == 1) ? ' checked="checked" ' : '');
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="redred_enable"' . $selected . ' value="1" /> ' 
-			. '<img src="addon/redred/rhash-32.png" title="' . t('Post to Red') . '" />' . '</div>';
+			. '<img src="images/rm-32.png" /> ' . t('Post to Red') . '</div>';
 	}
 }
 
@@ -92,8 +92,10 @@ function redred_settings(&$a,&$s) {
 	$defenabled = get_pconfig(local_user(),'redred','post_by_default');
 	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
 
-	$s .= '<div class="settings-block">';
-	$s .= '<h3>'. t('Red to Red (redred) Post Settings').'</h3>';
+   $s .= '<div class="settings-block">';
+   $s .= '<button class="btn btn-default" data-target="#settings-redred-wrapper" data-toggle="collapse" type="button"><img src="images/rm-32.png" /> ' . t('Red to Red (redred) Post Settings') . '</button>';
+   $s .= '<div id="settings-redred-wrapper" class="collapse well">';
+	
 	$s .= '<label id="redred-enable-label" for="redred-checkbox">'. t('Allow posting to Red Channel') .'</label>';
 	$s .= '<input id="redred-checkbox" type="checkbox" name="redred_enable" value="1" ' . $checked . '/>';
 	$s .= '<div class="clear"></div>';
@@ -112,8 +114,8 @@ function redred_settings(&$a,&$s) {
 	$s .= '<label id="redred-password-label" for="redred_password">'. t('Red password') .'</label>';
 	$s .= '<input id="redred-password" type="password" name="redred_password" size="35" value="' . $password . '" />';
 	$s .= '<div class="clear"></div>';
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="redred_submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
-	$s .= '</div>';
+	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="redred_submit" class="settings-submit" value="' . t('Submit Red to Red Post Settings') . '" /></div>';
+	$s .= '</div></div>';
 }
 
 

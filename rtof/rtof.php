@@ -41,7 +41,7 @@ function rtof_jot_nets(&$a,&$b) {
 		$rtof_defpost = get_pconfig(local_user(),'rtof','post_by_default');
 		$selected = ((intval($rtof_defpost) == 1) ? ' checked="checked" ' : '');
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="rtof_enable"' . $selected . ' value="1" /> ' 
-			. '<img src="addon/rtof/friendica-32.png" title="' . t('Post to Friendica') . '" />' . '</div>';
+			. '<img src="addon/rtof/friendica.png" title="' . t('Post to Friendica') . '" />' . '</div>';
 
 	}
 }
@@ -75,8 +75,10 @@ function rtof_settings(&$a,&$s) {
 	$defenabled = get_pconfig(local_user(),'rtof','post_by_default');
 	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
 
-	$s .= '<div class="settings-block">';
-	$s .= '<h3>'. t('Red to Friendica (rtof) Post Settings').'</h3>';
+    $s .= '<div class="settings-block">';
+    $s .= '<button class="btn btn-default" data-target="#settings-rtof-wrapper" data-toggle="collapse" type="button"><img src="addon/rtof/friendica.png" /> ' . t('Red to Friendica (rtof) Post Settings') . '</button>';
+    $s .= '<div id="settings-rtof-wrapper" class="collapse well">';	
+	
 	$s .= '<label id="rtof-enable-label" for="rtof-checkbox">'. t('Allow posting to Friendica') .'</label>';
 	$s .= '<input id="rtof-checkbox" type="checkbox" name="rtof_enable" value="1" ' . $checked . '/>';
 	$s .= '<div class="clear"></div>';
@@ -92,8 +94,8 @@ function rtof_settings(&$a,&$s) {
 	$s .= '<label id="rtof-password-label" for="rtof_password">'. t('Friendica password') .'</label>';
 	$s .= '<input id="rtof-password" type="password" name="rtof_password" size="35" value="' . $password . '" />';
 	$s .= '<div class="clear"></div>';
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="rtof_submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
-	$s .= '</div>';
+	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="rtof_submit" class="settings-submit" value="' . t('Submit Red to Friendica Post Settings') . '" /></div>';
+	$s .= '</div></div>';
 }
 
 

@@ -2,7 +2,7 @@
 #wppost-enable-label, #wppost-username-label, #wppost-password-label, 
 #wppost-blog-label, #wppost-bydefault-label, #wppost-backlink-label {
 	float: left;
-	width: 200px;
+	width: 350px;
 	margin-top: 10px;
 }
 
@@ -12,7 +12,7 @@
 	margin-top: 10px;
 }
 
-#wppost-submit {
+#wppost-submit, #settings-wordpress-wrapper {
 	margin-top: 15px;
 }
 

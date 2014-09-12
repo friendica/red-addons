@@ -181,7 +181,7 @@ function diaspora_settings(&$a,&$s) {
 
 	/* provide a submit button */
 
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" id="diaspora-submit" name="diaspora-submit" class="settings-submit" value="' . t('Save Diaspora Settings') . '" /></div></div></div>';
+	$s .= '<div class="settings-submit-wrapper" ><input type="submit" id="diaspora-submit" name="diaspora-submit" class="settings-submit" value="' . t('Submit Diaspora Settings') . '" /></div></div></div>';
 
 }
 

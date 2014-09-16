@@ -5,8 +5,8 @@
  * Version: 0.1
  * Author: Michael Vogel <http://pirati.ca/profile/heluecht>
  */
-require_once('addon/pumpio/oauth/http.php');
-require_once('addon/pumpio/oauth/oauth_client.php');
+require_once('library/oauth/http.php');
+require_once('library/oauth/oauth_client.php');
 
 require_once('include/permissions.php');
 

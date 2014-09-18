@@ -19,7 +19,7 @@ function donate_content(&$a) {
 $contributors = array(
 array('The RedMatrix Project', 'max@macgirvin.com', t('Project Servers and Resources')),
 array('Mike Macgirvin','mike@macgirvin.com',t('Project Creator and Tech Lead')),
-
+array('Thomas Willingham','beardyunixer@beardyunixer.com',t('Admin, developer, directorymin, support bloke')),
 /* Developers and public hubs - add your donatable resource here */
 
 );

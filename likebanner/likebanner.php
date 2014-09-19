@@ -53,7 +53,7 @@ function likebanner_content(&$a) {
 				intval($channel['channel_id'])
 			);
 			if($p) {
-				$link = z_root() . '/like/profile/' . $channel['channel_address'] . '/' . $p[0]['profile_guid'] . '?f=&verb=like&interactive=1';
+				$link = z_root() . '/like/profile/' . $p[0]['profile_guid'] . '?f=&verb=like&interactive=1';
 				$o .= EOL . EOL . t('Link:') . EOL . '<input type="text" size="64" onclick="this.select();" value="' . $link . '" />';
 
 				$html = '<a href="' . $link . '" ><img src="' . z_root() . '/likebanner?f=&addr=' . $def . '&size=' . $_REQUEST['size'] . '" alt="' . t('Like us on RedMatrix') . '" /></a>';

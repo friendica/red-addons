@@ -1,7 +1,7 @@
 <?php
 /**
  * Name: Random Channel Home
- * Description: Display a random channel from this server on the home page.
+ * Description: This plugin is deprecated and scheduled to be removed.  Please use the custom home plugin instead.
  * Version: 1.0
  * Author: Thomas Willingham <http://yamkote.com/channel/kogatosamgladen>
  */

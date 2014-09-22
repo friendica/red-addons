@@ -1,7 +1,7 @@
 <?php
 /**
  * Name: Custom Home
- * Description: Set a custom home page.  
+ * Description: Set a custom home page.  Display a random channel from this server on the home page.
  * Version: 1.0  
  * Author: Thomas Willingham <zot:beardyunixer@beardyunixer.com>
  */
@@ -20,11 +20,19 @@ function custom_home_unload() {
 function custom_home_home(&$a, &$o){
     
     $x = get_config('system','custom_home');
-    if($x) { 
-	$x = z_root() . '/' . $x;
-        goaway(zid($x));
+    if($x) {
+	if ($x == "random") {
+		$r = q("select channel_address from channel where channel_r_stream = 1 and channel_address != 'sys' order by rand() limit 1");
+		$x = z_root() . '/channel/' . $r[0]['channel_address'];
+		}
+	else {
+		$x = z_root() . '/' . $x;
 	}
-    else 
+        
+	goaway(zid($x));
+	}
+
+//If nothing is set
         return $o;
 }
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Name: Custom Home
- * Description: Set a custom home page.  Display a random channel from this server on the home page.
+ * Description: Set a custom home page.  
  * Version: 1.0  
  * Author: Thomas Willingham <zot:beardyunixer@beardyunixer.com>
  */

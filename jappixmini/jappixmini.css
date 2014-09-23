@@ -1,20 +1,35 @@
-#settings_jappixmini_expanded > label {
+#settings-jappixmini-wrapper > label {
 	clear: both;
 	float: left;
 	width: 200px;
 	margin-bottom: 15px;
 }
 
-#settings_jappixmini_expanded > input[type="text"], 
-#settings_jappixmini_expanded > input[type="password"],
-#settings_jappixmini_expanded > input[type="checkbox"] {
+#settings-jappixmini-wrapper > input[type="text"], 
+#settings-jappixmini-wrapper > input[type="password"],
+#settings-jappixmini-wrapper > input[type="checkbox"] {
 	float: left;
 }
 
-#settings_jappixmini_expanded > input[type="text"], 
-#settings_jappixmini_expanded > input[type="password"] {
+#settings-jappixmini-wrapper > input[type="text"], 
+#settings-jappixmini-wrapper > input[type="password"] {
 	width: 200px;
 }
 
+#settings-jappixmini-wrapper > input[type="button"] {
+   background-color: #333;
+   font-weight: bold;
+   color: #FFF;
+   text-decoration: none;
+   padding: 6px 12px;
+   margin-left: 15px;
+}
 
+#settings-jappixmini-wrapper > input[type="button"]:hover {
+   text-decoration: underline;
+}
+
+#settings-jappixmini-wrapper {
+	margin-top: 15px;
+}
 

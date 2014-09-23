@@ -97,7 +97,9 @@ function flattrwidget_settings(&$a,&$s) {
     $enable_checked = (($enable) ? ' checked="checked" ' : '');
 
     $s .= '<div class="settings-block">';
-    $s .= '<h3>Flattr Widget '.t('Settings').'</h3>';
+    $s .= '<button class="btn btn-default" data-target="#settings-flattrwidget-wrapper" data-toggle="collapse" type="button">' . t('Flattr Widget Settings') . '</button>';
+    $s .= '<div id="settings-flattrwidget-wrapper" class="collapse well">';   
+    
     $s .= '<div id="flattrwidget-settings-wrapper">';
     $s .= '<label id="flattrwidget-user-label" for="flattrwidget-user">' . t('flattr user'). '</label>';
     $s .= '<input id="flattrwidget-user" type="text" name="flattrwidget-user" value="'.$user.'" />';
@@ -135,6 +137,6 @@ function flattrwidget_settings(&$a,&$s) {
     
     $s .= '<div class="clear"></div>';
     $s .= '</div>';
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="flattrwidget-settings-submit" class="settings-submit" value="' . t('Submit') . '" /></div>';
-    $s .= '</div>';
+    $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="flattrwidget-settings-submit" class="settings-submit" value="' . t('Submit Flattr Widget Settings') . '" /></div>';
+    $s .= '</div></div>';
 }

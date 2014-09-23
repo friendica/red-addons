@@ -69,7 +69,9 @@ function ijpost_settings(&$a,&$s) {
     /* Add some HTML to the existing form */
 
     $s .= '<div class="settings-block">';
-    $s .= '<h3>' . t('InsaneJournal Post Settings') . '</h3>';
+    $s .= '<button class="btn btn-default" data-target="#settings-insanejournal-wrapper" data-toggle="collapse" type="button">' . t('InsaneJournal Post Settings') . '</button>';
+    $s .= '<div id="settings-insanejournal-wrapper" class="collapse well">';    
+    
     $s .= '<div id="ijpost-enable-wrapper">';
     $s .= '<label id="ijpost-enable-label" for="ijpost-checkbox">' . t('Enable InsaneJournal Post Plugin') . '</label>';
     $s .= '<input id="ijpost-checkbox" type="checkbox" name="ijpost" value="1" ' . $checked . '/>';
@@ -92,7 +94,7 @@ function ijpost_settings(&$a,&$s) {
 
     /* provide a submit button */
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="ijpost-submit" name="ijpost-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
+    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="ijpost-submit" name="ijpost-submit" class="settings-submit" value="' . t('Submit InsaneJournal Post Settings') . '" /></div></div></div>';
 
 }
 

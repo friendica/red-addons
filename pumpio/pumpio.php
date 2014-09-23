@@ -166,8 +166,7 @@ function pumpio_jot_nets(&$a,&$b) {
     if(intval($pumpio_post) == 1) {
         $pumpio_defpost = get_pconfig(local_user(),'pumpio','post_by_default');
         $selected = ((intval($pumpio_defpost) == 1) ? ' checked="checked" ' : '');
-        $b .= '<div class="profile-jot-net"><input type="checkbox" name="pumpio_enable"' . $selected . ' value="1" /> '
-			. '<img src="addon/pumpio/pumpio.png" title="' . t('Post to Pump.io') . '" />' . '</div>';
+        $b .= '<div class="profile-jot-net"><input type="checkbox" name="pumpio_enable"' . $selected . ' value="1" /> <img src="addon/pumpio/pumpio.png" /> ' . t('Post to Pump.io') . '</div>';
 
     }
 }
@@ -202,8 +201,9 @@ function pumpio_settings(&$a,&$s) {
     /* Add some HTML to the existing form */
 
     $s .= '<div class="settings-block">';
-    $s .= '<h3>' . t('Pump.io Post Settings') . '</h3>';
-
+        $s .= '<button class="btn btn-default" data-target="#settings-pumpio-wrapper" data-toggle="collapse" type="button"><img src="addon/pumpio/pumpio.png" /> ' . t('Pump.io Post Settings') . '</button>';
+    $s .= '<div id="settings-pumpio-wrapper" class="collapse well">';    
+    
     $s .= '<div id="pumpio-servername-wrapper">';
     $s .= '<label id="pumpio-servername-label" for="pumpio-servername">'.t('pump.io servername (without "http://" or "https://" )').'</label>';
     $s .= '<input id="pumpio-servername" type="text" name="pumpio_host" value="'.$servername.'" />';
@@ -251,7 +251,7 @@ function pumpio_settings(&$a,&$s) {
 
     /* provide a submit button */
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="pumpio-submit" name="pumpio-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
+    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="pumpio-submit" name="pumpio-submit" class="settings-submit" value="' . t('Submit Pump.io Post Settings') . '" /></div></div></div>';
 
 }
 

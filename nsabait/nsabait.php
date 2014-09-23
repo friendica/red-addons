@@ -154,7 +154,9 @@ function nsabait_settings(&$a,&$s) {
 	/* Add some HTML to the existing form */
 
 	$s .= '<div class="settings-block">';
-	$s .= '<h3>' . t('NSAbait Settings') . '</h3>';
+   $s .= '<button class="btn btn-default" data-target="#settings-nsabait-wrapper" data-toggle="collapse" type="button">' . t('NSAbait Settings') . '</button>';
+   $s .= '<div id="settings-nsabait-wrapper" class="collapse well">';    	
+	
 	$s .= '<div id="nsabait-enable-wrapper">';
 	$s .= '<label id="nsabait-enable-label" for="nsabait-checkbox">' . t('Enable NSAbait Plugin') . '</label>';
 	$s .= '<input id="nsabait-checkbox" type="checkbox" name="nsabait" value="1" ' . $checked . '/>';
@@ -162,6 +164,6 @@ function nsabait_settings(&$a,&$s) {
 
 	/* provide a submit button */
 
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="nsabait-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
+	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="nsabait-submit" class="settings-submit" value="' . t('Submit NSAbait Settings') . '" /></div></div></div>';
 
 }

@@ -69,7 +69,9 @@ function dwpost_settings(&$a,&$s) {
     /* Add some HTML to the existing form */
 
     $s .= '<div class="settings-block">';
-    $s .= '<h3>' . t('Dreamwidth Post Settings') . '</h3>';
+    $s .= '<button class="btn btn-default" data-target="#settings-dreamwidth-wrapper" data-toggle="collapse" type="button">' . t('Dreamwidth Post Settings') . '</button>';
+    $s .= '<div id="settings-dreamwidth-wrapper" class="collapse well">';        
+    
     $s .= '<div id="dwpost-enable-wrapper">';
     $s .= '<label id="dwpost-enable-label" for="dwpost-checkbox">' . t('Enable dreamwidth Post Plugin') . '</label>';
     $s .= '<input id="dwpost-checkbox" type="checkbox" name="dwpost" value="1" ' . $checked . '/>';
@@ -92,7 +94,7 @@ function dwpost_settings(&$a,&$s) {
 
     /* provide a submit button */
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="dwpost-submit" name="dwpost-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
+    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="dwpost-submit" name="dwpost-submit" class="settings-submit" value="' . t('Submit Dreamwidth Post Settings') . '" /></div></div></div>';
 
 }
 

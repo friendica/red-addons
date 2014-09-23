@@ -149,7 +149,9 @@ function planets_settings(&$a,&$s) {
 	/* Add some HTML to the existing form */
 
 	$s .= '<div class="settings-block">';
-	$s .= '<h3>' . t('Planets Settings') . '</h3>';
+	$s .= '<button class="btn btn-default" data-target="#settings-planets-wrapper" data-toggle="collapse" type="button">' . t('Planets Settings') . '</button>';
+   $s .= '<div id="settings-planets-wrapper" class="collapse well">';    
+    
 	$s .= '<div id="planets-enable-wrapper">';
 	$s .= '<label id="planets-enable-label" for="planets-checkbox">' . t('Enable Planets Plugin') . '</label>';
 	$s .= '<input id="planets-checkbox" type="checkbox" name="planets" value="1" ' . $checked . '/>';
@@ -157,6 +159,6 @@ function planets_settings(&$a,&$s) {
 
 	/* provide a submit button */
 
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="planets-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
+	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="planets-submit" class="settings-submit" value="' . t('Submit Planets Settings') . '" /></div></div></div>';
 
 }

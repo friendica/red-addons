@@ -298,13 +298,9 @@ function jappixmini_settings(&$a, &$s) {
         $a->page['htmlhead'] .= '<script type="text/javascript" src="' . $a->get_baseurl() . '/addon/jappixmini/lib.js"></script>'."\r\n";
     }
 
-    $s .= '<span id="settings_jappixmini_inflated" class="settings-block fakelink" style="display: block;" onclick="openClose(\'settings_jappixmini_expanded\'); openClose(\'settings_jappixmini_inflated\');">';
-    $s .= '<h3>'.t('Jappix Mini').'</h3>';
-    $s .= '</span>';
-    $s .= '<div id="settings_jappixmini_expanded" class="settings-block" style="display: none;">';
-    $s .= '<span class="fakelink" onclick="openClose(\'settings_jappixmini_expanded\'); openClose(\'settings_jappixmini_inflated\');">';
-    $s .= '<h3>'.t('Jappix Mini').'</h3>';
-    $s .= '</span>';
+    $s .= '<div class="settings-block">';
+    $s .= '<button class="btn btn-default" data-target="#settings-jappixmini-wrapper" data-toggle="collapse" type="button">' . t('Jappix Mini Settings') . '</button>';
+    $s .= '<div id="settings-jappixmini-wrapper" class="collapse well">';    
 
     $s .= '<label for="jappixmini-activate">'.t('Activate addon').'</label>';
     $s .= ' <input id="jappixmini-activate" type="checkbox" name="jappixmini-activate" value="1"'.$activate.' />';
@@ -324,7 +320,6 @@ function jappixmini_settings(&$a, &$s) {
 	$s .= ' <input id="jappixmini-bosh" type="text" name="jappixmini-bosh" value="'.$bosh.'" />';
 	$s .= '<br />';
     }
-
 
     $s .= '<label for="jappixmini-password">'.t('Jabber password').'</label>';
     $s .= ' <input type="hidden" id="jappixmini-password" name="jappixmini-encrypted-password" value="'.$password.'" />';
@@ -348,10 +343,10 @@ function jappixmini_settings(&$a, &$s) {
     $s .= '<br /><div class="clear"></div>';
     if ($info_text) $s .= '<br />Configuration help:<p style="margin-left:2em;">'.$info_text.'</p>';
     $s .= '<br />Status:<p style="margin-left:2em;">Addon knows '.$address_cnt.' Jabber addresses of '.$contact_cnt.' RedMatrix contacts (takes some time, usually 10 minutes, to update).</p>';
-    $s .= '<input type="submit" name="jappixmini-submit" value="' . t('Save Settings') . '" />';
+    $s .= '<input type="submit" name="jappixmini-submit" value="' . t('Submit Jappix Mini Settings') . '" />';
     $s .= ' <input type="button" value="'.t('Add contact').'" onclick="jappixmini_addon_subscribe();" />';
 
-    $s .= '</div>';
+    $s .= '</div></div>';
 
     $a->page['htmlhead'] .= "<script type=\"text/javascript\">
         function jappixmini_set_password() {

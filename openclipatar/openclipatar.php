@@ -3,7 +3,7 @@
  *
  * Name: Openclipatar
  * Description: Allows you to select a profile photo from openclipart.org easily
- * Version: 0.7
+ * Version: 0.8
  * Author: Habeas Codice <https://federated.social>
  *
  */
@@ -126,55 +126,100 @@ function openclipatar_content(&$a) {
 		$id = argv(2);
 		$chan = $a->get_channel();
 		
-		// unselect whatever previous profile photo as 'THE' profile photo
-		$r = q("update photo set xchan='', profile = 0 where aid = %d and uid = %d",
-			intval(get_account_id()),
-			intval(local_user())
-		);
-		//probably also need to handle photo_flags
+		$x = z_fetch_url('https://openclipart.org/image/250px/svg_to_png/' .$id . '/' . $id . '.png',true);
+		if($x['success'])
+			$imagedata = $x['body'];
 		
-		// make lib to the hard work - grabs the url and resizes for zoom 4,5,6
-		$x = import_profile_photo('https://openclipart.org/image/250px/svg_to_png/' .$id . '/' . $id . '.png', $chan['xchan_hash']);
+		$ph = photo_factory($imagedata, 'image/png');
+		if(! $ph->is_valid())
+			return t('Unknown error. Please try again later.');
+			
+		// create a unique resource_id
+		$hash = photo_new_resource();
 		
-		//import returns true in param 4 when error
-		if(!$x[4]) {
-				$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' 
-					where xchan_hash = '%s' limit 1",
-					dbesc(datetime_convert()),
-					dbesc($x[0]),
-					dbesc($x[1]),
-					dbesc($x[2]),
-					dbesc($x[3]),
-					dbesc($chan['xchan_hash'])
-				);
-				
-				// <resource_id>-<zoom_level>
-				$fname = basename($x[0]);
-				$resource_id = substr($fname, 0, strpos($fname, '-'));
-				
-				// import_profile_photo doesn't set uid, import_channel_photo does, setting it is necessary for canonical /photo/profile/<size>/<uid> link to work. import_channel_photo OTOH doesn't give us a resource_id back to update the xchan which are critical for all other functions to work -- TODO: check with red devs for proper procedure
-				// notes: tried 3 separate ways using import_channel_photo(), just doesn't seem workable unique ID wise. we cheat and overwrite album name to get around this.
-				$r = q("update photo set aid = %d, uid = %d, photo_flags = %d, album = '%s' where resource_id = '%s'",
-					intval(get_account_id()),
-					intval(local_user()),
-					intval(PHOTO_PROFILE),
-					dbesc(t('Profile Photos')),
-					$resource_id
-				);
-				
-				// set highest res available photo as the official profile pic
-				$r = q("update photo set profile = 1 where aid = %d and uid = %d and resource_id = '%s' order by scale limit 1",
-					intval(get_account_id()),
-					intval(local_user()),
-					$resource_id
-				);
-				
-				$profile_addr = $a->get_baseurl() . '/profile/' . $chan['channel_address'];
-				$o .= '<P>' . t('Your profile image has been updated. Click the following link to view: ') . '<a href="' . $profile_addr . '">' . $profile_addr . '</a></P>';
-					
-		}
-		// TODO: MX for failure, waiting until technical bits of photo api are better understood
+		// save an original or "scale 0" image
+		$p = array('aid' => get_account_id(), 'uid' => local_user(), 'resource_id' => $hash, 'filename' => $id.'.png', 'album' => t('Profile Photos'), 'scale' => 0);
+		$r = $ph->save($p);
+		if($r) {
+			// scale 0 success, continue 4, 5, 6
+			// we'll skip scales 1,2 (640, 320 rectangular formats as these images are all less than this)
+			
+			// ensure squareness at first, subsequent scales keep ratio
+			$ph->scaleImageSquare(175);
+			$p['scale'] = 4;
+			$r = $ph->save($p);
+			if($r === false)
+				$photo_failure = true;
 
+			$ph->scaleImage(80);
+			$p['scale'] = 5;
+			$r = $ph->save($p);
+			if($r === false)
+				$photo_failure = true;
+
+			$ph->scaleImage(48);
+			$p['scale'] = 6;
+			$r = $ph->save($p);
+			if($r === false)
+				$photo_failure = true;
+		}
+		
+		$is_default_profile = 1;
+		if($_REQUEST['profile']) {
+			$r = q("select id, is_default from profile where id = %d and uid = %d limit 1",
+				intval($_REQUEST['profile']),
+				intval(local_user())
+			);
+			if(($r) && (! intval($r[0]['is_default'])))
+				$is_default_profile = 0;
+		} 
+		if($is_default_profile) {
+			// unset any existing profile photos
+			$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND uid = %d",
+				intval(local_user()));
+			$r = q("UPDATE photo SET photo_flags = (photo_flags ^ %d ) WHERE (photo_flags & %d ) AND uid = %d",
+				intval(PHOTO_PROFILE),
+				intval(PHOTO_PROFILE),
+				intval(local_user()));
+
+			// set all sizes of this one as profile photos
+			$r = q("UPDATE photo SET profile = 1 WHERE uid = %d AND resource_id = '%s'",
+				intval(local_user()),
+				dbesc($hash)
+				);
+			$r = q("UPDATE photo SET photo_flags = ( photo_flags | %d ) WHERE uid = %d AND resource_id = '%s'",
+				intval(PHOTO_PROFILE),
+				intval(local_user()),
+				dbesc($hash)
+				);
+			
+			require_once('mod/profile_photo.php');
+			profile_photo_set_profile_perms(); //Reset default profile photo permissions to public
+			
+			// only the default needs reload since it uses canonical url -- despite the slightly ambiguous message, left it so as to re-use translations
+			info( t('Shift-reload the page or clear browser cache if the new photo does not display immediately.') . EOL);
+		}
+		else {
+			// not the default profile, set the path in the correct entry in the profile DB
+			$r = q("update profile set photo = '%s', thumb = '%s' where id = %d and uid = %d limit 1",
+				dbesc(get_app()->get_baseurl() . '/photo/' . $hash . '-4'),
+				dbesc(get_app()->get_baseurl() . '/photo/' . $hash . '-5'),
+				intval($_REQUEST['profile']),
+				intval(local_user())
+			);
+			info( t('Profile photo updated successfully.') . EOL);
+		}
+		// set a new photo_date on our xchan so that we can tell everybody to update their cached copy
+		$r = q("UPDATE xchan set xchan_photo_date = '%s' where xchan_hash = '%s' limit 1",
+			dbesc(datetime_convert()),
+			dbesc($chan['xchan_hash'])
+		);
+		// tell everybody
+		proc_run('php','include/directory.php',local_user());
+		
+		$profile_addr = $a->get_baseurl() . '/profile/' . ($_REQUEST['profile'] ? $_REQUEST['profile'].'/view' : $chan['channel_address']);
+		goaway($profile_addr);
+		
 	} else {
 		openclipatar_profile_photo_content_end($a, $o);
 	}

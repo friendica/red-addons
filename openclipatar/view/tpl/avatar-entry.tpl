@@ -6,6 +6,6 @@
 <div class="openclipatar-nfaves"><i class="icon-heart heart-icon"></i> {{$entry.nfaves}}</div>
 <div class="clear"></div>
 </div>
-<div class="openclipatar-use btn btn-default"><a href="{{$entry.uselink}}"><i class="icon-check use-icon"></i> {{$use}}</a></div>
+<div class="openclipatar-use btn btn-default"><a href="{{$entry.uselink}}" onclick="grabProfile(this)"><i class="icon-check use-icon"></i> {{$use}}</a></div>
 <div class="clear"></div>
 </div>

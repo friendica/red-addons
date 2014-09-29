@@ -12,6 +12,6 @@
 
 <div id="page-end"></div>
 <div class="openclipatar-end"></div>
-<script>$(document).ready(function() { loadingPage = false;});</script>
+<script>$(document).ready(function() { loadingPage = false; window.grabProfile = function(o) { o.href = [o.href,'&profile=',$('#profile-photo-profiles').val()].join(''); }; });</script>
 <div id="page-spinner"></div>
 

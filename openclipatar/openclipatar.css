@@ -1,0 +1,12 @@
+.openclipatar-ent, .openclipatar-ndownloads, .openclipatar-nfaves {
+float:left;
+}
+.openclipatar-img {
+width:220px;
+}
+.openclipatar-header {
+margin-top:1em;
+}
+.openclipatar-end {
+clear:both;
+}

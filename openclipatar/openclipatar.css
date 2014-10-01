@@ -1,6 +1,18 @@
 .openclipatar-ent, .openclipatar-ndownloads, .openclipatar-nfaves {
 float:left;
 }
+.openclipatar-ent {
+	width: 250px;
+	height: 250px;
+	overflow: hidden;
+	padding: 5px;
+}
+.openclipatar-title {
+	width:250px;
+	height: 14px;
+	overflow: hidden;
+}
+
 .openclipatar-img {
 width:220px;
 }

@@ -3,6 +3,8 @@ float:left;
 }
 .openclipatar-ent {
 height:20em;
+overflow: hidden;
+padding: 5px;
 }
 .openclipatar-img {
 width:220px;

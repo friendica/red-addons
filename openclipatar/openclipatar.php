@@ -3,20 +3,16 @@
  *
  * Name: Openclipatar
  * Description: Allows you to select a profile photo from openclipart.org easily
- * Version: 0.8
+ * Version: 1.0
  * Author: Habeas Codice <https://federated.social>
  *
  */
 
 function openclipatar_load() {
-	//register_hook('feature_settings', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings');
-	//register_hook('feature_settings_post', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings_post');
 	register_hook('profile_photo_content_end', 'addon/openclipatar/openclipatar.php', 'openclipatar_profile_photo_content_end');
 }
 
 function openclipatar_unload() {
-	//unregister_hook('feature_settings', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings');
-	//unregister_hook('feature_settings_post', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings_post');
 	unregister_hook('profile_photo_content_end', 'addon/openclipatar/openclipatar.php', 'openclipatar_profile_photo_content_end');
 }
 
@@ -27,12 +23,16 @@ function openclipatar_plugin_admin_post(&$a) {
 	$defsearch = ((x($_POST, 'defsearch')) ? notags(trim($_POST['defsearch'])) : '');
 	set_config('openclipatar', 'prefclipids', $prefclipids);
 	set_config('openclipatar', 'defsearch', $defsearch);
+	if(is_numeric($_POST['returnafter']))
+		set_config('openclipatar', 'returnafter', $_POST['returnafter']);
 }
 
 function openclipatar_plugin_admin(&$a, &$o) {
 	$t = get_markup_template('admin.tpl', 'addon/openclipatar/');
 	$prefclipids = get_config('openclipatar', 'prefclipids');
 	$defsearch = get_config('openclipatar', 'defsearch');
+	$returnafter = get_config('openclipatar', 'returnafter');
+	
 	if(! $defsearch) 
 		$defsearch = 'avatar';
 	
@@ -40,6 +40,11 @@ function openclipatar_plugin_admin(&$a, &$o) {
 		'$submit' => t('Submit'),
 		'$prefclipids' => array('prefclipids', t('Preferred Clipart IDs'), $prefclipids, t('List of preferred clipart ids. These will be shown first.')),
 		'$defsearch' => array('defsearch', t('Default Search Term'), $defsearch, t('The default search term. These will be shown second.')),
+		'$returnafter' => array('returnafter', t('Return After'), $returnafter, t('Page to load after image selection.'), array(
+			0 => t('View Profile'),
+			1 => t('Edit Profile'),
+			2 => t('Profile List'),
+		)),
 		//'$nperpage' => array('nperpage', t('Results pagination'), $nperpage, t('Enter the number of results you wish to pull from the server each page')),
 	));
 }
@@ -66,10 +71,10 @@ function openclipatar_decode_result($arr) {
 }
 
 function openclipatar_profile_photo_content_end(&$a, &$o) {
-	// until we get a better api from openclipart.org, preload everything and spit it out. hopefully ram doesn't run out
 	
 	$prefclipids = get_config('openclipatar', 'prefclipids');
 	$defsearch = get_config('openclipatar', 'defsearch');
+	$returnafter = get_config('openclipatar', 'returnafter');
 	
 	head_add_css('addon/openclipatar/openclipatar.css');
 	
@@ -238,8 +243,14 @@ function openclipatar_content(&$a) {
 		// tell everybody
 		proc_run('php','include/directory.php',local_user());
 		
-		$profile_addr = $a->get_baseurl() . '/profile/' . ($_REQUEST['profile'] ? $_REQUEST['profile'].'/view' : $chan['channel_address']);
-		goaway($profile_addr);
+		$returnafter = get_config('openclipatar', 'returnafter');
+		$returnafter_urls = array(
+			0 => $a->get_baseurl() . '/profile/' . ($_REQUEST['profile'] ? $_REQUEST['profile'].'/view' : $chan['channel_address']),
+			1 => $a->get_baseurl() . '/profiles/' . ($_REQUEST['profile'] ? $_REQUEST['profile'] : $a->profile_uid),
+			2 => $a->get_baseurl() . '/profiles'
+		);
+		
+		goaway($returnafter_urls[$returnafter]);
 		
 	} else {
 		//invoked as module, we place in content pane the same as we would for the end of the profile photo page. Also handles json for endless scroll for either invokation.
@@ -247,22 +258,3 @@ function openclipatar_content(&$a) {
 	}
 	return $o;
 }
-
-/*function openclipatar_settings(&$a, &$s) {
-	if(! local_user())
-		return;
-	head_add_css('addon/openclipatar/openclipatar.css');
-	$enabled = get_pconfig(local_user(),'openclipatar','enable');
-	$checked = (($enabled) ? ' checked="checked" ' : '');
-
-        $s .= '<div class="settings-block">';
-        $s .= '<button class="btn btn-default" data-target="#settings-openclipatar" data-toggle="collapse" type="button"><img src="addon/openclipatar/openclipart-banner.png" /> Openclipatar '. t('Settings') .'</button>';
-        
-        $s .= '<div id="settings-openclipatar" class="collapse well">';
-        $s .= '<div id="openclipatar-enable-wrapper">';
-        $s .= '<label id="openclipatar-enable-label" for="openclipatar-checkbox">' . t('Enable') . ' Openclipatar ' . t('Plugin') . '</label>';
-        $s .= '<input id="openclipatar-checkbox" type="checkbox" name="openclipatar" value="1" ' . $checked . '/>';
-        $s .= '</div><div class="clear"></div>';
-
-        $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="openclipatar-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div></div>';
-}*/

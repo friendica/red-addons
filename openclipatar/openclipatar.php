@@ -3,20 +3,16 @@
  *
  * Name: Openclipatar
  * Description: Allows you to select a profile photo from openclipart.org easily
- * Version: 0.8
+ * Version: 1.0
  * Author: Habeas Codice <https://federated.social>
  *
  */
 
 function openclipatar_load() {
-	//register_hook('feature_settings', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings');
-	//register_hook('feature_settings_post', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings_post');
 	register_hook('profile_photo_content_end', 'addon/openclipatar/openclipatar.php', 'openclipatar_profile_photo_content_end');
 }
 
 function openclipatar_unload() {
-	//unregister_hook('feature_settings', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings');
-	//unregister_hook('feature_settings_post', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings_post');
 	unregister_hook('profile_photo_content_end', 'addon/openclipatar/openclipatar.php', 'openclipatar_profile_photo_content_end');
 }
 
@@ -66,7 +62,6 @@ function openclipatar_decode_result($arr) {
 }
 
 function openclipatar_profile_photo_content_end(&$a, &$o) {
-	// until we get a better api from openclipart.org, preload everything and spit it out. hopefully ram doesn't run out
 	
 	$prefclipids = get_config('openclipatar', 'prefclipids');
 	$defsearch = get_config('openclipatar', 'defsearch');
@@ -247,22 +242,3 @@ function openclipatar_content(&$a) {
 	}
 	return $o;
 }
-
-/*function openclipatar_settings(&$a, &$s) {
-	if(! local_user())
-		return;
-	head_add_css('addon/openclipatar/openclipatar.css');
-	$enabled = get_pconfig(local_user(),'openclipatar','enable');
-	$checked = (($enabled) ? ' checked="checked" ' : '');
-
-        $s .= '<div class="settings-block">';
-        $s .= '<button class="btn btn-default" data-target="#settings-openclipatar" data-toggle="collapse" type="button"><img src="addon/openclipatar/openclipart-banner.png" /> Openclipatar '. t('Settings') .'</button>';
-        
-        $s .= '<div id="settings-openclipatar" class="collapse well">';
-        $s .= '<div id="openclipatar-enable-wrapper">';
-        $s .= '<label id="openclipatar-enable-label" for="openclipatar-checkbox">' . t('Enable') . ' Openclipatar ' . t('Plugin') . '</label>';
-        $s .= '<input id="openclipatar-checkbox" type="checkbox" name="openclipatar" value="1" ' . $checked . '/>';
-        $s .= '</div><div class="clear"></div>';
-
-        $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="openclipatar-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div></div>';
-}*/

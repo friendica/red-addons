@@ -1,6 +1,9 @@
 .openclipatar-ent, .openclipatar-ndownloads, .openclipatar-nfaves {
 float:left;
 }
+.openclipatar-ent {
+height:20em;
+}
 .openclipatar-img {
 width:220px;
 }

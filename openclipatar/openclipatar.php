@@ -44,6 +44,27 @@ function openclipatar_plugin_admin(&$a, &$o) {
 	));
 }
 
+function openclipatar_decode_result($arr) {
+	$dbt = empty($arr['drawn_by']) ? (t('Uploaded by: ') . $arr['uploader']) : (t('Drawn by: ') . $arr['drawn_by']);
+	$r = array(
+		'title' => $arr['title'],
+		'uploader' => $arr['uploader'],
+		'drawn_by' => $arr['drawn_by'],
+		'ncomments' => count($arr['comments'], COUNT_NORMAL),
+		'nfaves' => $arr['total_favorites'],
+		'ndownloads' => $arr['downloaded_by'],
+		'desc' => $arr['description'],
+		'tags' => $arr['tags'],
+		'link' => $arr['detail_link'],
+		'thumb' => 'https://openclipart.org/image/80px/svg_to_png/' . $arr['id'] . '/' . $arr['id'] . '.png',
+		'id' => $arr['id'],
+		'created' => $arr['created'],
+		'dbtext' => $dbt,
+		'uselink' => '/openclipatar/use/' . $arr['id'],
+	);
+	return $r;
+}
+
 function openclipatar_profile_photo_content_end(&$a, &$o) {
 	// until we get a better api from openclipart.org, preload everything and spit it out. hopefully ram doesn't run out
 	
@@ -64,33 +85,33 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 		
 	if(! $search)
 		$search = $defsearch;
-		
-	$x =  z_fetch_url('https://openclipart.org/search/json/?amount=20&query=' . urlencode($search) . '&page=' . $a->pager['page']);
 	
 	$entries = array();
+	$eidlist = array();
+		
+	if($prefclipids && preg_match('/[\d,]+/',$prefclipids)) {
+		$eidlist = explode(',', $prefclipids); // save for later
+		$x = z_fetch_url('https://openclipart.org/search/json/?byids=' . dbesc($prefclipids));
+		if($x['success']) {
+			$j = json_decode($x['body'], true);
+			if($j && !empty($j['payload'])) {
+				foreach($j['payload'] as $rr) {
+					$entries[] = openclipatar_decode_result($rr);
+				}
+			}
+		}
+	}
+		
+	$x =  z_fetch_url('https://openclipart.org/search/json/?amount=20&query=' . urlencode($search) . '&page=' . $a->pager['page']);
 	
 	if($x['success']) {
 		$j = json_decode($x['body'], true);
 		if($j && !empty($j['payload'])) {
 			foreach($j['payload'] as $rr) {
-				$dbt = empty($rr['drawn_by']) ? (t('Uploaded by: ') . $rr['uploader']) : (t('Drawn by: ') . $rr['drawn_by']);
-				$e = array(
-					'title' => $rr['title'],
-					'uploader' => $rr['uploader'],
-					'drawn_by' => $rr['drawn_by'],
-					'ncomments' => count($rr['comments'], COUNT_NORMAL),
-					'nfaves' => $rr['total_favorites'],
-					'ndownloads' => $rr['downloaded_by'],
-					'desc' => $rr['description'],
-					'tags' => $rr['tags'],
-					'link' => $rr['detail_link'],
-					'thumb' => 'https://openclipart.org/image/80px/svg_to_png/' . $rr['id'] . '/' . $rr['id'] . '.png',
-					'id' => $rr['id'],
-					'created' => $rr['created'],
-					'dbtext' => $dbt,
-					'uselink' => '/openclipatar/use/' . $rr['id'],
-				);
-				$entries[] = $e;
+				$e = openclipatar_decode_result($rr);
+				if(!in_array($e['id'], $eidlist)) {
+					$entries[] = $e;
+				}
 			}
 			$o .= "<script> var page_query = 'openclipatar'; var extra_args = 'search=" . urlencode($search) . '&' . extra_query_args() . "' ; </script>";
 		}
@@ -221,6 +242,7 @@ function openclipatar_content(&$a) {
 		goaway($profile_addr);
 		
 	} else {
+		//invoked as module, we place in content pane the same as we would for the end of the profile photo page. Also handles json for endless scroll for either invokation.
 		openclipatar_profile_photo_content_end($a, $o);
 	}
 	return $o;

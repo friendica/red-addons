@@ -9,45 +9,51 @@ tool Piwik into the red# pages.
 Requirements
 ------------
 
-To use this plugin you need a [piwik](http://piwik.org/) installation.
+To use this plugin you need a [Piwik](http://piwik.org/) installation.
 
 Where to find
 -------------
 
-In the red# addon git repository `/piwik/piwik.php` and a CSS file for
-styling the opt-out notice.
+In the *red-addons* git repository /piwik/, this directory contains
+all required files and a CSS-file for styling the opt-out notice.
 
 Configuration
 -------------
 
 Activate the analytics addon in your admin panel and then open the
-.htconfig.php file in you fav editor to add the following lines.
+.htconfig.php file in you fav editor to add the following lines:
 
     $a->config['piwik']['baseurl'] = 'example.com/piwik/';
     $a->config['piwik']['sideid'] = '1';
     $a->config['piwik']['optout'] = true;
     $a->config['piwik']['async'] = false;
+    $a->config['piwik']['trackjserror'] = false;
+You can also use the CLI config utility:
+    `$ ./util/config piwik baseurl "www.example.com/piwik/"`
 
 Configuration fields
 ---------------------
 
 * The *baseurl* points to your Piwik installation. Use the absolute path,
-remember trailing slashes but ignore the protocol (http/s) part of the URL.
+  remember trailing slashes but ignore the protocol (http/s) part of the URL.
 * Change the *sideid* parameter to whatever ID you want to use for tracking your
-red# installation.
+  red# installation.
 * The *optout* parameter (true|false) defines whether or
-not a short notice about the utilization of Piwik will be displayed on every
-page of your red# site (at the bottom of the page with some spacing to the
-other content). Part of the note is a link that allows the visitor to set an
-_opt-out_ cookie which will prevent visits from that user be tracked by piwik.
+  not a short notice about the utilization of Piwik will be displayed on every
+  page of your red# site (at the bottom of the page with some spacing to the
+  other content). Part of the note is a link that allows the visitor to set an
+  _opt-out_ cookie which will prevent visits from that user be tracked by piwik.
 * The *async* parameter (true|false) defines whether or not to use asynchronous
-tracking so pages load (or appear to load) faster.
+  tracking so pages load (or appear to load) faster.
+* The *trackjserror* parameter (true|false) defines weather or not to include
+  tracking of untracked JavaScript errors in frontend. This feature requires
+  Piwik >= 2.2.0
 
 Currently the optional notice states the following:
 
->    This website is tracked using the Piwik analytics tool. If you do not want
->    that your visits are logged this way you can set a cookie to prevent Piwik
->    from tracking further visits of the site (opt-out).
+> This website is tracked using the Piwik analytics tool. If you do not want
+> that your visits are logged this way you can set a cookie to prevent Piwik
+> from tracking further visits of the site (opt-out).
 
 License
 =======

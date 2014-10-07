@@ -15,3 +15,10 @@ margin-top:1em;
 .openclipatar-end {
 clear:both;
 }
+.openclipatar-prefids {
+background:rgba(50,10,10,5);
+}
+.openclipatar-prefclipmsg {
+border-radius: 4px 4px 4px 0px;
+font:larger bolder;
+}

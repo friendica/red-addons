@@ -124,6 +124,7 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 	
 	$entries = array();
 	$haveprefclips = false;
+	$eidlist = array();
 	
 	if($prefclipids && preg_match('/[\d,]+/',$prefclipids)) {
 		logger('Openclipatar: initial load: '.var_export($_REQUEST,true), LOGGER_DEBUG);
@@ -155,7 +156,7 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 			foreach($j['payload'] as $rr) {
 				$e = openclipatar_decode_result($rr);
 				if(!in_array($e['id'], $eidlist)) {
-					logger('openclipatar: id '.$e['id'].' not in '.var_export($eidlist,true), LOGGER_DEBUG);
+					//logger('openclipatar: id '.$e['id'].' not in '.var_export($eidlist,true), LOGGER_DEBUG);
 					$entries[] = $e;
 				}
 			}

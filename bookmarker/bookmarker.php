@@ -31,7 +31,11 @@ function bookmarker_prepare_body(&$a,&$b) {
 		return;
 
 	$id = $b['item']['id'];
-	$link = '<a class="fakelink" onclick="itemBookmark(' . $id . '); return false;" title="' . t('Save Bookmarks') . '" href="#"><i class="icon-bookmark"></i></a> ';
+	if(local_user())
+		$link = '<a class="fakelink" onclick="itemBookmark(' . $id . '); return false;" title="' . t('Save Bookmarks') . '" href="#"><i class="icon-bookmark"></i></a> ';
+	else
+		$link = '<i class="icon-bookmark"></i></a> ';
+
 	$b['html'] = str_replace('<span class="bookmark-identifier">#^</span>',$link,$b['html']);
 
 }

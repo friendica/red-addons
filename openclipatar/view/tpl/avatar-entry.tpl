@@ -1,4 +1,4 @@
-<div class="openclipatar-ent" id="openclipatar-ent-{{$entry.id}}" >
+<div class="openclipatar-ent{{if $entry.extraclass}} {{$entry.extraclass}}{{/if}}" id="openclipatar-ent-{{$entry.id}}" >
 <div class="openclipatar-img contact-entry-wrapper"><img src="{{$entry.thumb}}" title="{{$entry.dbtext}}" />
 <div class="openclipatar-title">{{$entry.title}}</div>
 <div class="openclipatar-created">{{$entry.created}}</div>

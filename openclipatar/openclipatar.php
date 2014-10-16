@@ -3,20 +3,16 @@
  *
  * Name: Openclipatar
  * Description: Allows you to select a profile photo from openclipart.org easily
- * Version: 0.8
+ * Version: 1.0
  * Author: Habeas Codice <https://federated.social>
  *
  */
 
 function openclipatar_load() {
-	//register_hook('feature_settings', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings');
-	//register_hook('feature_settings_post', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings_post');
 	register_hook('profile_photo_content_end', 'addon/openclipatar/openclipatar.php', 'openclipatar_profile_photo_content_end');
 }
 
 function openclipatar_unload() {
-	//unregister_hook('feature_settings', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings');
-	//unregister_hook('feature_settings_post', 'addon/openclipatar/openclipatar.php', 'openclipatar_settings_post');
 	unregister_hook('profile_photo_content_end', 'addon/openclipatar/openclipatar.php', 'openclipatar_profile_photo_content_end');
 }
 
@@ -25,30 +21,88 @@ function openclipatar_module() { return; }
 function openclipatar_plugin_admin_post(&$a) {
 	$prefclipids = ((x($_POST, 'prefclipids')) ? notags(trim($_POST['prefclipids'])) : '');
 	$defsearch = ((x($_POST, 'defsearch')) ? notags(trim($_POST['defsearch'])) : '');
+	$prefclipmsg = ((x($_POST, 'prefclipmsg')) ? notags(trim($_POST['prefclipmsg'])) : '');
 	set_config('openclipatar', 'prefclipids', $prefclipids);
 	set_config('openclipatar', 'defsearch', $defsearch);
+	set_config('openclipatar', 'prefclipmsg', $prefclipmsg);
+	if(is_numeric($_POST['returnafter']))
+		set_config('openclipatar', 'returnafter', $_POST['returnafter']);
+	if(is_numeric($_POST['sortprefids']))
+		set_config('openclipatar', 'sortprefids', $_POST['sortprefids']);
 }
 
 function openclipatar_plugin_admin(&$a, &$o) {
 	$t = get_markup_template('admin.tpl', 'addon/openclipatar/');
 	$prefclipids = get_config('openclipatar', 'prefclipids');
 	$defsearch = get_config('openclipatar', 'defsearch');
+	$returnafter = get_config('openclipatar', 'returnafter');
+	$sortprefids = get_config('openclipatar', 'sortprefids');
+	$prefclipmsg = get_config('openclipatar', 'prefclipmsg');
+	
 	if(! $defsearch) 
 		$defsearch = 'avatar';
+		
+	if(! $prefclipmsg)
+		$prefclipmsg = t('System defaults:');
 	
 	$o = replace_macros( $t, array(
 		'$submit' => t('Submit'),
 		'$prefclipids' => array('prefclipids', t('Preferred Clipart IDs'), $prefclipids, t('List of preferred clipart ids. These will be shown first.')),
 		'$defsearch' => array('defsearch', t('Default Search Term'), $defsearch, t('The default search term. These will be shown second.')),
+		'$returnafter' => array('returnafter', t('Return After'), $returnafter, t('Page to load after image selection.'), array(
+			0 => t('View Profile'),
+			1 => t('Edit Profile'),
+			2 => t('Profile List'), 
+		)),
+		'$sortprefids' => array('sortprefids', t('Sort Order'), $sortprefids, t('Sort order of preferred clipart ids.'), array(
+			0 => t('Newest First'),
+			1 => t('As Entered'),
+		)),
+		'$prefclipmsg' => array('prefclipmsg', t('Preferred IDs Message'), $prefclipmsg, t('Message to display above preferred results.')),
 		//'$nperpage' => array('nperpage', t('Results pagination'), $nperpage, t('Enter the number of results you wish to pull from the server each page')),
 	));
 }
 
+function openclipatar_decode_result($arr) {
+	$dbt = empty($arr['drawn_by']) ? (t('Uploaded by: ') . $arr['uploader']) : (t('Drawn by: ') . $arr['drawn_by']);
+	$r = array(
+		'title' => $arr['title'],
+		'uploader' => $arr['uploader'],
+		'drawn_by' => $arr['drawn_by'],
+		'ncomments' => count($arr['comments'], COUNT_NORMAL),
+		'nfaves' => $arr['total_favorites'],
+		'ndownloads' => $arr['downloaded_by'],
+		'desc' => $arr['description'],
+		'tags' => $arr['tags'],
+		'link' => $arr['detail_link'],
+		'thumb' => 'https://openclipart.org/image/80px/svg_to_png/' . $arr['id'] . '/' . $arr['id'] . '.png',
+		'id' => $arr['id'],
+		'created' => $arr['created'],
+		'dbtext' => $dbt,
+		'uselink' => '/openclipatar/use/' . $arr['id'],
+	);
+	return $r;
+}
+
+function openclipatar_sort_result(&$arr, array $prefclipids, $sortprefids) {
+	if($sortprefids == 0) // Newest first is how we get them from openclipart.org, do nothing.
+		return;
+	
+	// sort pref 1 == 'as entered'. no others exist yet.
+	usort($arr, function($a, $b) use ($prefclipids) {
+		$idxa = array_search($a['id'], $prefclipids);
+		$idxb = array_search($b['id'], $prefclipids);
+		return ($idxa < $idxb ? -1 : 1);
+	});
+}
+
 function openclipatar_profile_photo_content_end(&$a, &$o) {
-	// until we get a better api from openclipart.org, preload everything and spit it out. hopefully ram doesn't run out
 	
 	$prefclipids = get_config('openclipatar', 'prefclipids');
 	$defsearch = get_config('openclipatar', 'defsearch');
+	$returnafter = get_config('openclipatar', 'returnafter');
+	$sortprefids = get_config('openclipatar', 'sortprefids');
+	$prefclipmsg = get_config('openclipatar', 'prefclipmsg');
 	
 	head_add_css('addon/openclipatar/openclipatar.css');
 	
@@ -56,6 +110,9 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 	
 	if(! $defsearch)
 		$defsearch = 'avatar';
+		
+	if(! $prefclipmsg)
+		$prefclipmsg = t('System defaults:');
 	
 	if(x($_POST,'search'))
 		$search = notags(trim($_POST['search']));
@@ -64,35 +121,46 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 		
 	if(! $search)
 		$search = $defsearch;
-		
-	$x =  z_fetch_url('https://openclipart.org/search/json/?amount=20&query=' . urlencode($search) . '&page=' . $a->pager['page']);
 	
 	$entries = array();
+	$haveprefclips = false;
+	$eidlist = array();
+	
+	if($prefclipids && preg_match('/[\d,]+/',$prefclipids)) {
+		logger('Openclipatar: initial load: '.var_export($_REQUEST,true), LOGGER_DEBUG);
+		$x = z_fetch_url('https://openclipart.org/search/json/?amount=50&byids=' . dbesc($prefclipids));
+		if($x['success']) {
+			$j = json_decode($x['body'], true);
+			if($j && !empty($j['payload'])) {
+				$eidlist = explode(',', $prefclipids); // save for later
+				if(!$_REQUEST['aj']) {
+					foreach($j['payload'] as $rr) {
+						$e = openclipatar_decode_result($rr);
+						$e['extraclass'] = 'openclipatar-prefids';
+						$entries[] = $e;
+					}
+					if(count($entries)) {
+						openclipatar_sort_result($entries, $eidlist, $sortprefids);
+						$haveprefclips = true;
+					}
+				}
+			}
+		}
+	}
+		
+	$x =  z_fetch_url('https://openclipart.org/search/json/?amount=20&query=' . urlencode($search) . '&page=' . $a->pager['page']);
 	
 	if($x['success']) {
 		$j = json_decode($x['body'], true);
 		if($j && !empty($j['payload'])) {
 			foreach($j['payload'] as $rr) {
-				$dbt = empty($rr['drawn_by']) ? (t('Uploaded by: ') . $rr['uploader']) : (t('Drawn by: ') . $rr['drawn_by']);
-				$e = array(
-					'title' => $rr['title'],
-					'uploader' => $rr['uploader'],
-					'drawn_by' => $rr['drawn_by'],
-					'ncomments' => count($rr['comments'], COUNT_NORMAL),
-					'nfaves' => $rr['total_favorites'],
-					'ndownloads' => $rr['downloaded_by'],
-					'desc' => $rr['description'],
-					'tags' => $rr['tags'],
-					'link' => $rr['detail_link'],
-					'thumb' => 'https://openclipart.org/image/80px/svg_to_png/' . $rr['id'] . '/' . $rr['id'] . '.png',
-					'id' => $rr['id'],
-					'created' => $rr['created'],
-					'dbtext' => $dbt,
-					'uselink' => '/openclipatar/use/' . $rr['id'],
-				);
-				$entries[] = $e;
+				$e = openclipatar_decode_result($rr);
+				if(!in_array($e['id'], $eidlist)) {
+					//logger('openclipatar: id '.$e['id'].' not in '.var_export($eidlist,true), LOGGER_DEBUG);
+					$entries[] = $e;
+				}
 			}
-			$o .= "<script> var page_query = 'openclipatar'; var extra_args = 'search=" . urlencode($search) . '&' . extra_query_args() . "' ; </script>";
+			$o .= "<script> var page_query = 'openclipatar'; var extra_args = '&search=" . urlencode($search) . '&' . extra_query_args() . "' ; </script>";
 		}
 	}
 	if($_REQUEST['aj']) {
@@ -109,6 +177,7 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 	} else {
 		$o .= replace_macros( $t, array(
 			'$selectmsg' => t('Or select from a free OpenClipart.org image:'),
+			'$prefmsg' => $haveprefclips ? ('<div class="openclipatar-prefclipmsg openclipatar-prefids">' . $prefclipmsg . '</div>') : '',
 			'$use' => t('Use'),
 			'$defsearch' => array('search', t('Search Term'), $search),
 			//'$form_security_token' => get_form_security_token('profile_photo'),
@@ -217,30 +286,18 @@ function openclipatar_content(&$a) {
 		// tell everybody
 		proc_run('php','include/directory.php',local_user());
 		
-		$profile_addr = $a->get_baseurl() . '/profile/' . ($_REQUEST['profile'] ? $_REQUEST['profile'].'/view' : $chan['channel_address']);
-		goaway($profile_addr);
+		$returnafter = get_config('openclipatar', 'returnafter');
+		$returnafter_urls = array(
+			0 => $a->get_baseurl() . '/profile/' . ($_REQUEST['profile'] ? $_REQUEST['profile'].'/view' : $chan['channel_address']),
+			1 => $a->get_baseurl() . '/profiles/' . ($_REQUEST['profile'] ? $_REQUEST['profile'] : $a->profile_uid),
+			2 => $a->get_baseurl() . '/profiles'
+		);
+		
+		goaway($returnafter_urls[$returnafter]);
 		
 	} else {
+		//invoked as module, we place in content pane the same as we would for the end of the profile photo page. Also handles json for endless scroll for either invokation.
 		openclipatar_profile_photo_content_end($a, $o);
 	}
 	return $o;
 }
-
-/*function openclipatar_settings(&$a, &$s) {
-	if(! local_user())
-		return;
-	head_add_css('addon/openclipatar/openclipatar.css');
-	$enabled = get_pconfig(local_user(),'openclipatar','enable');
-	$checked = (($enabled) ? ' checked="checked" ' : '');
-
-        $s .= '<div class="settings-block">';
-        $s .= '<button class="btn btn-default" data-target="#settings-openclipatar" data-toggle="collapse" type="button"><img src="addon/openclipatar/openclipart-banner.png" /> Openclipatar '. t('Settings') .'</button>';
-        
-        $s .= '<div id="settings-openclipatar" class="collapse well">';
-        $s .= '<div id="openclipatar-enable-wrapper">';
-        $s .= '<label id="openclipatar-enable-label" for="openclipatar-checkbox">' . t('Enable') . ' Openclipatar ' . t('Plugin') . '</label>';
-        $s .= '<input id="openclipatar-checkbox" type="checkbox" name="openclipatar" value="1" ' . $checked . '/>';
-        $s .= '</div><div class="clear"></div>';
-
-        $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="openclipatar-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div></div>';
-}*/

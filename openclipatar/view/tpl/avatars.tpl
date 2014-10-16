@@ -5,7 +5,7 @@
 {{include file="field_input.tpl" field=$defsearch}}
 
 </form>
-</div>
+</div>{{$prefmsg}}
 {{foreach $entries as $entry}}
 {{include file="addon/openclipatar/view/tpl/avatar-entry.tpl"}}
 {{/foreach}}

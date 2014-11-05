@@ -40,7 +40,8 @@ function dirstats_content(&$a) {
 	$friendicachannelcount = get_config('dirstats','friendicachannelcount');
 	$diasporachannelcount = get_config('dirstats','diasporachannelcount');
 	$over35s = get_config('dirstats','over35s');
-	$average = get_config('dirstats','average');
+	$under35s = get_config('dirstats','under35s');
+	$average = get_config('dirstats','averageage');
 	$chatrooms = get_config('dirstats','chatrooms');
 	$tags = get_config('dirstats','tags');
 
@@ -121,7 +122,7 @@ function dirstats_cron(&$a, $b) {
 		$r = q("SELECT count(distinct hubloc_host) as total FROM `hubloc` where hubloc_network = 'friendica-over-diaspora'");
 		if ($r){
 			$friendicacount = $r[0]['total'];
-			set_config('dirstats','friendicacount',$friendicaount);
+			set_config('dirstats','friendicacount',$friendicacount);
 		}
 		$r = q("SELECT count(distinct hubloc_host) as total FROM `hubloc` where hubloc_network = 'diaspora'");
 		if ($r) {

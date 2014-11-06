@@ -71,7 +71,7 @@ if (argv(1) == 'json') {
 	}
 
 	// Used by RedMatrix News
-	elseif (argv(1) == 'genpost') {
+	elseif (argv(1) == 'genpost' && get_config('dirstats','allowfiledump')) {
 			$result = '[b]Hub count[/b] : ' . $hubcount . "\xA" .
 			'[b]RedMatrix Hubs[/b] : ' . $zotcount . "\xA" .
 			'[b]Friendica Hubs[/b] : ' . $friendicacount . "\xA" .
@@ -107,7 +107,6 @@ else {
 
 }
 function dirstats_cron(&$a, $b) {
-	echo "starting";
 	$r = q("SELECT count(distinct hubloc_host) as total FROM `hubloc`");
 		if ($r) {
 		$hubcount = $r[0]['total'];

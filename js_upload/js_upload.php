@@ -97,8 +97,7 @@ function createUploader() {
 		onSubmit: function(id,filename) {
 			if (typeof acl!="undefined"){
 				uploader.setParams( {
-					newalbum		:	document.getElementById('photos-upload-newalbum').value,
-					album			:	document.getElementById('photos-upload-album-select').value,
+					album			:	document.getElementById('photos-upload-album').value,
 					not_visible     :   document.getElementById('photos-upload-noshare').checked,
 					source          :   document.getElementById('photos-upload-source').value,
 					group_allow		:	acl.allow_gid.join(','),
@@ -108,8 +107,7 @@ function createUploader() {
 				});
 			} else {
 				uploader.setParams( {
-					newalbum		:	document.getElementById('photos-upload-newalbum').value,
-					album			:	document.getElementById('photos-upload-album-select').value,
+					album			:	document.getElementById('photos-upload-album').value,
 					not_visible     :   document.getElementById('photos-upload-noshare').checked,
 					source          :   document.getElementById('photos-upload-source').value,
 					group_allow		:	getSelected(document.getElementById('group_allow')).join(','),

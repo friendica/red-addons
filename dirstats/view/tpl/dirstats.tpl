@@ -8,5 +8,11 @@
 <ul>RedMatrix Channels: {{$channelcount}}</ul>
 <ul>Friendica Profiles: {{$friendicachannelcount}}</ul>
 <ul>Diaspora Profiles: {{$diasporachannelcount}}</ul>
-
+<p></p>
+<ul>Aged 35 and above: {{$over35s}}</ul>
+<ul>Aged 34 and below: {{$under35s}}</ul>
+<ul>Average age: {{$average}}</ul>
+<p></p>
+<ul>Known chatrooms: {{$chatrooms}}</ul>
+<ul>Total tags: {{$tags}}</ul>
 </div>

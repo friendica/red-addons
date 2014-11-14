@@ -73,7 +73,7 @@ function startpage_settings_post($a,$post) {
 			if(strpos($page,'http') !== 0)
 				$page = $page;
 
-		$r = q("update channel set channel_startpage = '%s' where channel_id = %d limit 1",
+		$r = q("update channel set channel_startpage = '%s' where channel_id = %d",
 			dbesc($page),
 			intval(local_user())
 		);

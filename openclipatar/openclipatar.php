@@ -246,7 +246,7 @@ function openclipatar_content(&$a) {
 			// unset any existing profile photos
 			$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND uid = %d",
 				intval(local_user()));
-			$r = q("UPDATE photo SET photo_flags = (photo_flags ^ %d ) WHERE (photo_flags & %d ) AND uid = %d",
+			$r = q("UPDATE photo SET photo_flags = (photo_flags & ~%d ) WHERE (photo_flags & %d )>0 AND uid = %d",
 				intval(PHOTO_PROFILE),
 				intval(PHOTO_PROFILE),
 				intval(local_user()));
@@ -270,7 +270,7 @@ function openclipatar_content(&$a) {
 		}
 		else {
 			// not the default profile, set the path in the correct entry in the profile DB
-			$r = q("update profile set photo = '%s', thumb = '%s' where id = %d and uid = %d limit 1",
+			$r = q("update profile set photo = '%s', thumb = '%s' where id = %d and uid = %d",
 				dbesc(get_app()->get_baseurl() . '/photo/' . $hash . '-4'),
 				dbesc(get_app()->get_baseurl() . '/photo/' . $hash . '-5'),
 				intval($_REQUEST['profile']),
@@ -279,7 +279,7 @@ function openclipatar_content(&$a) {
 			info( t('Profile photo updated successfully.') . EOL);
 		}
 		// set a new photo_date on our xchan so that we can tell everybody to update their cached copy
-		$r = q("UPDATE xchan set xchan_photo_date = '%s' where xchan_hash = '%s' limit 1",
+		$r = q("UPDATE xchan set xchan_photo_date = '%s' where xchan_hash = '%s'",
 			dbesc(datetime_convert()),
 			dbesc($chan['xchan_hash'])
 		);

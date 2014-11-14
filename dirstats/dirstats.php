@@ -107,7 +107,7 @@ else {
 
 }
 function dirstats_cron(&$a, $b) {
-	$r = q("SELECT count(distinct hubloc_host) as total FROM `hubloc` where not (hubloc_flags & %d) ",
+	$r = q("SELECT count(distinct hubloc_host) as total FROM `hubloc` where not (hubloc_flags & %d) > 0",
         intval(HUBLOC_FLAGS_DELETED)
         );
 		if ($r) {
@@ -115,7 +115,7 @@ function dirstats_cron(&$a, $b) {
 		set_config('dirstats','hubcount',$hubcount);
 		}
 
-		$r = q("SELECT count(distinct hubloc_host) as total FROM `hubloc` where hubloc_network = 'zot' and not (hubloc_flags & %d) ",
+		$r = q("SELECT count(distinct hubloc_host) as total FROM `hubloc` where hubloc_network = 'zot' and not (hubloc_flags & %d) > 0 ",
             intval(HUBLOC_FLAGS_DELETED)
         );
 			if ($r) {
@@ -132,7 +132,7 @@ function dirstats_cron(&$a, $b) {
 			$diasporacount = $r[0]['total'];
 			set_config('dirstats','diasporacount',$diasporacount);
 		}
-		$r = q("SELECT count(distinct xchan_hash) as total FROM `xchan` where xchan_network = 'zot' and not (xchan_flags & %d) ",
+		$r = q("SELECT count(distinct xchan_hash) as total FROM `xchan` where xchan_network = 'zot' and not (xchan_flags & %d) > 0",
             intval(XCHAN_FLAGS_DELETED)
         );
 		if ($r) {

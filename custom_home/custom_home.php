@@ -22,7 +22,8 @@ function custom_home_home(&$a, &$o){
     $x = get_config('system','custom_home');
     if($x) {
 	if ($x == "random") {
-		$r = q("select channel_address from channel where channel_r_stream = 1 and channel_address != 'sys' order by rand() limit 1");
+		$rand = db_getfunc('rand');
+		$r = q("select channel_address from channel where channel_r_stream = 1 and channel_address != 'sys' order by $rand limit 1");
 		$x = z_root() . '/channel/' . $r[0]['channel_address'];
 		}
 	else {

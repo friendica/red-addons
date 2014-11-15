@@ -108,7 +108,7 @@ else {
 }
 function dirstats_cron(&$a, $b) {
     // Some hublocs are immortal and won't ever die - they all have null date for hubloc_connected and hubloc_updated
-	$r = q("SELECT count(distinct hubloc_host) as total FROM `hubloc` where not (hubloc_flags & %d) > 0 and not (hubloc_connected = %d and not hubloc_updated = %d)",
+	$r = q("SELECT count(distinct hubloc_host) as total FROM `hubloc` where not (hubloc_flags & %d) > 0 and not (hubloc_connected = %d and hubloc_updated = %d)",
         intval(HUBLOC_FLAGS_DELETED),
         dbesc(NULL_DATE),
         dbesc(NULL_DATE)

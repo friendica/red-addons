@@ -115,7 +115,7 @@ else {
 		'$chatrooms' => $chatrooms,
         '$tagslabel' => t('Known Tags'),
 		'$tags' => $tags,
-        '$dislcaimer' => t('Please note Diaspora and Friendica statistics are merely those **this directory** is aware of, and not all those known in the network.  This also applies to chatrooms,')
+        '$disclaimer' => t('Please note Diaspora and Friendica statistics are merely those **this directory** is aware of, and not all those known in the network.  This also applies to chatrooms,')
 		));
 	}
 }

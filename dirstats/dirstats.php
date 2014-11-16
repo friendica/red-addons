@@ -90,21 +90,34 @@ if (argv(1) == 'json') {
 else {
 	$tpl = get_markup_template( "dirstats.tpl", "addon/dirstats/" );
 	 return replace_macros($tpl, array(
+        '$title' => t('RedMatrix Directory Stats'),
+        '$hubtitle' => t('Total Hubs'),
 		'$hubcount' => $hubcount,
+        '$zotlabel' => t('RedMatrix Hubs'),
 		'$zotcount' => $zotcount,
+        '$friendicalabel' => t('Friendica Hubs'),
 		'$friendicacount' => $friendicacount,
+        '$diasporalabel' => t('Diaspora Pods'),
 		'$diasporacount' => $diasporacount,
+        '$zotchanlabel' => t('RedMatrix Channels'),
 		'$channelcount' => $channelcount,
+        '$friendicachanlabel' => t('Friendica Channels'),
 		'$friendicachannelcount' => $friendicachannelcount,
+        '$diasporachanlabel' => t('Diaspora Channels'),
 		'$diasporachannelcount' => $diasporachannelcount,
+        '$over35label' => t('Aged 35 and above'),
 		'$over35s' => $over35s,
+        '$under35label' => t('Aged 34 and under'),
 		'$under35s' => $under35s,
+        '$averageagelabel' => t('Average Age'),
 		'$average' => $average,
+        '$chatlabel' => t('Known Chatrooms'),
 		'$chatrooms' => $chatrooms,
-		'$tags' => $tags
+        '$tagslabel' => t('Known Tags'),
+		'$tags' => $tags,
+        '$dislcaimer' => t('Please note Diaspora and Friendica statistics are merely those **this directory** is aware of, and not all those known in the network.  This also applies to chatrooms,')
 		));
 	}
-
 }
 function dirstats_cron(&$a, $b) {
     // Some hublocs are immortal and won't ever die - they all have null date for hubloc_connected and hubloc_updated

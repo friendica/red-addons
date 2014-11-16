@@ -1,18 +1,20 @@
 <div class="generic-content-wrapper">
-<h1>RedMatrix Directory Stats</h1>
-<ul>Total Hubs: {{$hubcount}}</ul>
-<ul>RedMatrix Hubs: {{$zotcount}}</ul>
-<ul>Friendica Hubs: {{$friendicacount}}</ul>
-<ul>Diaspora Pods: {{$diasporacount}}</ul>
+<h1>{{$title}}</h1>
+<ul>{{$hubtitle}} : {{$hubcount}}</ul>
+<ul>{{$zotlabel}} : {{$zotcount}}</ul>
+<ul>{{$friendicalabel}} : {{$friendicacount}}</ul>
+<ul>{{$diasporalabel}} : {{$diasporacount}}</ul>
 <p></p>
-<ul>RedMatrix Channels: {{$channelcount}}</ul>
-<ul>Friendica Profiles: {{$friendicachannelcount}}</ul>
-<ul>Diaspora Profiles: {{$diasporachannelcount}}</ul>
+<ul>{{$zotchanlabel}} : {{$channelcount}}</ul>
+<ul>{{$friendicachanlabel}} : {{$friendicachannelcount}}</ul>
+<ul>{{$diasporachanlabel}} : {{$diasporachannelcount}}</ul>
 <p></p>
-<ul>Aged 35 and above: {{$over35s}}</ul>
-<ul>Aged 34 and below: {{$under35s}}</ul>
-<ul>Average age: {{$average}}</ul>
+<ul>{{$over35label}} : {{$over35s}}</ul>
+<ul>{{$under35label}} : {{$under35s}}</ul>
+<ul>{{$averageagelabel}} : {{$average}}</ul>
 <p></p>
-<ul>Known chatrooms: {{$chatrooms}}</ul>
-<ul>Total tags: {{$tags}}</ul>
+<ul>{{$chatlabel}} : {{$chatrooms}}</ul>
+<ul>{{$tagslabel}} : {{$tags}}</ul>
+
+<p>{{$disclaimer}}</p>
 </div>

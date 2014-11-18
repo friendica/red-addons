@@ -368,9 +368,6 @@ function smiley_pack_smilies(&$a,&$b) {
 
 #Happy smileys
 
-	$b['texts'][] = ':cloud';
-	$b['icons'][] = '<img class="smiley" src="' . z_root() . '/addon/smiley_pack/icons/things/cloud9.gif' . '" alt="' . ':cloud' . '" />';
-
 	$b['texts'][] = ':tearsofjoy';
 	$b['icons'][] = '<img class="smiley" src="' . z_root() . '/addon/smiley_pack/icons/happy/tearsofjoy.gif' . '" alt="' . ':tearsofjoy' . '" />';
 

@@ -41,7 +41,7 @@ function visage_magic_auth($a, &$b) {
 //		logger('visage: exiting: ' . $b['url']);
 		return;
 	}
-4
+
 	$p = preg_match('/http(.*?)(channel|profile)\/(.*?)($|[\/\?\&])/',$b['url'],$matches);
 	if(! $p) {
 //		logger('visage: no matching pattern');

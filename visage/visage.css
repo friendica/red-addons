@@ -1,0 +1,13 @@
+settings-visage-wrapper {
+	margin-top: 12px;
+}
+
+#visage-enable-label {
+	float: left;
+	width: 350px;
+	margin-bottom: 5px;
+}
+
+#visage-checkbox {
+	float: left;
+}

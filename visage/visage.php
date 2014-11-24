@@ -18,13 +18,16 @@
 function visage_load() {
 
 	register_hook('magic_auth_success', 'addon/visage/visage.php', 'visage_magic_auth');
-
+	register_hook('feature_settings',      'addon/visage/visage.php', 'visage_settings');
+	register_hook('feature_settings_post', 'addon/visage/visage.php', 'visage_settings_post');
 }
 
 
 function visage_unload() {
 
 	unregister_hook('magic_auth_success', 'addon/visage/visage.php', 'visage_magic_auth');
+	unregister_hook('feature_settings',      'addon/visage/visage.php', 'visage_settings');
+	unregister_hook('feature_settings_post', 'addon/visage/visage.php', 'visage_settings_post');
 
 }
 
@@ -38,7 +41,7 @@ function visage_magic_auth($a, &$b) {
 //		logger('visage: exiting: ' . $b['url']);
 		return;
 	}
-
+4
 	$p = preg_match('/http(.*?)(channel|profile)\/(.*?)($|[\/\?\&])/',$b['url'],$matches);
 	if(! $p) {
 //		logger('visage: no matching pattern');
@@ -89,6 +92,14 @@ function visage_content(&$a) {
 
 	$o = '<h3>' . t('Recent Channel/Profile Viewers') . '</h3>';
 
+	$enabled = get_pconfig(local_user(),'visage','enabled');
+
+	if(! $enabled) {
+		$o .= t('This plugin/addon has not been configured.') . EOL;
+		$o .= sprintf( t('Please visit the Visage settings on %s'), '<a href="settings/featured">' . t('your feature settings page') . '</a>');
+		return $o;
+	}
+
 	// let's play fair.
 
 	require_once('include/identity.php');
@@ -136,3 +147,41 @@ function visage_content(&$a) {
 }
 
 		
+function visage_settings(&$a,&$s) {
+
+	if(! local_user())
+		return;
+
+	/* Add our stylesheet to the page so we can make our settings look nice */
+
+	head_add_css('/addon/visage/visage.css');
+
+	/* Get the current state of our config variables */
+
+	$enabled = get_pconfig(local_user(),'visage','enabled');
+	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$css = (($enabled) ? '' : '-disabled');
+
+	$s .= '<div class="settings-block">';
+	$s .= '<button class="btn btn-default" data-target="#settings-visage-wrapper" data-toggle="collapse" type="button">' . t('Visage Settings') . '</button>';
+	$s .= '<div id="settings-visage-wrapper" class="collapse well">';
+
+	$s .= '<div id="visage-enable-wrapper">';
+	$s .= '<label id="visage-enable-label" for="visage-checkbox">' . t('Enable Visage Visitor Logging') . '</label>';
+	$s .= '<input id="visage-checkbox" type="checkbox" name="visage" value="1" ' . $checked . '/>';
+	$s .= '</div><div class="clear"></div>';
+
+	/* provide a submit button */
+
+	$s .= '<div class="settings-submit-wrapper" ><input type="submit" id="visage-submit" name="visage-submit" class="settings-submit" value="' . t('Submit Visage Settings') . '" /></div></div></div>';
+
+}
+
+
+function visage_settings_post(&$a,&$b) {
+
+	if(x($_POST,'visage-submit')) {
+		set_pconfig(local_user(),'visage','enabled',intval($_POST['visage']));
+	}
+
+}

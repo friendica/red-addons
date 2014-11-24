@@ -5,7 +5,7 @@ by Tobias Diekershoff
    
 Mike, Thomas, Tony and Jeroen adapted this addon to the RedMatrix.
 
-Important Note: GNU Social instanced with self signed certificates or CA-certificates are currently not supported. You're welcome to fixed this.
+Important Note: GNU Social instances with self signed certificates or CA-certificates are currently not supported. You're welcome to fix this.
 
 With this addon to the RedMatrix you can give your user the possibility to post
 their public messages to any GNU social instance (like loadaverage.org for example). 

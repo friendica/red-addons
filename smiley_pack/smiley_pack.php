@@ -368,9 +368,6 @@ function smiley_pack_smilies(&$a,&$b) {
 
 #Happy smileys
 
-	$b['texts'][] = ':cloud9';
-	$b['icons'][] = '<img class="smiley" src="' . z_root() . '/addon/smiley_pack/icons/happy/cloud9.gif' . '" alt="' . ':cloud9' . '" />';
-
 	$b['texts'][] = ':tearsofjoy';
 	$b['icons'][] = '<img class="smiley" src="' . z_root() . '/addon/smiley_pack/icons/happy/tearsofjoy.gif' . '" alt="' . ':tearsofjoy' . '" />';
 
@@ -447,6 +444,10 @@ function smiley_pack_smilies(&$a,&$b) {
 
 	$b['texts'][] = ':-o';
 	$b['icons'][] = '<img class="smiley" src="' . z_root() . '/addon/smiley_pack/icons/oldcore/surprised.gif' . '" alt="' . ':-o' . '" />';
+
+#Things
+    $b['texts'][] = ':cloud';
+	$b['icons'][] = '<img class="smiley" src="' . z_root() . '/addon/smiley_pack/icons/things/cloud9.gif' . '" alt="' . ':cloud' . '" />';
 
 # Regex killers - stick these at the bottom so they appear at the end of the English and 
 # at the start of $OtherLanguage.

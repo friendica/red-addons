@@ -8,11 +8,12 @@
 
 
 function custom_home_load() {
-    register_hook('home_content', 'addon/custom_home/custom_home.php', 'custom_home_home');
+    register_hook('home_mod_content', 'addon/custom_home/custom_home.php', 'custom_home_home');
     logger("loaded custom_home");
 }
  
 function custom_home_unload() {
+    unregister_hook('home_mod_content', 'addon/custom_home/custom_home.php', 'custom_home_home');
     unregister_hook('home_content', 'addon/custom_home/custom_home.php', 'custom_home_home');
     logger("removed custom_home");
 }

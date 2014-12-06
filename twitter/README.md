@@ -1,6 +1,10 @@
 Twitter Plugin
 ==============
 
+*Warning: Because Twitter currently blocks ur1.ca links, tweets with these links are not accepted by Twitter. This means that you can only crosspost short messages to Twitter. Other link shortening services didn't seem to work at all, so #pleaseFIX! [BTW: the question is if we need link shortening, because Twitter has its own nowadays.]*
+
+------------
+
 Original main authors Tobias Diekershoff and Michael Vogel. Adapted for the RedMatrix by Mike Macgirvin.
 
 With this addon for the RedMatrix you can give your hub members the possibility to post

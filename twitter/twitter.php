@@ -209,7 +209,7 @@ function twitter_settings(&$a,&$s) {
 			$s .= '<input id="twitter-token" type="hidden" name="twitter-token" value="'.$token.'" />';
 			$s .= '<input id="twitter-token2" type="hidden" name="twitter-token2" value="'.$request_token['oauth_token_secret'].'" />';
             $s .= '</div><div class="clear"></div>';
-            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="twitter-submit" class="settings-submit" value="' . t('Submit Twitter Settings') . '" /></div>';
+            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="twitter-submit" class="settings-submit" value="' . t('Submit Twitter Settings') . '" /></div></div>';
 		} else {
 			/***
 			 *  we have an OAuth key / secret pair for the user
@@ -242,10 +242,10 @@ function twitter_settings(&$a,&$s) {
 			$s .= '<label id="twitter-disconnect-label" for="twitter-disconnect">'. t('Clear OAuth configuration') .'</label>';
 			$s .= '<input id="twitter-disconnect" type="checkbox" name="twitter-disconnect" value="1" />';
 			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="twitter-submit" class="settings-submit" value="' . t('Submit Twitter Settings') . '" /></div>'; 
+			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="twitter-submit" class="settings-submit" value="' . t('Submit Twitter Settings') . '" /></div></div>'; 
 		}
 	}
-	$s .= '</div><div class="clear"></div></div></div>';
+	$s .= '<div class="clear"></div></div></div>';
 }
 
 

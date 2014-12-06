@@ -311,6 +311,9 @@ function smiley_pack_smilies(&$a,&$b) {
 	$b['texts'][] = ':acid';
 	$b['icons'][] = '<img class="smiley" src="' . z_root() . '/addon/smiley_pack/icons/fight/acid.gif' . '" alt="' . ':acid' . '" />';
 
+	$b['texts'][] = ':throwrocsks';
+	$b['icons'][] = '<img class="smiley" src="' . z_root() . '/addon/smiley_pack/icons/fight/throw-rocks.gif' . '" alt="' . ':throwrocks' . '" />';
+
 #Fantasy smileys - monsters and dragons fantasy.  
 
 	$b['texts'][] = ':alienmonster';

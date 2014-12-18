@@ -121,7 +121,7 @@ function openstreetmap_generate_map(&$a,&$b) {
 	logger('lon: ' . $lon);
 
 
-	$b['html'] = '<iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="' . $tmsserver . '/export/embed.html?bbox=' . ($lon - 0.01) . '%2C' . ($lat - 0.01) . '%2C' . ($lon + 0.01) . '%2C' . ($lat + 0.01) ;
+	$b['html'] = '<iframe style="width:100%; height:300px; border:1px solid #ccc" src="' . $tmsserver . '/export/embed.html?bbox=' . ($lon - 0.01) . '%2C' . ($lat - 0.01) . '%2C' . ($lon + 0.01) . '%2C' . ($lat + 0.01) ;
 
 	logger('generate_map: ' . $b['html']);
 

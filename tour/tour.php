@@ -54,6 +54,8 @@ function tour_post() {
 }
 
 function tour_addfooter($a,&$navHtml) {
+	if(!local_user()) return; // Don't show tour to non-logged in users
+
 	if(get_pconfig(local_user(),'tour','notour') == 1)
 		return;
 
@@ -64,26 +66,54 @@ function tour_addfooter($a,&$navHtml) {
 
 	// TOOD: Check which elements are present on which pages, and only include the relevant stuff
 	$legs = array();
-	$legs[] = array('profile-jot-text',t('Share important stuff.'));
-	$legs[] = array('jot-title',t('You can write an optional title for your update (good for long posts).'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
-	$legs[] = array('jot-category',t('Entering some categories here makes it easier to find your post later.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
-	$legs[] = array('wall-image-upload',t('Share photos, links, location, etc.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
-	$legs[] = array('profile-expires',t('Only want to share content for a while? Make it expire at a certain date.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
-	$legs[] = array('profile-encrypt',t('You can password protect content.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
-	$legs[] = array('dbtn-acl',t('Choose who you share with.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
+
+
+	// Nav elements
+	$legs[] = array('#avatar',t('Edit your profile and change settings.'));
+	$legs[] = array('#network_nav_btn',t('Click here to see activity from your connections.'));
+	$legs[] = array('#home_nav_btn',t('Click here to see your channel home.'));
+	$legs[] = array('#mail_nav_btn',t('You can access your private messages from here.'));
+	$legs[] = array('#events_nav_btn',t('Create new events here.'));
+	$legs[] = array('#connections_nav_btn',t('You can accept new connections and change permissions for existing ones here. You can also e.g. create groups of contacts.'));
+	$legs[] = array('#notifications_nav_btn',t('System notifications will arrive here'));
+	$legs[] = array('#nav-search-text',t('Search for content and users'));
+	$legs[] = array('#directory_nav_btn',t('Browse for new contacts'));
+	$legs[] = array('#apps_nav_btn',t('Launch installed apps'));
+	$legs[] = array('#help_nav_btn',t('Looking for help? Click here.'));
+	$legs[] = array('.net-update.show',t('New events have occurred in your network. Click here to see what has happened!'));
+	$legs[] = array('.mail-update.show',t('You have received a new private message. Click here to see from who!'));
+	$legs[] = array('.all_events-update.show',t('There are events this week. Click here too see which!'));
+	$legs[] = array('.intro-update.show',t('You have received a new introduction. Click here to see who!'));
+	$legs[] = array('.notify-update.show',t('There is a new system notification. Click here to see what has happened!'));
+
+	// Posting stuff
+	$legs[] = array('#profile-jot-text',t('Click here to share text, images, videos and sound.'));
+	$legs[] = array('#jot-title',t('You can write an optional title for your update (good for long posts).'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
+	$legs[] = array('#jot-category',t('Entering some categories here makes it easier to find your post later.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
+	$legs[] = array('#wall-image-upload',t('Share photos, links, location, etc.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
+	$legs[] = array('#profile-expires',t('Only want to share content for a while? Make it expire at a certain date.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
+	$legs[] = array('#profile-encrypt',t('You can password protect content.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
+	$legs[] = array('#dbtn-acl',t('Choose who you share with.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
 	/* Todo: Preview */
-	$legs[] = array('dbtn-submit',t('Click here when you are done.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
-	$legs[] = array('avatar',t('Edit your profile and change settings.'));
-	$legs[] = array('network_nav_btn',t('Click here to see activity from your connections.'));
-	$legs[] = array('home_nav_btn',t('Click here to see your channel home.'));
-	$legs[] = array('mail_nav_btn',t('You can access your private messages from here.'));
-	$legs[] = array('events_nav_btn',t('Create new events here.'));
-	$legs[] = array('connections_nav_btn',t('You can accept new connections and change permissions for existing ones here. You can also e.g. create groups of contacts.'));
-	$legs[] = array('notifications_nav_btn',t('System notifications will arrive here'));
-	$legs[] = array('nav-search-text',t('Search for content and users'));
-	$legs[] = array('directory_nav_btn',t('Browse for new contacts'));
-	$legs[] = array('apps_nav_btn',t('Launch installed apps'));
-	$legs[] = array('help_nav_btn',t('Looking for help? Click here.'));
+	$legs[] = array('#dbtn-submit',t('Click here when you are done.'),'if($("#jot-title").css("display") == "none") { $("#profile-jot-text").trigger("click"); }');
+
+	// Network
+	$legs[] = array('#main-slider',t('Adjust from which channels posts should be displayed.'));
+	$legs[] = array('#group-sidebar',t('Only show posts from channels in the specified collection.'));
+
+	// Sidebar
+
+	$legs[] = array('.tagblock',t('Easily find posts containing tags (keywords preceded by the "#" symbol).'));
+	$legs[] = array('#categories-sidebar',t('Easily find posts in given category.'));
+	$legs[] = array('#datebrowse-sidebar',t('Easily find posts by date.'));
+	$legs[] = array('.suggestions-sidebar',t('Suggested users who have volounteered to be shown as suggestions, and who we think you might find interesting.'));
+	$legs[] = array('#contacts-block',t('Here you see channels you have connected to.'));
+	$legs[] = array('.saved-search-widget',t('Save your search so you can repeat it at a later date.'));
+
+	// Misc
+	$legs[] = array('.item-verified',t('If you see this icon you can be sure that the sender is who it say it is. It is normal that it is not always possible to verify the sender, so the icon will be missing sometimes. There is usually no need to worry about that.'));
+	$legs[] = array('.item-forged',t('Danger! It seems someone tried to forge a message! This message is not necessarily from who it says it is from!'));
+
 
 	$content .= "<ol id='tourlegs' class='tourbus-legs'>";
 
@@ -100,11 +130,11 @@ function tour_addfooter($a,&$navHtml) {
 		$click='';
 		if(count($leg) > 2)
 			$click="data-click='$leg[2]'";
-		$content .= "<li data-el='#$leg[0]' data-tourid='$leg[0]' $click><p>$leg[1]</p><button href='javascript:void(0);' class='tourbus-next btn btn-primary'>Continue <span class='icon-forward'/></button><button href='javascript:void()' class='tourbus-stop btn btn-warning'>Pause tour <span class='icon-pause'/></button><button href='javascript:void();' onclick='notour();' class='tourbus-stop btn btn-danger'>Don't show tour again <span class='icon-remove'></span></button></li>";
+		$content .= "<li data-el='$leg[0]' data-tourid='$leg[0]' $click><p>$leg[1]</p><button href='javascript:void(0);' class='tourbus-next btn btn-primary'>Continue <span class='icon-forward'/></button><button href='javascript:void()' class='tourbus-stop btn btn-warning'>Pause tour <span class='icon-pause'/></button><button href='javascript:void();' onclick='notour();' class='tourbus-stop btn btn-danger'>Don't show tour again <span class='icon-remove'></span></button></li>";
 		$steps = $steps + 1;
 	}
 
-	if($steps > 1) {
+	if($steps > 1 && !in_array('tourend',$seen)) {
 		$content .= "<li data-orientation='centered' data-tourid='tourend'><p>That's it for now! Continue to explore, and you'll get more help along the way.</p><button href='javascript:void()' class='tourbus-stop btn btn-primary'>OK <span class='icon-ok'/></button></li>";
 
 	}
@@ -120,7 +150,6 @@ $(window).load(function() {
 		var targetSelector = leg.data('el');
 		if( targetSelector && $(targetSelector).length == 0 ) leg.remove();
 	});
-
 
 	var tour = $("#tourlegs").tourbus({
 		leg: { align:'left', arrow:15},

@@ -11,6 +11,7 @@
 function openstreetmap_load() {
 	register_hook('render_location', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_location');
 	register_hook('generate_map', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_generate_map');
+	register_hook('generate_named_map', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_generate_named_map');
 	register_hook('page_header', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_alterheader');
 
 	logger("installed openstreetmap");
@@ -19,6 +20,7 @@ function openstreetmap_load() {
 function openstreetmap_unload() {
 	unregister_hook('render_location', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_location');
 	unregister_hook('generate_map', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_generate_map');
+	unregister_hook('generate_named_map', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_generate_named_map');
 	unregister_hook('page_header', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_alterheader');
 
 	logger("removed openstreetmap");
@@ -94,6 +96,27 @@ function openstreetmap_location($a, &$item) {
 	$item['html'] = $location;
 }
 
+
+function openstreetmap_generate_named_map(&$a,&$b) {
+
+
+	$nomserver = get_config('openstreetmap', 'nomserver');
+	if(! $nomserver)
+		$nomserver = 'http://nominatim.openstreetmap.org/search.php';
+	$args = '?q=' . urlencode($b['location']) . '&format=json';
+
+	$x = z_fetch_url($nomserver . $args);
+
+	if($x['success']) {
+		$j = json_decode($x['body'],true);
+		if($j && is_array($j) && $j[0]['lat'] && $j[0]['lon']) {
+			$arr = array('lat' => $j[0]['lat'],'lon' => $j[0]['lon'],'html' => '');
+			openstreetmap_generate_map($a,$arr);
+			$b['html'] = $arr['html'];
+		}
+	}
+}
+
 function openstreetmap_generate_map(&$a,&$b) {
 
 	$tmsserver = get_config('openstreetmap', 'tmsserver');
@@ -114,8 +137,8 @@ function openstreetmap_generate_map(&$a,&$b) {
 	$location = '';
 	$coord = '';
 
-	$lat = round($b['lat'], 5);
-	$lon = round($b['lon'], 5);
+	$lat = $b['lat']; // round($b['lat'], 5);
+	$lon = $b['lon']; // round($b['lon'], 5);
 	logger('lat: ' . $lat);
 
 	logger('lon: ' . $lon);

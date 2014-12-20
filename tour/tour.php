@@ -45,7 +45,7 @@ function tour_post() {
 		return;
 
 	// Never show tour again
-	if(x($_POST,'showtour') && $_POST['showtour'] == '0') {
+	if(x($_POST,'showtour') !== false && $_POST['showtour'] == '0') {
 		set_pconfig(local_user(),'tour','showtour',0);
 	}
 
@@ -58,7 +58,7 @@ function tour_post() {
 function tour_addfooter($a,&$navHtml) {
 	if(!local_user()) return; // Don't show tour to non-logged in users
 
-	if(get_pconfig(local_user(),'tour','showtour') == 0)
+	if(get_pconfig(local_user(),'tour','showtour') != 1)
 		return;
 
 	$content = '<script type="text/javascript" src="' . $a->get_baseurl() . '/addon/tour/jquery-tourbus.min.js"></script>' . "\r\n";

@@ -337,6 +337,9 @@ function smiley_pack_smilies(&$a,&$b) {
 	$b['texts'][] = ':mummy';
 	$b['icons'][] = '<img class="smiley" src="' . z_root() . '/addon/smiley_pack/icons/fantasy/mummy.gif' . '" alt="' . ':mummy' . '" />';
 
+	$b['texts'][] = ':thedoctor';
+	$b['icons'][] = '<img class="smiley" src="' . z_root() . '/addon/smiley_pack/icons/fantasy/doctor.gif' . '" alt="' . ':thedoctor' . '" />';
+
 #Food smileys
 
 	$b['texts'][] = ':apple';

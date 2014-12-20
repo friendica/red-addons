@@ -2,7 +2,7 @@
 /**
  * Name: OpenStreetMap
  * Description: Use OpenStreetMap for displaying locations. After activation the post location just beneath your avatar in your posts will link to OpenStreetMap.
- * Version: 1.2
+ * Version: 1.3
  * Author: Mike Macgirvin <http://macgirvin.com/profile/mike>
  * Author: Klaus Weidenbach
  *
@@ -10,6 +10,8 @@
 
 function openstreetmap_load() {
 	register_hook('render_location', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_location');
+	register_hook('generate_map', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_generate_map');
+	register_hook('generate_named_map', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_generate_named_map');
 	register_hook('page_header', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_alterheader');
 
 	logger("installed openstreetmap");
@@ -17,6 +19,8 @@ function openstreetmap_load() {
 
 function openstreetmap_unload() {
 	unregister_hook('render_location', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_location');
+	unregister_hook('generate_map', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_generate_map');
+	unregister_hook('generate_named_map', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_generate_named_map');
 	unregister_hook('page_header', 'addon/openstreetmap/openstreetmap.php', 'openstreetmap_alterheader');
 
 	logger("removed openstreetmap");
@@ -91,6 +95,65 @@ function openstreetmap_location($a, &$item) {
 	}
 	$item['html'] = $location;
 }
+
+
+function openstreetmap_generate_named_map(&$a,&$b) {
+
+
+	$nomserver = get_config('openstreetmap', 'nomserver');
+	if(! $nomserver)
+		$nomserver = 'http://nominatim.openstreetmap.org/search.php';
+	$args = '?q=' . urlencode($b['location']) . '&format=json';
+
+	$x = z_fetch_url($nomserver . $args);
+
+	if($x['success']) {
+		$j = json_decode($x['body'],true);
+		if($j && is_array($j) && $j[0]['lat'] && $j[0]['lon']) {
+			$arr = array('lat' => $j[0]['lat'],'lon' => $j[0]['lon'],'html' => '');
+			openstreetmap_generate_map($a,$arr);
+			$b['html'] = $arr['html'];
+		}
+	}
+}
+
+function openstreetmap_generate_map(&$a,&$b) {
+
+	$tmsserver = get_config('openstreetmap', 'tmsserver');
+	if(! $tmsserver)
+		$tmsserver = 'http://www.openstreetmap.org';
+	if(strpos(z_root(),'https:') !== false)
+		$tmsserver = str_replace('http:','https:',$tmsserver);
+
+
+	$zoom = get_config('openstreetmap', 'zoom');
+	if(! $zoom)
+		$zoom = 16;
+
+	$marker = get_config('openstreetmap', 'marker');
+	if(! $marker)
+		$marker = 0;
+
+	$location = '';
+	$coord = '';
+
+	$lat = $b['lat']; // round($b['lat'], 5);
+	$lon = $b['lon']; // round($b['lon'], 5);
+	logger('lat: ' . $lat);
+
+	logger('lon: ' . $lon);
+
+
+	$b['html'] = '<iframe style="width:100%; height:300px; border:1px solid #ccc" src="' . $tmsserver . '/export/embed.html?bbox=' . ($lon - 0.01) . '%2C' . ($lat - 0.01) . '%2C' . ($lon + 0.01) . '%2C' . ($lat + 0.01) ;
+
+	logger('generate_map: ' . $b['html']);
+
+	$b['html'] .=  '&amp;layer=mapnik&amp;marker=' . $lat . '%2C' . $lon . '" style="border: 1px solid black"></iframe><br/><small><a href="' . $tmsserver . '/?mlat=' . $lat . '&mlon=' . $lon . '#map=16/' . $lat . '/' . $lon . '">' . t('View Larger') . '</a></small>';
+
+	logger('generate_map: ' . $b['html']);
+
+}
+
 
 /*function openstreetmap_getcoords($server, $name) {
 	$queryurl = $server . '?q=' . $name . '&format=json&limit=4';

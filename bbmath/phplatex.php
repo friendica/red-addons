@@ -13,7 +13,8 @@ $imgfmt="png"; #literally used in extensions, and in parameters to convert. Shou
 
 function phplatex_cleantmp($tempfname,$todir) {
   #specifically removes the various files that probably got created for a specific run, based on the run's filename.
-  global $imgfmt;
+  //global $imgfmt; // Global doesn't work for some reason
+  $imgfmt="png"; #literally used in extensions, and in parameters to convert. Should be either png or gif.
   if (chdir($todir)===FALSE) { return '[directory access error, fix permissions (and empty tmp manually this time)]'; }
   error_reporting(0); #at least one of these probably will not exist, but disable the error reporting related to that.
   unlink($tempfname);     #the longer/cleaner way would be check for existance for each

@@ -18,6 +18,5 @@ function bbmath_unload() {
 }
 
 function bbmath_bbcode($a,&$text) {
-	logger("texifying ".$text);
 	$text = preg_replace_callback('|\[tex\](.*?)\[/tex\]|',function($m) { return texify($m[1]); },$text);
 }

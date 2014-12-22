@@ -14,11 +14,13 @@ function tour_module(){};
 function tour_load() {
 	register_hook('page_header','addon/tour/tour.php','tour_alterheader');
 	register_hook('page_end','addon/tour/tour.php','tour_addfooter');
+	register_hook('register_account','addon/tour/tour.php','tour_register');
 }
 
 function tour_unload() {
 	unregister_hook('page_header','addon/tour/tour.php','tour_alterheader');
 	unregister_hook('page_end','addon/tour/tour.php','tour_addfooter');
+	unregister_hook('register_account','addon/tour/tour.php','tour_register');
 }
 
 function tour_alterheader($a, &$navHtml) {
@@ -33,7 +35,7 @@ function tour_content(&$a) {
 	if($_REQUEST['reset']) {
 		$seen = '';
 		set_pconfig(local_user(),'tour','seen','');
-		set_pconfig(local_user(),'tour','notour',false);
+		set_pconfig(local_user(),'tour','showtour',1);
 		logger('Reset tour');
 	}
 }
@@ -43,8 +45,8 @@ function tour_post() {
 		return;
 
 	// Never show tour again
-	if(x($_POST,'notour') && $_POST['notour'] == '1') {
-		set_pconfig(local_user(),'tour','notour',1);
+	if(x($_POST,'showtour') !== false && $_POST['showtour'] == '0') {
+		set_pconfig(local_user(),'tour','showtour',0);
 	}
 
 	// Add the recently seen element to the list of things not to show again
@@ -56,7 +58,7 @@ function tour_post() {
 function tour_addfooter($a,&$navHtml) {
 	if(!local_user()) return; // Don't show tour to non-logged in users
 
-	if(get_pconfig(local_user(),'tour','notour') == 1)
+	if(get_pconfig(local_user(),'tour','showtour') != 1)
 		return;
 
 	$content = '<script type="text/javascript" src="' . $a->get_baseurl() . '/addon/tour/jquery-tourbus.min.js"></script>' . "\r\n";
@@ -161,12 +163,17 @@ $(window).load(function() {
 });
 
 function notour() {
-	$.post('tour',{'notour':'1'});
+	$.post('tour',{'showtour':'0'});
 }
 </script>
 EOD;
 }
 
 	$navHtml .= $content;
+}
+
+function tour_register($a, $uid) {
+	// Show tour for new users
+	set_pconfig($uid, 'tour', 'showtour', 1);
 }
 ?>

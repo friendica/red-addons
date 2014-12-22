@@ -2,7 +2,7 @@
 
 /**
  * Name: Statistics
- * Description: Generates some statistics for http://pods.jasonrobinson.me/
+ * Description: Generates some statistics for the-federation.info (formerly http://pods.jasonrobinson.me/)
  * Version: 0.1
  * Author: Michael Vogel <https://pirati.ca/profile/heluecht>
  */
@@ -124,7 +124,7 @@ function statistics_json_cron($a,$b) {
 	set_config('statistics_json','twitter', $twitter);
 
 	// Now trying to register
-	$url = "http://pods.jasonrobinson.me/register/" . $a->get_hostname();
+	$url = "http://the-federation.info/register/" . $a->get_hostname();
 
 	$ret = z_fetch_url($url);
 	logger('statistics_json_cron: registering answer: '. print_r($ret,true), LOGGER_DEBUG);

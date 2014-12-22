@@ -115,6 +115,7 @@ function nsfw_prepare_body(&$a,&$b) {
 
 
 	$words = null;
+
 	if(get_pconfig(local_user(),'nsfw','disable'))
 		return;
 
@@ -150,6 +151,7 @@ function nsfw_prepare_body(&$a,&$b) {
 			if($author && stripos($b['item']['author']['xchan_name'],$author) === false)
 				continue;
 
+
 			if(! $word)
 				$found = true;
 
@@ -177,6 +179,11 @@ function nsfw_prepare_body(&$a,&$b) {
 			}
 		}
 	}
+
+	if(! local_user() && ($b['item']['author']['xchan_flags'] & (XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED))) {
+		$found = true;
+		$orig_word = t('Possible adult content');
+	}	
 	if($found) {
 		$rnd = random_string(8);
 		$b['html'] = '<div id="nsfw-wrap-' . $rnd . '" class="fakelink" onclick=openClose(\'nsfw-' . $rnd . '\'); >' . sprintf( t('%s - Click to open/close'),$orig_word ) . '</div><div id="nsfw-' . $rnd . '" style="display: none; " >' . $b['html'] . '</div>';  

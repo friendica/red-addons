@@ -697,7 +697,8 @@ function statusnet_post_hook(&$a,&$b) {
                     //$result = $dent->post('statuses/update', array('status' => $msg));
                     $result = $dent->post('statuses/update', $postdata);
                     logger('statusnet_post send, result: ' . print_r($result, true).
-                           "\nmessage: ".$msg, LOGGER_DEBUG."\nOriginal post: ".print_r($b, true)."\nPost Data: ".print_r($postdata, true));
+                           "\nmessage: ".$msg, LOGGER_DEBUG);
+					logger("Original post: ".print_r($b, true)."\nPost Data: ".print_r($postdata, true), LOGGER_DEBUG);
                     if ($result->error) {
                         logger('Send to GNU social failed: "' . $result->error . '"');
                     }

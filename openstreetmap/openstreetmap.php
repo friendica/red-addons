@@ -154,14 +154,6 @@ function openstreetmap_generate_map(&$a,&$b) {
 
 }
 
-
-/*function openstreetmap_getcoords($server, $name) {
-	$queryurl = $server . '?q=' . $name . '&format=json&limit=4';
-	$json = file_get_contents($queryurl);
-	$r = json_decode($json, true);
-	$lat = $r[0]['lat'];
-}*/
-
 function openstreetmap_plugin_admin(&$a, &$o) {
 	$t = get_markup_template("admin.tpl", "addon/openstreetmap/");
 	$tmsserver = get_config('openstreetmap', 'tmsserver');

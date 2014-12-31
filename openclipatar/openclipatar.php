@@ -189,7 +189,7 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 	} else {
 		$o .= replace_macros( $t, array(
 			'$selectmsg' => t('Or select from a free OpenClipart.org image:'),
-			'$prefmsg' => $haveprefclips ? ('<div class="openclipatar-prefclipmsg openclipatar-prefids">' . $prefclipmsg . '</div>') : '',
+			'$prefmsg' => $haveprefclips ? ('<div class="openclipatar-prefclipmsg">' . $prefclipmsg . '</div>') : '',
 			'$use' => t('Use'),
 			'$defsearch' => array('search', t('Search Term'), $search),
 			//'$form_security_token' => get_form_security_token('profile_photo'),

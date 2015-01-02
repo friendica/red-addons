@@ -27,8 +27,8 @@ function openclipatar_plugin_admin_post(&$a) {
 	set_config('openclipatar', 'prefclipmsg', $prefclipmsg);
 	if(is_numeric($_POST['returnafter']))
 		set_config('openclipatar', 'returnafter', $_POST['returnafter']);
-	if(is_numeric($_POST['sortprefids']))
-		set_config('openclipatar', 'sortprefids', $_POST['sortprefids']);
+	set_config('openclipatar', 'sortprefids', $_POST['sortprefids']);
+	set_config('openclipatar', 'sortids', $_POST['sortids']);
 }
 
 function openclipatar_plugin_admin(&$a, &$o) {
@@ -37,6 +37,9 @@ function openclipatar_plugin_admin(&$a, &$o) {
 	$defsearch = get_config('openclipatar', 'defsearch');
 	$returnafter = get_config('openclipatar', 'returnafter');
 	$sortprefids = get_config('openclipatar', 'sortprefids');
+	if($sortprefids == "0") $sortprefids = 'date'; // Backwards compatibility
+	if($sortprefids == "1") $sortprefids = 'asentered';
+	$sortids = get_config('openclipatar', 'sortids');
 	$prefclipmsg = get_config('openclipatar', 'prefclipmsg');
 	
 	if(! $defsearch) 
@@ -54,9 +57,16 @@ function openclipatar_plugin_admin(&$a, &$o) {
 			1 => t('Edit Profile'),
 			2 => t('Profile List'), 
 		)),
-		'$sortprefids' => array('sortprefids', t('Sort Order'), $sortprefids, t('Sort order of preferred clipart ids.'), array(
-			0 => t('Newest First'),
-			1 => t('As Entered'),
+		'$sortprefids' => array('sortprefids', t('Order of Preferred'), $sortprefids, t('Sort order of preferred clipart ids.'), array(
+			'date' => t('Newest first'),
+			//'downloads' => t('Most downloaded first'), These don't work yet due to a bug(?) in openclipart.org's search
+			//'favorites' => t('Most liked first'),
+			'asentered' => t('As entered'),
+		)),
+		'$sortids' => array('sortids', t('Order of other'), $sortids, t('Sort order of other clipart ids.'), array(
+			'date' => t('Newest first'),
+			'downloads' => t('Most downloaded first'),
+			'favorites' => t('Most liked first'),
 		)),
 		'$prefclipmsg' => array('prefclipmsg', t('Preferred IDs Message'), $prefclipmsg, t('Message to display above preferred results.')),
 		//'$nperpage' => array('nperpage', t('Results pagination'), $nperpage, t('Enter the number of results you wish to pull from the server each page')),
@@ -85,10 +95,9 @@ function openclipatar_decode_result($arr) {
 }
 
 function openclipatar_sort_result(&$arr, array $prefclipids, $sortprefids) {
-	if($sortprefids == 0) // Newest first is how we get them from openclipart.org, do nothing.
+	if($sortprefids != 'asentered') // Got them in the right order from openclipart.org
 		return;
-	
-	// sort pref 1 == 'as entered'. no others exist yet.
+
 	usort($arr, function($a, $b) use ($prefclipids) {
 		$idxa = array_search($a['id'], $prefclipids);
 		$idxb = array_search($b['id'], $prefclipids);
@@ -102,6 +111,9 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 	$defsearch = get_config('openclipatar', 'defsearch');
 	$returnafter = get_config('openclipatar', 'returnafter');
 	$sortprefids = get_config('openclipatar', 'sortprefids');
+	if($sortprefids == "0") $sortprefids = 'date'; // Backwards compatibility
+	if($sortprefids == "1") $sortprefids = 'asentered';
+	$sortids = get_config('openclipatar', 'sortids');
 	$prefclipmsg = get_config('openclipatar', 'prefclipmsg');
 	
 	head_add_css('addon/openclipatar/openclipatar.css');
@@ -128,7 +140,8 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 	
 	if($prefclipids && preg_match('/[\d,]+/',$prefclipids)) {
 		logger('Openclipatar: initial load: '.var_export($_REQUEST,true), LOGGER_DEBUG);
-		$x = z_fetch_url('https://openclipart.org/search/json/?amount=50&byids=' . dbesc($prefclipids));
+		$sortpref = ($sortprefids == 'asentered') ? 'date' : $sortprefids; // Use user defined sort, unless it's asentered. That's handled later
+		$x = z_fetch_url('https://openclipart.org/search/json/?sort='. $sortpref . '&amount=50&byids=' . dbesc($prefclipids));
 		if($x['success']) {
 			$j = json_decode($x['body'], true);
 			if($j && !empty($j['payload'])) {
@@ -147,8 +160,7 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 			}
 		}
 	}
-		
-	$x =  z_fetch_url('https://openclipart.org/search/json/?amount=20&query=' . urlencode($search) . '&page=' . $a->pager['page']);
+	$x =  z_fetch_url('https://openclipart.org/search/json/?sort=' . $sortids . '&amount=20&query=' . urlencode($search) . '&page=' . $a->pager['page']);
 	
 	if($x['success']) {
 		$j = json_decode($x['body'], true);
@@ -177,7 +189,7 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 	} else {
 		$o .= replace_macros( $t, array(
 			'$selectmsg' => t('Or select from a free OpenClipart.org image:'),
-			'$prefmsg' => $haveprefclips ? ('<div class="openclipatar-prefclipmsg openclipatar-prefids">' . $prefclipmsg . '</div>') : '',
+			'$prefmsg' => $haveprefclips ? ('<div class="openclipatar-prefclipmsg">' . $prefclipmsg . '</div>') : '',
 			'$use' => t('Use'),
 			'$defsearch' => array('search', t('Search Term'), $search),
 			//'$form_security_token' => get_form_security_token('profile_photo'),

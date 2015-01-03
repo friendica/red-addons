@@ -180,7 +180,8 @@ function nsfw_prepare_body(&$a,&$b) {
 		}
 	}
 
-	if(! local_user() && ($b['item']['author']['xchan_flags'] & (XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED))) {
+	$ob_hash = get_observer_hash();
+	if((! $ob_hash) && ($b['item']['author']['xchan_flags'] & (XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED))) {
 		$found = true;
 		$orig_word = t('Possible adult content');
 	}	

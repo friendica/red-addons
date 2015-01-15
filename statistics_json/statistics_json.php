@@ -33,8 +33,8 @@ function statistics_json_init() {
 			"active_users_halfyear" => get_config('statistics_json','active_users_halfyear'),
 			"active_users_monthly" => get_config('statistics_json','active_users_monthly'),
 			"local_posts" => get_config('statistics_json','local_posts'),
-			"twitter" => get_config('statistics_json','twitter'),
-			"wordpress" => get_config('statistics_json','wordpress')
+			"twitter" => (bool) get_config('statistics_json','twitter'),
+			"wordpress" => (bool) get_config('statistics_json','wordpress')
 			);
 
 	header("Content-Type: application/json");
@@ -108,20 +108,20 @@ function statistics_json_cron($a,$b) {
 
 	set_config('statistics_json','local_posts', $local_posts);
 
-// WordPress and Twitter need to return *strings* of true or false or they're not understood.
-	$wordpress = 'false';
+
+	$wordpress = false;
 	$r = q("select * from addon where hidden = 0 and name = 'wppost'");
  		if($r)
-		$wordpress = 'true';
+		$wordpress = true;
 
-	set_config('statistics_json','wordpress', $wordpress);
+	set_config('statistics_json','wordpress', intval($wordpress));
 
-	$twitter = 'false';
+	$twitter = false;
 	$r = q("select * from addon where hidden = 0 and name = 'twitter'");
  		if($r)
-		$twitter = 'true';
+		$twitter = true;
 
-	set_config('statistics_json','twitter', $twitter);
+	set_config('statistics_json','twitter', intval($twitter));
 
 	// Now trying to register
 	$url = "http://the-federation.info/register/" . $a->get_hostname();

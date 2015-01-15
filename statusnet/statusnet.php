@@ -149,7 +149,7 @@ function statusnet_settings_post ($a,$post) {
 		return;
 
 	if(isset($_POST['statusnet-disconnect'])) {
-	
+
 		/***
 		 * if the statusnet-disconnect checkbox is set, clear the statusnet configuration
 		 */
@@ -166,7 +166,11 @@ function statusnet_settings_post ($a,$post) {
 		del_pconfig(local_user(), 'statusnet', 'intelligent_shortening');
 	} 
 	else {
+
+
 		if (isset($_POST['statusnet-preconf-apiurl'])) {
+
+
 			/***
 			 * If the user used one of the preconfigured GNU social server credentials
 			 * use them. All the data are available in the global config.
@@ -191,7 +195,9 @@ function statusnet_settings_post ($a,$post) {
 			goaway($a->get_baseurl().'/settings/featured');
 		} 
 		else {
+
 			if (isset($_POST['statusnet-consumersecret'])) {
+
 				//  check if we can reach the API of the GNU social server
 				//  we'll check the API Version for that, if we don't get one we'll try to fix the path but will
 				//  resign quickly after this one try to fix the path ;-)
@@ -225,7 +231,9 @@ function statusnet_settings_post ($a,$post) {
 				goaway($a->get_baseurl().'/settings/featured');
 			} 
 			else {
+
 				if (isset($_POST['statusnet-pin'])) {
+
 					//  if the user supplied us with a PIN from GNU social, let the magic of OAuth happen
 					$api	 = get_pconfig(local_user(), 'statusnet', 'baseapi');
 					$ckey	= get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
@@ -276,6 +284,8 @@ function statusnet_settings(&$a,&$s) {
 	$enabled = get_pconfig(local_user(), 'statusnet', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
 	$defenabled = get_pconfig(local_user(),'statusnet','post_by_default');
+	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
+
 //	$shorteningenabled = get_pconfig(local_user(),'statusnet','intelligent_shortening');
 //	$shorteningchecked = (($shorteningenabled) ? ' checked="checked" ' : '');
 
@@ -370,7 +380,7 @@ function statusnet_settings(&$a,&$s) {
 			$s .= '<input id="statusnet-checkbox" type="checkbox" name="statusnet-enable" value="1" ' . $checked . '/>';
 			$s .= '<div class="clear"></div>';
 			$s .= '<label id="statusnet-default-label" for="statusnet-default">'. t('Send public postings to GNU social by default') .'</label>';
-			$s .= '<input id="statusnet-default" type="checkbox" name="statusnet-default" value="1" ' . $defenabled . '/>';
+			$s .= '<input id="statusnet-default" type="checkbox" name="statusnet-default" value="1" ' . $defchecked . '/>';
 			$s .= '<div class="clear"></div>';
 
 // 		FIXME: Doesn't seem to work. But maybe we don't want it all.

@@ -1,0 +1,19 @@
+
+#mailhost-label, #nsfw-enable-label {
+	float: left;
+	width: 350px;
+	margin-top: 10px;
+}
+
+#mailhost-mailhost, #nsfw-enable {
+	float: left;
+	margin-top: 10px;
+}
+
+#mailhost-submit, #settings-mailhost-wrapper {
+	margin-top: 15px;
+}
+
+.mailhost-desc {
+	margin-top: 10px;
+}

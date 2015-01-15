@@ -147,6 +147,8 @@ function statusnet_settings_post ($a,$post) {
 	    return;
 	// don't check statusnet settings if statusnet submit button is not clicked
 	if (!x($_POST,'statusnet-submit')) return;
+
+//logger('post: '. print_r($_POST,true));
 	
 	if (isset($_POST['statusnet-disconnect'])) {
             /***
@@ -188,7 +190,7 @@ function statusnet_settings_post ($a,$post) {
                 }
                 goaway($a->get_baseurl().'/settings/featured');
             } else {
-            if (isset($_POST['statusnet-consumersecret'])) {
+            	if (isset($_POST['statusnet-consumersecret'])) {
                 //  check if we can reach the API of the GNU social server
                 //  we'll check the API Version for that, if we don't get one we'll try to fix the path but will
                 //  resign quickly after this one try to fix the path ;-)
@@ -240,8 +242,8 @@ function statusnet_settings_post ($a,$post) {
 					//  if no PIN is supplied in the POST variables, the user has changed the setting
 					//  to post a dent for every new __public__ posting to the wall
 					set_pconfig(local_user(),'statusnet','post',intval($_POST['statusnet-enable']));
-                                        set_pconfig(local_user(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
-                                        set_pconfig(local_user(),'statusnet','post_taglinks',intval($_POST['statusnet-sendtaglinks']));
+					set_pconfig(local_user(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
+					set_pconfig(local_user(),'statusnet','post_taglinks',intval($_POST['statusnet-sendtaglinks']));
 					set_pconfig(local_user(), 'statusnet', 'mirror_posts', intval($_POST['statusnet-mirror']));
 					set_pconfig(local_user(), 'statusnet', 'intelligent_shortening', intval($_POST['statusnet-shortening']));
 					info( t('GNU social settings updated.') . EOL);
@@ -359,7 +361,7 @@ function statusnet_settings(&$a,&$s) {
 			$s .= '<input id="statusnet-checkbox" type="checkbox" name="statusnet-enable" value="1" ' . $checked . '/>';
 			$s .= '<div class="clear"></div>';
 			$s .= '<label id="statusnet-default-label" for="statusnet-default">'. t('Send public postings to GNU social by default') .'</label>';
-			$s .= '<input id="statusnet-default" type="checkbox" name="statusnet-default" value="1" ' . $defchecked . '/>';
+			$s .= '<input id="statusnet-default" type="checkbox" name="statusnet-default" value="1" ' . $defenabled . '/>';
 			$s .= '<div class="clear"></div>';
 
 // 		FIXME: Doesn't seem to work. But maybe we don't want it all.
@@ -371,7 +373,7 @@ function statusnet_settings(&$a,&$s) {
                         $s .= '<label id="statusnet-disconnect-label" for="statusnet-disconnect">'. t('Clear OAuth configuration') .'</label>';
                         $s .= '<input id="statusnet-disconnect" type="checkbox" name="statusnet-disconnect" value="1" />';
 			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div>'; 
+			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div></div>'; 
 		}
 	}
         $s .= '</div><div class="clear"></div></div>';

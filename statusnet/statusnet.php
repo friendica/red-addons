@@ -787,7 +787,9 @@ function statusnet_cron($a,$b) {
 	}
 	logger('statusnet: cron_start');
 
-	$r = q("SELECT * FROM `pconfig` WHERE `cat` = 'statusnet' AND `k` = 'mirror_posts' AND `v` = '1' ORDER BY RAND() ");
+	$rand = db_getfunc('rand');
+
+	$r = q("SELECT * FROM `pconfig` WHERE `cat` = 'statusnet' AND `k` = 'mirror_posts' AND `v` = '1' ORDER BY $rand ");
 	if(count($r)) {
 		foreach($r as $rr) {
 			logger('statusnet: fetching for user '.$rr['uid']);

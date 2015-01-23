@@ -184,7 +184,10 @@ function dirstats_cron(&$a, $b) {
 				$rr = q("select count(xprof_hash) as total from `xprof` where xprof_age >=1");
 				$total = $r[0]['sum'];
 				$number = $rr[0]['total'];
-				$average = $total / $number;
+				if($number)
+					$average = $total / $number;
+				else
+					$average = 0;
 				set_config('dirstats','averageage',$average);
 		}
 

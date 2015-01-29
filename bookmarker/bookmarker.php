@@ -21,7 +21,7 @@ function bookmarker_uninstall() {
 function bookmarker_prepare_body(&$a,&$b) {
 
 
-	if(get_pconfig(local_user(),'bookmarker','disable'))
+	if(get_pconfig(local_channel(),'bookmarker','disable'))
 		return;
 
 	if(! strpos($b['html'],'bookmark-identifier'))
@@ -31,7 +31,7 @@ function bookmarker_prepare_body(&$a,&$b) {
 		return;
 
 	$id = $b['item']['id'];
-	if(local_user())
+	if(local_channel())
 		$link = '<a class="fakelink" onclick="itemBookmark(' . $id . '); return false;" title="' . t('Save Bookmarks') . '" href="#"><i class="icon-bookmark"></i></a> ';
 	else
 		$link = '<i class="icon-bookmark"></i></a> ';

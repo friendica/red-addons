@@ -86,13 +86,13 @@ function visage_module() {}
 
 function visage_content(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 
 	$o = '<h3>' . t('Recent Channel/Profile Viewers') . '</h3>';
 
-	$enabled = get_pconfig(local_user(),'visage','enabled');
+	$enabled = get_pconfig(local_channel(),'visage','enabled');
 
 	if(! $enabled) {
 		$o .= t('This plugin/addon has not been configured.') . EOL;
@@ -107,7 +107,7 @@ function visage_content(&$a) {
 	if(! is_public_profile())
 		return $o;
 
-	$x = get_pconfig(local_user(),'visage','visitors');
+	$x = get_pconfig(local_channel(),'visage','visitors');
 	if((! $x) || (! is_array($x))) {
 		$o .= t('No entries.');
 		return $o;
@@ -149,7 +149,7 @@ function visage_content(&$a) {
 		
 function visage_settings(&$a,&$s) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
@@ -158,7 +158,7 @@ function visage_settings(&$a,&$s) {
 
 	/* Get the current state of our config variables */
 
-	$enabled = get_pconfig(local_user(),'visage','enabled');
+	$enabled = get_pconfig(local_channel(),'visage','enabled');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
 	$css = (($enabled) ? '' : '-disabled');
 
@@ -181,7 +181,7 @@ function visage_settings(&$a,&$s) {
 function visage_settings_post(&$a,&$b) {
 
 	if(x($_POST,'visage-submit')) {
-		set_pconfig(local_user(),'visage','enabled',intval($_POST['visage']));
+		set_pconfig(local_channel(),'visage','enabled',intval($_POST['visage']));
 	}
 
 }

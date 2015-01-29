@@ -67,10 +67,10 @@ function planets_post_hook($a, &$item) {
 
 	logger('planets invoked');
 
-	if(! local_user())   /* non-zero if this is a logged in user of this system */
+	if(! local_channel())   /* non-zero if this is a logged in user of this system */
 		return;
 
-	if(local_user() != $item['uid'])    /* Does this person own the post? */
+	if(local_channel() != $item['uid'])    /* Does this person own the post? */
 		return;
 
 	if($item['parent'])   /* If the item has a parent, this is a comment or something else, not a status post. */
@@ -78,7 +78,7 @@ function planets_post_hook($a, &$item) {
 
 	/* Retrieve our personal config setting */
 
-	$active = get_pconfig(local_user(), 'planets', 'enable');
+	$active = get_pconfig(local_channel(), 'planets', 'enable');
 
 	if(! $active)
 		return;
@@ -113,10 +113,10 @@ function planets_post_hook($a, &$item) {
  */
 
 function planets_settings_post($a,$post) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	if($_POST['planets-submit']) {
-		set_pconfig(local_user(),'planets','enable',intval($_POST['planets']));
+		set_pconfig(local_channel(),'planets','enable',intval($_POST['planets']));
 		info( t('Planets Settings updated.') . EOL);
 	}
 }
@@ -133,7 +133,7 @@ function planets_settings_post($a,$post) {
 
 function planets_settings(&$a,&$s) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
@@ -142,7 +142,7 @@ function planets_settings(&$a,&$s) {
 
 	/* Get the current state of our config variable */
 
-	$enabled = get_pconfig(local_user(),'planets','enable');
+	$enabled = get_pconfig(local_channel(),'planets','enable');
 
 	$checked = (($enabled) ? ' checked="checked" ' : '');
 

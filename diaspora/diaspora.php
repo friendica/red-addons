@@ -26,12 +26,12 @@ function diaspora_unload() {
 
 
 function diaspora_jot_nets(&$a,&$b) {
-    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+    if((! local_channel()) || (! perm_is_allowed(local_channel(),'','view_stream')))
         return;
 
-    $diaspora_post = get_pconfig(local_user(),'diaspora','post');
+    $diaspora_post = get_pconfig(local_channel(),'diaspora','post');
     if(intval($diaspora_post) == 1) {
-        $diaspora_defpost = get_pconfig(local_user(),'diaspora','post_by_default');
+        $diaspora_defpost = get_pconfig(local_channel(),'diaspora','post_by_default');
         $selected = ((intval($diaspora_defpost) == 1) ? ' checked="checked" ' : '');
         $b .= '<div class="profile-jot-net"><input type="checkbox" name="diaspora_enable"' . $selected . ' value="1" /> <img src="addon/diaspora/diaspora.png" /> ' . t('Post to Diaspora') . '</div>';
     }
@@ -108,7 +108,7 @@ function diaspora_queue_hook(&$a,&$b) {
 
 function diaspora_settings(&$a,&$s) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
@@ -117,17 +117,17 @@ function diaspora_settings(&$a,&$s) {
 
 	/* Get the current state of our config variables */
 
-	$enabled = get_pconfig(local_user(),'diaspora','post');
+	$enabled = get_pconfig(local_channel(),'diaspora','post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
 	$css = (($enabled) ? '' : '-disabled');
 
-	$def_enabled = get_pconfig(local_user(),'diaspora','post_by_default');
+	$def_enabled = get_pconfig(local_channel(),'diaspora','post_by_default');
 
 	$def_checked = (($def_enabled) ? ' checked="checked" ' : '');
 
-	$diaspora_username = get_pconfig(local_user(), 'diaspora', 'diaspora_username');
-	$diaspora_password = get_pconfig(local_user(), 'diaspora', 'diaspora_password');
-	$diaspora_url = get_pconfig(local_user(), 'diaspora', 'diaspora_url');
+	$diaspora_username = get_pconfig(local_channel(), 'diaspora', 'diaspora_username');
+	$diaspora_password = get_pconfig(local_channel(), 'diaspora', 'diaspora_password');
+	$diaspora_url = get_pconfig(local_channel(), 'diaspora', 'diaspora_url');
 
 	$status = "";
 
@@ -190,11 +190,11 @@ function diaspora_settings_post(&$a,&$b) {
 
 	if(x($_POST,'diaspora-submit')) {
 
-		set_pconfig(local_user(),'diaspora','post',intval($_POST['diaspora']));
-		set_pconfig(local_user(),'diaspora','post_by_default',intval($_POST['diaspora_bydefault']));
-		set_pconfig(local_user(),'diaspora','diaspora_username',trim($_POST['diaspora_username']));
-		set_pconfig(local_user(),'diaspora','diaspora_password',trim($_POST['diaspora_password']));
-		set_pconfig(local_user(),'diaspora','diaspora_url',trim($_POST['diaspora_url']));
+		set_pconfig(local_channel(),'diaspora','post',intval($_POST['diaspora']));
+		set_pconfig(local_channel(),'diaspora','post_by_default',intval($_POST['diaspora_bydefault']));
+		set_pconfig(local_channel(),'diaspora','diaspora_username',trim($_POST['diaspora_username']));
+		set_pconfig(local_channel(),'diaspora','diaspora_password',trim($_POST['diaspora_password']));
+		set_pconfig(local_channel(),'diaspora','diaspora_url',trim($_POST['diaspora_url']));
 
 	}
 
@@ -209,17 +209,17 @@ function diaspora_post_local(&$a,&$b) {
         return;
 
 
-	if((! local_user()) || (local_user() != $b['uid']))
+	if((! local_channel()) || (local_channel() != $b['uid']))
 		return;
 
 	if($b['item_private'])
 		return;
 
-	$diaspora_post   = intval(get_pconfig(local_user(),'diaspora','post'));
+	$diaspora_post   = intval(get_pconfig(local_channel(),'diaspora','post'));
 
 	$diaspora_enable = (($diaspora_post && x($_REQUEST,'diaspora_enable')) ? intval($_REQUEST['diaspora_enable']) : 0);
 
-	if($_REQUEST['api_source'] && intval(get_pconfig(local_user(),'diaspora','post_by_default')))
+	if($_REQUEST['api_source'] && intval(get_pconfig(local_channel(),'diaspora','post_by_default')))
 		$diaspora_enable = 1;
 
     if(! $diaspora_enable)

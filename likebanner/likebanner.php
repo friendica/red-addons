@@ -23,7 +23,7 @@ function likebanner_init(&$a) {
 
 function likebanner_content(&$a) {
 
-	if(local_user()) {
+	if(local_channel()) {
 		$channel = $a->get_channel();
 	}
 	else 

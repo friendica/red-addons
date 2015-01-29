@@ -34,7 +34,7 @@ function pumpio_module() {}
 
 function pumpio_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied.') . EOL);
 		return '';
 	}
@@ -101,17 +101,17 @@ function pumpio_connect($a) {
 	session_start();
 
 	// Define the needed keys
-	$consumer_key = get_pconfig(local_user(), 'pumpio','consumer_key');
-	$consumer_secret = get_pconfig(local_user(), 'pumpio','consumer_secret');
-	$hostname = get_pconfig(local_user(), 'pumpio','host');
+	$consumer_key = get_pconfig(local_channel(), 'pumpio','consumer_key');
+	$consumer_secret = get_pconfig(local_channel(), 'pumpio','consumer_secret');
+	$hostname = get_pconfig(local_channel(), 'pumpio','host');
 
 	if ((($consumer_key == "") OR ($consumer_secret == "")) AND ($hostname != "")) {
 		$clientdata = pumpio_registerclient($a, $hostname);
-		set_pconfig(local_user(), 'pumpio','consumer_key', $clientdata->client_id);
-		set_pconfig(local_user(), 'pumpio','consumer_secret', $clientdata->client_secret);
+		set_pconfig(local_channel(), 'pumpio','consumer_key', $clientdata->client_id);
+		set_pconfig(local_channel(), 'pumpio','consumer_secret', $clientdata->client_secret);
 
-		$consumer_key = get_pconfig(local_user(), 'pumpio','consumer_key');
-		$consumer_secret = get_pconfig(local_user(), 'pumpio','consumer_secret');
+		$consumer_key = get_pconfig(local_channel(), 'pumpio','consumer_key');
+		$consumer_secret = get_pconfig(local_channel(), 'pumpio','consumer_secret');
 	}
 
 	if (($consumer_key == "") OR ($consumer_secret == ""))
@@ -141,8 +141,8 @@ function pumpio_connect($a) {
 	if (($success = $client->Initialize())) {
 		if (($success = $client->Process())) {
 			if (strlen($client->access_token)) {
-				set_pconfig(local_user(), "pumpio", "oauth_token", $client->access_token);
-				set_pconfig(local_user(), "pumpio", "oauth_token_secret", $client->access_token_secret);
+				set_pconfig(local_channel(), "pumpio", "oauth_token", $client->access_token);
+				set_pconfig(local_channel(), "pumpio", "oauth_token_secret", $client->access_token_secret);
 			}
 		}
 		$success = $client->Finalize($success);
@@ -159,12 +159,12 @@ function pumpio_connect($a) {
 }
 
 function pumpio_jot_nets(&$a,&$b) {
-    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+    if((! local_channel()) || (! perm_is_allowed(local_channel(),'','view_stream')))
         return;
 
-    $pumpio_post = get_pconfig(local_user(),'pumpio','post');
+    $pumpio_post = get_pconfig(local_channel(),'pumpio','post');
     if(intval($pumpio_post) == 1) {
-        $pumpio_defpost = get_pconfig(local_user(),'pumpio','post_by_default');
+        $pumpio_defpost = get_pconfig(local_channel(),'pumpio','post_by_default');
         $selected = ((intval($pumpio_defpost) == 1) ? ' checked="checked" ' : '');
         $b .= '<div class="profile-jot-net"><input type="checkbox" name="pumpio_enable"' . $selected . ' value="1" /> <img src="addon/pumpio/pumpio.png" /> ' . t('Post to Pump.io') . '</div>';
 
@@ -174,7 +174,7 @@ function pumpio_jot_nets(&$a,&$b) {
 
 function pumpio_settings(&$a,&$s) {
 
-    if(! local_user())
+    if(! local_channel())
         return;
 
     /* Add our stylesheet to the page so we can make our settings look nice */
@@ -183,20 +183,20 @@ function pumpio_settings(&$a,&$s) {
 
     /* Get the current state of our config variables */
 
-    $enabled = get_pconfig(local_user(),'pumpio','post');
+    $enabled = get_pconfig(local_channel(),'pumpio','post');
     $checked = (($enabled) ? ' checked="checked" ' : '');
 
-    $def_enabled = get_pconfig(local_user(),'pumpio','post_by_default');
+    $def_enabled = get_pconfig(local_channel(),'pumpio','post_by_default');
     $def_checked = (($def_enabled) ? ' checked="checked" ' : '');
 
-    $public_enabled = get_pconfig(local_user(),'pumpio','public');
+    $public_enabled = get_pconfig(local_channel(),'pumpio','public');
     $public_checked = (($public_enabled) ? ' checked="checked" ' : '');
 
-    $mirror_enabled = get_pconfig(local_user(),'pumpio','mirror');
+    $mirror_enabled = get_pconfig(local_channel(),'pumpio','mirror');
     $mirror_checked = (($mirror_enabled) ? ' checked="checked" ' : '');
 
-    $servername = get_pconfig(local_user(), "pumpio", "host");
-    $username = get_pconfig(local_user(), "pumpio", "user");
+    $servername = get_pconfig(local_channel(), "pumpio", "host");
+    $username = get_pconfig(local_channel(), "pumpio", "user");
 
     /* Add some HTML to the existing form */
 
@@ -239,8 +239,8 @@ function pumpio_settings(&$a,&$s) {
 	$s .= '<input id="pumpio-mirror" type="checkbox" name="pumpio_mirror" value="1" ' . $mirror_checked . '/>';
 	$s .= '</div><div class="clear"></div>';
 
-	$oauth_token = get_pconfig(local_user(), "pumpio", "oauth_token");
-	$oauth_token_secret = get_pconfig(local_user(), "pumpio", "oauth_token_secret");
+	$oauth_token = get_pconfig(local_channel(), "pumpio", "oauth_token");
+	$oauth_token_secret = get_pconfig(local_channel(), "pumpio", "oauth_token_secret");
 
 	$s .= '<div id="pumpio-password-wrapper">';
 	if (($oauth_token == "") OR ($oauth_token_secret == ""))
@@ -272,12 +272,12 @@ function pumpio_settings_post(&$a,&$b) {
 		$host = trim($host);
 		$host = str_replace(array("https://", "http://"), array("", ""), $host);
 
-		set_pconfig(local_user(),'pumpio','post',intval($_POST['pumpio']));
-		set_pconfig(local_user(),'pumpio','host',$host);
-		set_pconfig(local_user(),'pumpio','user',$user);
-		set_pconfig(local_user(),'pumpio','public',$_POST['pumpio_public']);
-		set_pconfig(local_user(),'pumpio','mirror',$_POST['pumpio_mirror']);
-		set_pconfig(local_user(),'pumpio','post_by_default',intval($_POST['pumpio_bydefault']));
+		set_pconfig(local_channel(),'pumpio','post',intval($_POST['pumpio']));
+		set_pconfig(local_channel(),'pumpio','host',$host);
+		set_pconfig(local_channel(),'pumpio','user',$user);
+		set_pconfig(local_channel(),'pumpio','public',$_POST['pumpio_public']);
+		set_pconfig(local_channel(),'pumpio','mirror',$_POST['pumpio_mirror']);
+		set_pconfig(local_channel(),'pumpio','post_by_default',intval($_POST['pumpio_bydefault']));
                 info( t('PumpIO Settings saved.') . EOL);
 
 
@@ -292,17 +292,17 @@ function pumpio_post_local(&$a,&$b) {
 	if($b['edit'])
 		return;
 
-	if((! local_user()) || (local_user() != $b['uid']))
+	if((! local_channel()) || (local_channel() != $b['uid']))
 		return;
 
 	if($b['item_private'] || ($b['parent_mid'] != $b['mid']))
 		return;
 
-	$pumpio_post   = intval(get_pconfig(local_user(),'pumpio','post'));
+	$pumpio_post   = intval(get_pconfig(local_channel(),'pumpio','post'));
 
 	$pumpio_enable = (($pumpio_post && x($_REQUEST,'pumpio_enable')) ? intval($_REQUEST['pumpio_enable']) : 0);
 
-	if($_REQUEST['api_source'] && intval(get_pconfig(local_user(),'pumpio','post_by_default')))
+	if($_REQUEST['api_source'] && intval(get_pconfig(local_channel(),'pumpio','post_by_default')))
 		$pumpio_enable = 1;
 
 	if(! $pumpio_enable)

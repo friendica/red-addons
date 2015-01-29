@@ -26,13 +26,13 @@ function startpage_unload() {
 function startpage_home_init($a, $b) {
 
 	return;
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$channel = $a->get_channel();
 	$page = $channel['channel_startpage'];
 	if(! $page)
-		$page = get_pconfig(local_user(),'system','startpage');
+		$page = get_pconfig(local_channel(),'system','startpage');
 
 	if(strlen($page)) {		
 		$slash = ((strpos($page,'/') === 0) ? true : false);
@@ -57,7 +57,7 @@ function startpage_home_init($a, $b) {
  */
 
 function startpage_settings_post($a,$post) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	$channel = $a->get_channel();
 
@@ -75,9 +75,9 @@ function startpage_settings_post($a,$post) {
 
 		$r = q("update channel set channel_startpage = '%s' where channel_id = %d",
 			dbesc($page),
-			intval(local_user())
+			intval(local_channel())
 		);
-		set_pconfig(local_user(),'system','startpage',$page);
+		set_pconfig(local_channel(),'system','startpage',$page);
 
 	}
 }
@@ -94,7 +94,7 @@ function startpage_settings_post($a,$post) {
 
 function startpage_settings(&$a,&$s) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
@@ -106,7 +106,7 @@ function startpage_settings(&$a,&$s) {
 	$channel = $a->get_channel();
 	$page = $channel['channel_startpage'];
 	if(! $page)
-		$page = get_pconfig(local_user(),'system','startpage');
+		$page = get_pconfig(local_channel(),'system','startpage');
 
 
 	/* Add some HTML to the existing form */

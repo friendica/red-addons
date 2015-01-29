@@ -245,28 +245,28 @@ function jappixmini_settings(&$a, &$s) {
 
     // addon settings for a user
 
-    $activate = get_pconfig(local_user(),'jappixmini','activate');
+    $activate = get_pconfig(local_channel(),'jappixmini','activate');
     $activate = intval($activate) ? ' checked="checked"' : '';
-    $dontinsertchat = get_pconfig(local_user(),'jappixmini','dontinsertchat');
+    $dontinsertchat = get_pconfig(local_channel(),'jappixmini','dontinsertchat');
     $insertchat = !(intval($dontinsertchat) ? ' checked="checked"' : '');
 
     $defaultbosh = get_config("jappixmini", "bosh_address");
 
     if ($defaultbosh != "")
-	set_pconfig(local_user(),'jappixmini','bosh', $defaultbosh);
+	set_pconfig(local_channel(),'jappixmini','bosh', $defaultbosh);
 
-    $username = get_pconfig(local_user(),'jappixmini','username');
+    $username = get_pconfig(local_channel(),'jappixmini','username');
     $username = htmlentities($username);
-    $server = get_pconfig(local_user(),'jappixmini','server');
+    $server = get_pconfig(local_channel(),'jappixmini','server');
     $server = htmlentities($server);
-    $bosh = get_pconfig(local_user(),'jappixmini','bosh');
+    $bosh = get_pconfig(local_channel(),'jappixmini','bosh');
     $bosh = htmlentities($bosh);
-    $password = get_pconfig(local_user(),'jappixmini','password');
-    $autosubscribe = get_pconfig(local_user(),'jappixmini','autosubscribe');
+    $password = get_pconfig(local_channel(),'jappixmini','password');
+    $autosubscribe = get_pconfig(local_channel(),'jappixmini','autosubscribe');
     $autosubscribe = intval($autosubscribe) ? ' checked="checked"' : '';
-    $autoapprove = get_pconfig(local_user(),'jappixmini','autoapprove');
+    $autoapprove = get_pconfig(local_channel(),'jappixmini','autoapprove');
     $autoapprove = intval($autoapprove) ? ' checked="checked"' : '';
-    $encrypt = intval(get_pconfig(local_user(),'jappixmini','encrypt'));
+    $encrypt = intval(get_pconfig(local_channel(),'jappixmini','encrypt'));
     $encrypt_checked = $encrypt ? ' checked="checked"' : '';
     $encrypt_disabled = $encrypt ? '' : ' disabled="disabled"';
 
@@ -281,12 +281,12 @@ function jappixmini_settings(&$a, &$s) {
     $info_text = str_replace("\n", "<br />", $info_text);
 
     // count contacts
-    $r = q("SELECT COUNT(1) as `cnt` FROM `pconfig` WHERE `uid`=%d AND `cat`='jappixmini' AND `k` LIKE 'id:%%'", local_user());
+    $r = q("SELECT COUNT(1) as `cnt` FROM `pconfig` WHERE `uid`=%d AND `cat`='jappixmini' AND `k` LIKE 'id:%%'", local_channel());
     if (count($r)) $contact_cnt = $r[0]["cnt"];
     else $contact_cnt = 0;
 
     // count jabber addresses
-    $r = q("SELECT COUNT(1) as `cnt` FROM `pconfig` WHERE `uid`=%d AND `cat`='jappixmini' AND `k` LIKE 'id:%%' AND `v` LIKE '%%@%%'", local_user());
+    $r = q("SELECT COUNT(1) as `cnt` FROM `pconfig` WHERE `uid`=%d AND `cat`='jappixmini' AND `k` LIKE 'id:%%' AND `v` LIKE '%%@%%'", local_channel());
     if (count($r)) $address_cnt = $r[0]["cnt"];
     else $address_cnt = 0;
 
@@ -387,8 +387,8 @@ function jappixmini_settings(&$a, &$s) {
 function jappixmini_settings_post(&$a,&$b) {
 	// save addon settings for a user
 
-	if(! local_user()) return;
-	$uid = local_user();
+	if(! local_channel()) return;
+	$uid = local_channel();
 
 	$account_id = get_account_id();
 	if(! $account_id)
@@ -451,10 +451,10 @@ function jappixmini_settings_post(&$a,&$b) {
 function jappixmini_script(&$a,&$s) {
     // adds the script to the page header which starts Jappix Mini
 
-    if(! local_user()) return;
+    if(! local_channel()) return;
 
-    $activate = get_pconfig(local_user(),'jappixmini','activate');
-    $dontinsertchat = get_pconfig(local_user(), 'jappixmini','dontinsertchat');
+    $activate = get_pconfig(local_channel(),'jappixmini','activate');
+    $dontinsertchat = get_pconfig(local_channel(), 'jappixmini','dontinsertchat');
     if (!$activate or $dontinsertchat) return;
 
     $a->page['htmlhead'] .= '<script type="text/javascript" src="' . $a->get_baseurl() . '/addon/jappixmini/jappix/php/get.php?t=js&amp;g=mini.xml"></script>'."\r\n";
@@ -462,20 +462,20 @@ function jappixmini_script(&$a,&$s) {
 
     $a->page['htmlhead'] .= '<script type="text/javascript" src="' . $a->get_baseurl() . '/addon/jappixmini/lib.js"></script>'."\r\n";
 
-    $username = get_pconfig(local_user(),'jappixmini','username');
+    $username = get_pconfig(local_channel(),'jappixmini','username');
     $username = str_replace("'", "\\'", $username);
-    $server = get_pconfig(local_user(),'jappixmini','server');
+    $server = get_pconfig(local_channel(),'jappixmini','server');
     $server = str_replace("'", "\\'", $server);
-    $bosh = get_pconfig(local_user(),'jappixmini','bosh');
+    $bosh = get_pconfig(local_channel(),'jappixmini','bosh');
     $bosh = str_replace("'", "\\'", $bosh);
-    $encrypt = get_pconfig(local_user(),'jappixmini','encrypt');
+    $encrypt = get_pconfig(local_channel(),'jappixmini','encrypt');
     $encrypt = intval($encrypt);
-    $password = get_pconfig(local_user(),'jappixmini','password');
+    $password = get_pconfig(local_channel(),'jappixmini','password');
     $password = str_replace("'", "\\'", $password);
 
-    $autoapprove = get_pconfig(local_user(),'jappixmini','autoapprove');
+    $autoapprove = get_pconfig(local_channel(),'jappixmini','autoapprove');
     $autoapprove = intval($autoapprove);
-    $autosubscribe = get_pconfig(local_user(),'jappixmini','autosubscribe');
+    $autosubscribe = get_pconfig(local_channel(),'jappixmini','autosubscribe');
     $autosubscribe = intval($autosubscribe);
 
     // set proxy if necessary
@@ -489,7 +489,7 @@ function jappixmini_script(&$a,&$s) {
 
     // get a list of jabber accounts of the contacts
     $contacts = Array();
-    $uid = local_user();
+    $uid = local_channel();
     $rows = q("SELECT * FROM `pconfig` WHERE `uid`=$uid AND `cat`='jappixmini' AND `k` LIKE 'id:%%'");
     foreach ($rows as $row) {
         $key = $row['k'];

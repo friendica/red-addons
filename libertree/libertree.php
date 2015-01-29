@@ -27,12 +27,12 @@ function libertree_unload() {
 
 
 function libertree_jot_nets(&$a,&$b) {
-    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+    if((! local_channel()) || (! perm_is_allowed(local_channel(),'','view_stream')))
         return;
 
-    $ltree_post = get_pconfig(local_user(),'libertree','post');
+    $ltree_post = get_pconfig(local_channel(),'libertree','post');
     if(intval($ltree_post) == 1) {
-        $ltree_defpost = get_pconfig(local_user(),'libertree','post_by_default');
+        $ltree_defpost = get_pconfig(local_channel(),'libertree','post_by_default');
         $selected = ((intval($ltree_defpost) == 1) ? ' checked="checked" ' : '');
         $b .= '<div class="profile-jot-net"><input type="checkbox" name="libertree_enable"' . $selected . ' value="1" /> <img src="addon/libertree/libertree.png" /> ' . t('Post to Libertree') . '</div>';
     }
@@ -41,7 +41,7 @@ function libertree_jot_nets(&$a,&$b) {
 
 function libertree_settings(&$a,&$s) {
 
-    if(! local_user())
+    if(! local_channel())
         return;
 
     /* Add our stylesheet to the page so we can make our settings look nice */
@@ -50,16 +50,16 @@ function libertree_settings(&$a,&$s) {
 
     /* Get the current state of our config variables */
 
-    $enabled = get_pconfig(local_user(),'libertree','post');
+    $enabled = get_pconfig(local_channel(),'libertree','post');
 
     $checked = (($enabled) ? ' checked="checked" ' : '');
 
-    $def_enabled = get_pconfig(local_user(),'libertree','post_by_default');
+    $def_enabled = get_pconfig(local_channel(),'libertree','post_by_default');
 
     $def_checked = (($def_enabled) ? ' checked="checked" ' : '');
 
-    $ltree_api_token = get_pconfig(local_user(), 'libertree', 'libertree_api_token');
-    $ltree_url = get_pconfig(local_user(), 'libertree', 'libertree_url');
+    $ltree_api_token = get_pconfig(local_channel(), 'libertree', 'libertree_api_token');
+    $ltree_url = get_pconfig(local_channel(), 'libertree', 'libertree_url');
 
 
     /* Add some HTML to the existing form */
@@ -99,10 +99,10 @@ function libertree_settings_post(&$a,&$b) {
 
 	if(x($_POST,'libertree-submit')) {
 
-		set_pconfig(local_user(),'libertree','post',intval($_POST['libertree']));
-		set_pconfig(local_user(),'libertree','post_by_default',intval($_POST['libertree_bydefault']));
-		set_pconfig(local_user(),'libertree','libertree_api_token',trim($_POST['libertree_api_token']));
-		set_pconfig(local_user(),'libertree','libertree_url',trim($_POST['libertree_url']));
+		set_pconfig(local_channel(),'libertree','post',intval($_POST['libertree']));
+		set_pconfig(local_channel(),'libertree','post_by_default',intval($_POST['libertree_bydefault']));
+		set_pconfig(local_channel(),'libertree','libertree_api_token',trim($_POST['libertree_api_token']));
+		set_pconfig(local_channel(),'libertree','libertree_url',trim($_POST['libertree_url']));
                 info( t('Libertree Settings saved.') . EOL);
 
 	}
@@ -116,17 +116,17 @@ function libertree_post_local(&$a,&$b) {
 	if($b['edit'])
 		return;
 
-	if((! local_user()) || (local_user() != $b['uid']))
+	if((! local_channel()) || (local_channel() != $b['uid']))
 		return;
 
 	if($b['item_private'] || ($b['mid'] != $b['parent_mid']))
 		return;
 
-	$ltree_post   = intval(get_pconfig(local_user(),'libertree','post'));
+	$ltree_post   = intval(get_pconfig(local_channel(),'libertree','post'));
 
 	$ltree_enable = (($ltree_post && x($_REQUEST,'libertree_enable')) ? intval($_REQUEST['libertree_enable']) : 0);
 
-	if($_REQUEST['api_source'] && intval(get_pconfig(local_user(),'libertree','post_by_default')))
+	if($_REQUEST['api_source'] && intval(get_pconfig(local_channel(),'libertree','post_by_default')))
 		$ltree_enable = 1;
 
     if(! $ltree_enable)

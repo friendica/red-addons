@@ -127,13 +127,13 @@ function statusnet_unload() {
 
 function statusnet_jot_nets(&$a,&$b) {
 
-	if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream'))) 
+	if((! local_channel()) || (! perm_is_allowed(local_channel(),'','view_stream'))) 
 		return;
 
-	$statusnet_post = get_pconfig(local_user(),'statusnet','post');
+	$statusnet_post = get_pconfig(local_channel(),'statusnet','post');
 
 	if(intval($statusnet_post) == 1) {
-		$statusnet_defpost = get_pconfig(local_user(),'statusnet','post_by_default');
+		$statusnet_defpost = get_pconfig(local_channel(),'statusnet','post_by_default');
 		$selected = ((intval($statusnet_defpost) == 1) ? ' checked="checked" ' : '');
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="statusnet_enable"' . $selected . ' value="1" /> ' 
 			. '<img src="addon/statusnet/gnusocial.png" /> ' . t('Post to GNU social') . '</div>';
@@ -141,7 +141,7 @@ function statusnet_jot_nets(&$a,&$b) {
 }
 
 function statusnet_settings_post ($a,$post) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	// don't check statusnet settings if statusnet submit button is not clicked
 
@@ -153,17 +153,17 @@ function statusnet_settings_post ($a,$post) {
 		/***
 		 * if the statusnet-disconnect checkbox is set, clear the statusnet configuration
 		 */
-		del_pconfig(local_user(), 'statusnet', 'consumerkey');
-		del_pconfig(local_user(), 'statusnet', 'consumersecret');
-		del_pconfig(local_user(), 'statusnet', 'post');
-		del_pconfig(local_user(), 'statusnet', 'post_by_default');
-		del_pconfig(local_user(), 'statusnet', 'oauthtoken');
-		del_pconfig(local_user(), 'statusnet', 'oauthsecret');
-		del_pconfig(local_user(), 'statusnet', 'baseapi');
-		del_pconfig(local_user(), 'statusnet', 'post_taglinks');
-		del_pconfig(local_user(), 'statusnet', 'lastid');
-		del_pconfig(local_user(), 'statusnet', 'mirror_posts');
-		del_pconfig(local_user(), 'statusnet', 'intelligent_shortening');
+		del_pconfig(local_channel(), 'statusnet', 'consumerkey');
+		del_pconfig(local_channel(), 'statusnet', 'consumersecret');
+		del_pconfig(local_channel(), 'statusnet', 'post');
+		del_pconfig(local_channel(), 'statusnet', 'post_by_default');
+		del_pconfig(local_channel(), 'statusnet', 'oauthtoken');
+		del_pconfig(local_channel(), 'statusnet', 'oauthsecret');
+		del_pconfig(local_channel(), 'statusnet', 'baseapi');
+		del_pconfig(local_channel(), 'statusnet', 'post_taglinks');
+		del_pconfig(local_channel(), 'statusnet', 'lastid');
+		del_pconfig(local_channel(), 'statusnet', 'mirror_posts');
+		del_pconfig(local_channel(), 'statusnet', 'intelligent_shortening');
 	} 
 	else {
 
@@ -182,10 +182,10 @@ function statusnet_settings_post ($a,$post) {
 					$apibase = $asn['apiurl'];
 					$x = z_fetch_url( $apibase . 'statusnet/version.xml', false, 0, array('novalidate' => true));						$c = $x['body'];
 					if (strlen($c) > 0) {
-						set_pconfig(local_user(), 'statusnet', 'consumerkey', $asn['consumerkey'] );
-						set_pconfig(local_user(), 'statusnet', 'consumersecret', $asn['consumersecret'] );
-						set_pconfig(local_user(), 'statusnet', 'baseapi', $asn['apiurl'] );
-						set_pconfig(local_user(), 'statusnet', 'application_name', $asn['applicationname'] );
+						set_pconfig(local_channel(), 'statusnet', 'consumerkey', $asn['consumerkey'] );
+						set_pconfig(local_channel(), 'statusnet', 'consumersecret', $asn['consumersecret'] );
+						set_pconfig(local_channel(), 'statusnet', 'baseapi', $asn['apiurl'] );
+						set_pconfig(local_channel(), 'statusnet', 'application_name', $asn['applicationname'] );
 					} 
 					else {
 						notice( t('Please contact your site administrator.<br />The provided API URL is not valid.').EOL.$asn['apiurl'].EOL );
@@ -206,10 +206,10 @@ function statusnet_settings_post ($a,$post) {
 				$c = $x['body'];
 				if (strlen($c) > 0) {
 					//  ok the API path is correct, let's save the settings
-					set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
-					set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
-					set_pconfig(local_user(), 'statusnet', 'baseapi', $apibase );
-					set_pconfig(local_user(), 'statusnet', 'application_name', $_POST['statusnet-applicationname'] );
+					set_pconfig(local_channel(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
+					set_pconfig(local_channel(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
+					set_pconfig(local_channel(), 'statusnet', 'baseapi', $apibase );
+					set_pconfig(local_channel(), 'statusnet', 'application_name', $_POST['statusnet-applicationname'] );
 				} 
 				else {
 					//  the API path is not correct, maybe missing trailing / ?
@@ -219,9 +219,9 @@ function statusnet_settings_post ($a,$post) {
 					$c = $x['body'];
 					if (strlen($c) > 0) {
 						//  ok the API path is now correct, let's save the settings
-						set_pconfig(local_user(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
-						set_pconfig(local_user(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
-						set_pconfig(local_user(), 'statusnet', 'baseapi', $apibase );
+						set_pconfig(local_channel(), 'statusnet', 'consumerkey', $_POST['statusnet-consumerkey']);
+						set_pconfig(local_channel(), 'statusnet', 'consumersecret', $_POST['statusnet-consumersecret']);
+						set_pconfig(local_channel(), 'statusnet', 'baseapi', $apibase );
 					} 
 					else {
 						//  still not the correct API base, let's do noting
@@ -235,30 +235,30 @@ function statusnet_settings_post ($a,$post) {
 				if (isset($_POST['statusnet-pin'])) {
 
 					//  if the user supplied us with a PIN from GNU social, let the magic of OAuth happen
-					$api	 = get_pconfig(local_user(), 'statusnet', 'baseapi');
-					$ckey	= get_pconfig(local_user(), 'statusnet', 'consumerkey'  );
-					$csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
+					$api	 = get_pconfig(local_channel(), 'statusnet', 'baseapi');
+					$ckey	= get_pconfig(local_channel(), 'statusnet', 'consumerkey'  );
+					$csecret = get_pconfig(local_channel(), 'statusnet', 'consumersecret' );
 					//  the token and secret for which the PIN was generated were hidden in the settings
 					//  form as token and token2, we need a new connection to Twitter using these token
 					//  and secret to request a Access Token with the PIN
 					$connection = new StatusNetOAuth($api, $ckey, $csecret, $_POST['statusnet-token'], $_POST['statusnet-token2']);
 					$token   = $connection->getAccessToken( $_POST['statusnet-pin'] );
 					//  ok, now that we have the Access Token, save them in the user config
-					set_pconfig(local_user(),'statusnet', 'oauthtoken',  $token['oauth_token']);
-					set_pconfig(local_user(),'statusnet', 'oauthsecret', $token['oauth_token_secret']);
-										set_pconfig(local_user(),'statusnet', 'post', 1);
-										set_pconfig(local_user(),'statusnet', 'post_taglinks', 1);
+					set_pconfig(local_channel(),'statusnet', 'oauthtoken',  $token['oauth_token']);
+					set_pconfig(local_channel(),'statusnet', 'oauthsecret', $token['oauth_token_secret']);
+										set_pconfig(local_channel(),'statusnet', 'post', 1);
+										set_pconfig(local_channel(),'statusnet', 'post_taglinks', 1);
 					//  reload the Addon Settings page, if we don't do it see Bug #42
 					goaway($a->get_baseurl().'/settings/featured');
 				} 
 				else {
 					//  if no PIN is supplied in the POST variables, the user has changed the setting
 					//  to post a dent for every new __public__ posting to the wall
-					set_pconfig(local_user(),'statusnet','post',intval($_POST['statusnet-enable']));
-					set_pconfig(local_user(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
-					set_pconfig(local_user(),'statusnet','post_taglinks',intval($_POST['statusnet-sendtaglinks']));
-					set_pconfig(local_user(), 'statusnet', 'mirror_posts', intval($_POST['statusnet-mirror']));
-					set_pconfig(local_user(), 'statusnet', 'intelligent_shortening', intval($_POST['statusnet-shortening']));
+					set_pconfig(local_channel(),'statusnet','post',intval($_POST['statusnet-enable']));
+					set_pconfig(local_channel(),'statusnet','post_by_default',intval($_POST['statusnet-default']));
+					set_pconfig(local_channel(),'statusnet','post_taglinks',intval($_POST['statusnet-sendtaglinks']));
+					set_pconfig(local_channel(), 'statusnet', 'mirror_posts', intval($_POST['statusnet-mirror']));
+					set_pconfig(local_channel(), 'statusnet', 'intelligent_shortening', intval($_POST['statusnet-shortening']));
 					info( t('GNU social settings updated.') . EOL);
 				}
 			}
@@ -267,7 +267,7 @@ function statusnet_settings_post ($a,$post) {
 }
 
 function statusnet_settings(&$a,&$s) {
-		if(! local_user())
+		if(! local_channel())
 				return;
 		$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/statusnet/statusnet.css' . '" media="all" />' . "\r\n";
 	/***
@@ -276,17 +276,17 @@ function statusnet_settings(&$a,&$s) {
 		 *	allow the user to cancel the connection process at this step
 	 * 3) Checkbox for "Send public notices (respect size limitation)
 	 */
-		$api	 = get_pconfig(local_user(), 'statusnet', 'baseapi');
-	$ckey	= get_pconfig(local_user(), 'statusnet', 'consumerkey' );
-	$csecret = get_pconfig(local_user(), 'statusnet', 'consumersecret' );
-	$otoken  = get_pconfig(local_user(), 'statusnet', 'oauthtoken'  );
-	$osecret = get_pconfig(local_user(), 'statusnet', 'oauthsecret' );
-	$enabled = get_pconfig(local_user(), 'statusnet', 'post');
+		$api	 = get_pconfig(local_channel(), 'statusnet', 'baseapi');
+	$ckey	= get_pconfig(local_channel(), 'statusnet', 'consumerkey' );
+	$csecret = get_pconfig(local_channel(), 'statusnet', 'consumersecret' );
+	$otoken  = get_pconfig(local_channel(), 'statusnet', 'oauthtoken'  );
+	$osecret = get_pconfig(local_channel(), 'statusnet', 'oauthsecret' );
+	$enabled = get_pconfig(local_channel(), 'statusnet', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
-	$defenabled = get_pconfig(local_user(),'statusnet','post_by_default');
+	$defenabled = get_pconfig(local_channel(),'statusnet','post_by_default');
 	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
 
-//	$shorteningenabled = get_pconfig(local_user(),'statusnet','intelligent_shortening');
+//	$shorteningenabled = get_pconfig(local_channel(),'statusnet','intelligent_shortening');
 //	$shorteningchecked = (($shorteningenabled) ? ' checked="checked" ' : '');
 
 	$s .= '<div class="settings-block">';
@@ -403,13 +403,13 @@ function statusnet_post_local(&$a,&$b) {
 	if($b['edit'])
 		return;
 
-	if((local_user()) && (local_user() == $b['uid']) && (! $b['item_private'])) {
+	if((local_channel()) && (local_channel() == $b['uid']) && (! $b['item_private'])) {
 
-		$statusnet_post = get_pconfig(local_user(),'statusnet','post');
+		$statusnet_post = get_pconfig(local_channel(),'statusnet','post');
 		$statusnet_enable = (($statusnet_post && x($_REQUEST,'statusnet_enable')) ? intval($_REQUEST['statusnet_enable']) : 0);
 
 		// if API is used, default to the chosen settings
-		if($_REQUEST['api_source'] && intval(get_pconfig(local_user(),'statusnet','post_by_default')))
+		if($_REQUEST['api_source'] && intval(get_pconfig(local_channel(),'statusnet','post_by_default')))
 			$statusnet_enable = 1;
 
 	   if(! $statusnet_enable)

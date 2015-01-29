@@ -33,12 +33,12 @@ function wppost_unload () {
 
 
 function wppost_jot_nets(&$a,&$b) {
-    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+    if((! local_channel()) || (! perm_is_allowed(local_channel(),'','view_stream')))
         return;
 
-    $wp_post = get_pconfig(local_user(),'wppost','post');
+    $wp_post = get_pconfig(local_channel(),'wppost','post');
     if(intval($wp_post) == 1) {
-        $wp_defpost = get_pconfig(local_user(),'wppost','post_by_default');
+        $wp_defpost = get_pconfig(local_channel(),'wppost','post_by_default');
         $selected = ((intval($wp_defpost) == 1) ? ' checked="checked" ' : '');
         $b .= '<div class="profile-jot-net"><input type="checkbox" name="wppost_enable" ' . $selected . ' value="1" /> <img src="addon/wppost/wordpress-logo.png" /> ' . t('Post to WordPress') . '</div>';
 
@@ -48,7 +48,7 @@ function wppost_jot_nets(&$a,&$b) {
 
 function wppost_settings(&$a,&$s) {
 
-    if(! local_user())
+    if(! local_channel())
         return;
 
     /* Add our stylesheet to the page so we can make our settings look nice */
@@ -57,21 +57,21 @@ function wppost_settings(&$a,&$s) {
 
     /* Get the current state of our config variables */
 
-    $enabled = get_pconfig(local_user(),'wppost','post');
+    $enabled = get_pconfig(local_channel(),'wppost','post');
 
     $checked = (($enabled) ? ' checked="checked" ' : '');
 
-	$fwd_enabled = get_pconfig(local_user(), 'wppost','forward_comments');
+	$fwd_enabled = get_pconfig(local_channel(), 'wppost','forward_comments');
 
     $fwd_checked = (($fwd_enabled) ? ' checked="checked" ' : '');
 
-    $def_enabled = get_pconfig(local_user(),'wppost','post_by_default');
+    $def_enabled = get_pconfig(local_channel(),'wppost','post_by_default');
 
     $def_checked = (($def_enabled) ? ' checked="checked" ' : '');
 
-	$wp_username = get_pconfig(local_user(), 'wppost', 'wp_username');
-	$wp_password = get_pconfig(local_user(), 'wppost', 'wp_password');
-	$wp_blog = get_pconfig(local_user(), 'wppost', 'wp_blog');
+	$wp_username = get_pconfig(local_channel(), 'wppost', 'wp_username');
+	$wp_password = get_pconfig(local_channel(), 'wppost', 'wp_password');
+	$wp_blog = get_pconfig(local_channel(), 'wppost', 'wp_blog');
 
 
     /* Add some HTML to the existing form */
@@ -119,12 +119,12 @@ function wppost_settings(&$a,&$s) {
 
 function wppost_settings_post(&$a,&$b) {
 	if(x($_POST,'wppost-submit')) {
-		set_pconfig(local_user(),'wppost','post',intval($_POST['wppost']));
-		set_pconfig(local_user(),'wppost','post_by_default',intval($_POST['wp_bydefault']));
-		set_pconfig(local_user(),'wppost','wp_username',trim($_POST['wp_username']));
-		set_pconfig(local_user(),'wppost','wp_password',trim($_POST['wp_password']));
-		set_pconfig(local_user(),'wppost','wp_blog',trim($_POST['wp_blog']));
-		set_pconfig(local_user(),'wppost','forward_comments',trim($_POST['wp_forward_comments']));
+		set_pconfig(local_channel(),'wppost','post',intval($_POST['wppost']));
+		set_pconfig(local_channel(),'wppost','post_by_default',intval($_POST['wp_bydefault']));
+		set_pconfig(local_channel(),'wppost','wp_username',trim($_POST['wp_username']));
+		set_pconfig(local_channel(),'wppost','wp_password',trim($_POST['wp_password']));
+		set_pconfig(local_channel(),'wppost','wp_blog',trim($_POST['wp_blog']));
+		set_pconfig(local_channel(),'wppost','forward_comments',trim($_POST['wp_forward_comments']));
 		info( t('Wordpress Settings saved.') . EOL);
 	}
 }
@@ -136,17 +136,17 @@ function wppost_post_local(&$a,&$b) {
 	if($b['edit'])
 		return;
 
-	if((! local_user()) || (local_user() != $b['uid']))
+	if((! local_channel()) || (local_channel() != $b['uid']))
 		return;
 
 	if($b['item_private'] || $b['parent'])
 		return;
 
-    $wp_post   = intval(get_pconfig(local_user(),'wppost','post'));
+    $wp_post   = intval(get_pconfig(local_channel(),'wppost','post'));
 
 	$wp_enable = (($wp_post && x($_REQUEST,'wppost_enable')) ? intval($_REQUEST['wppost_enable']) : 0);
 
-	if($_REQUEST['api_source'] && intval(get_pconfig(local_user(),'wppost','post_by_default')))
+	if($_REQUEST['api_source'] && intval(get_pconfig(local_channel(),'wppost','post_by_default')))
 		$wp_enable = 1;
 
     if(! $wp_enable)

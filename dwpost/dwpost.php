@@ -30,12 +30,12 @@ function dwpost_unload() {
 
 
 function dwpost_jot_nets(&$a,&$b) {
-    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+    if((! local_channel()) || (! perm_is_allowed(local_channel(),'','view_stream')))
         return;
 
-    $dw_post = get_pconfig(local_user(),'dwpost','post');
+    $dw_post = get_pconfig(local_channel(),'dwpost','post');
     if(intval($dw_post) == 1) {
-        $dw_defpost = get_pconfig(local_user(),'dwpost','post_by_default');
+        $dw_defpost = get_pconfig(local_channel(),'dwpost','post_by_default');
         $selected = ((intval($dw_defpost) == 1) ? ' checked="checked" ' : '');
         $b .= '<div class="profile-jot-net"><input type="checkbox" name="dwpost_enable" ' . $selected . ' value="1" /> '
             . t('Post to Dreamwidth') . '</div>';
@@ -45,7 +45,7 @@ function dwpost_jot_nets(&$a,&$b) {
 
 function dwpost_settings(&$a,&$s) {
 
-    if(! local_user())
+    if(! local_channel())
         return;
 
     /* Add our stylesheet to the page so we can make our settings look nice */
@@ -54,16 +54,16 @@ function dwpost_settings(&$a,&$s) {
 
     /* Get the current state of our config variables */
 
-    $enabled = get_pconfig(local_user(),'dwpost','post');
+    $enabled = get_pconfig(local_channel(),'dwpost','post');
 
     $checked = (($enabled) ? ' checked="checked" ' : '');
 
-    $def_enabled = get_pconfig(local_user(),'dwpost','post_by_default');
+    $def_enabled = get_pconfig(local_channel(),'dwpost','post_by_default');
 
     $def_checked = (($def_enabled) ? ' checked="checked" ' : '');
 
-	$dw_username = get_pconfig(local_user(), 'dwpost', 'dw_username');
-	$dw_password = get_pconfig(local_user(), 'dwpost', 'dw_password');
+	$dw_username = get_pconfig(local_channel(), 'dwpost', 'dw_username');
+	$dw_password = get_pconfig(local_channel(), 'dwpost', 'dw_password');
 
 
     /* Add some HTML to the existing form */
@@ -103,10 +103,10 @@ function dwpost_settings_post(&$a,&$b) {
 
 	if(x($_POST,'dwpost-submit')) {
 
-		set_pconfig(local_user(),'dwpost','post',intval($_POST['dwpost']));
-		set_pconfig(local_user(),'dwpost','post_by_default',intval($_POST['dw_bydefault']));
-		set_pconfig(local_user(),'dwpost','dw_username',trim($_POST['dw_username']));
-		set_pconfig(local_user(),'dwpost','dw_password',trim($_POST['dw_password']));
+		set_pconfig(local_channel(),'dwpost','post',intval($_POST['dwpost']));
+		set_pconfig(local_channel(),'dwpost','post_by_default',intval($_POST['dw_bydefault']));
+		set_pconfig(local_channel(),'dwpost','dw_username',trim($_POST['dw_username']));
+		set_pconfig(local_channel(),'dwpost','dw_password',trim($_POST['dw_password']));
 
 	}
 
@@ -119,7 +119,7 @@ function dwpost_post_local(&$a,&$b) {
 	if($b['edit'])
 		return;
 
-	if((! local_user()) || (local_user() != $b['uid']))
+	if((! local_channel()) || (local_channel() != $b['uid']))
 		return;
 
 	if($b['item_private'] || $b['parent'])
@@ -127,11 +127,11 @@ function dwpost_post_local(&$a,&$b) {
 
 	logger('Dreamwidth xpost invoked');
 
-    $dw_post   = intval(get_pconfig(local_user(),'dwpost','post'));
+    $dw_post   = intval(get_pconfig(local_channel(),'dwpost','post'));
 
 	$dw_enable = (($dw_post && x($_REQUEST,'dwpost_enable')) ? intval($_REQUEST['dwpost_enable']) : 0);
 
-	if($_REQUEST['api_source'] && intval(get_pconfig(local_user(),'dwpost','post_by_default')))
+	if($_REQUEST['api_source'] && intval(get_pconfig(local_channel(),'dwpost','post_by_default')))
 		$dw_enable = 1;
 
     if(! $dw_enable)

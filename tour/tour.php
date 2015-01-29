@@ -34,37 +34,37 @@ function tour_content(&$a) {
 
 	if($_REQUEST['reset']) {
 		$seen = '';
-		set_pconfig(local_user(),'tour','seen','');
-		set_pconfig(local_user(),'tour','showtour',1);
+		set_pconfig(local_channel(),'tour','seen','');
+		set_pconfig(local_channel(),'tour','showtour',1);
 		logger('Reset tour');
 	}
 }
 
 function tour_post() {
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	// Never show tour again
 	if(x($_POST,'showtour') !== false && $_POST['showtour'] == '0') {
-		set_pconfig(local_user(),'tour','showtour',0);
+		set_pconfig(local_channel(),'tour','showtour',0);
 	}
 
 	// Add the recently seen element to the list of things not to show again
-	$seen = get_pconfig(local_user(),'tour','seen');
+	$seen = get_pconfig(local_channel(),'tour','seen');
 	if(x($_POST,'seen') && $_POST['seen'])
-		set_pconfig(local_user(),'tour','seen',$seen . ',' . $_POST['seen']); // Todo: validate input
+		set_pconfig(local_channel(),'tour','seen',$seen . ',' . $_POST['seen']); // Todo: validate input
 }
 
 function tour_addfooter($a,&$navHtml) {
-	if(!local_user()) return; // Don't show tour to non-logged in users
+	if(!local_channel()) return; // Don't show tour to non-logged in users
 
-	if(get_pconfig(local_user(),'tour','showtour') != 1)
+	if(get_pconfig(local_channel(),'tour','showtour') != 1)
 		return;
 
 	$content = '<script type="text/javascript" src="' . $a->get_baseurl() . '/addon/tour/jquery-tourbus.min.js"></script>' . "\r\n";
 	$content .= '<script type="text/javascript" src="' . $a->get_baseurl() . '/addon/tour/jquery.scrollTo.min.js"></script>' . "\r\n";
 
-	$seen = explode(',',get_pconfig(local_user(),'tour','seen'));
+	$seen = explode(',',get_pconfig(local_channel(),'tour','seen'));
 
 	// TOOD: Check which elements are present on which pages, and only include the relevant stuff
 	$legs = array();

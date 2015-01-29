@@ -33,12 +33,12 @@ function redred_unload() {
 }
 
 function redred_jot_nets(&$a,&$b) {
-    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+    if((! local_channel()) || (! perm_is_allowed(local_channel(),'','view_stream')))
         return;
 
-	$redred_post = get_pconfig(local_user(),'redred','post');
+	$redred_post = get_pconfig(local_channel(),'redred','post');
 	if(intval($redred_post) == 1) {
-		$redred_defpost = get_pconfig(local_user(),'redred','post_by_default');
+		$redred_defpost = get_pconfig(local_channel(),'redred','post_by_default');
 		$selected = ((intval($redred_defpost) == 1) ? ' checked="checked" ' : '');
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="redred_enable"' . $selected . ' value="1" /> ' 
 			. '<img src="images/rm-32.png" /> ' . t('Post to Red') . '</div>';
@@ -46,7 +46,7 @@ function redred_jot_nets(&$a,&$b) {
 }
 
 function redred_settings_post ($a,$post) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	// don't check redred settings if redred submit button is not clicked
 	if (! x($_POST,'redred_submit')) 
@@ -68,28 +68,28 @@ function redred_settings_post ($a,$post) {
  
 
 	
-	set_pconfig(local_user(), 'redred', 'baseapi',         trim($_POST['redred_baseapi']));
-	set_pconfig(local_user(), 'redred', 'username',        trim($_POST['redred_username']));
-	set_pconfig(local_user(), 'redred', 'password',        trim($_POST['redred_password']));
-	set_pconfig(local_user(), 'redred', 'channel',         trim($_POST['redred_channel']));
-	set_pconfig(local_user(), 'redred', 'post',            intval($_POST['redred_enable']));
-	set_pconfig(local_user(), 'redred', 'post_by_default', intval($_POST['redred_default']));
+	set_pconfig(local_channel(), 'redred', 'baseapi',         trim($_POST['redred_baseapi']));
+	set_pconfig(local_channel(), 'redred', 'username',        trim($_POST['redred_username']));
+	set_pconfig(local_channel(), 'redred', 'password',        trim($_POST['redred_password']));
+	set_pconfig(local_channel(), 'redred', 'channel',         trim($_POST['redred_channel']));
+	set_pconfig(local_channel(), 'redred', 'post',            intval($_POST['redred_enable']));
+	set_pconfig(local_channel(), 'redred', 'post_by_default', intval($_POST['redred_default']));
         info( t('redred Settings saved.') . EOL);
 
 }
 
 function redred_settings(&$a,&$s) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	head_add_css('/addon/redred/redred.css');
 
-	$api     = get_pconfig(local_user(), 'redred', 'baseapi');
-	$username    = get_pconfig(local_user(), 'redred', 'username' );
-	$password = get_pconfig(local_user(), 'redred', 'password' );
-	$channel = get_pconfig(local_user(), 'redred', 'channel' );
-	$enabled = get_pconfig(local_user(), 'redred', 'post');
+	$api     = get_pconfig(local_channel(), 'redred', 'baseapi');
+	$username    = get_pconfig(local_channel(), 'redred', 'username' );
+	$password = get_pconfig(local_channel(), 'redred', 'password' );
+	$channel = get_pconfig(local_channel(), 'redred', 'channel' );
+	$enabled = get_pconfig(local_channel(), 'redred', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
-	$defenabled = get_pconfig(local_user(),'redred','post_by_default');
+	$defenabled = get_pconfig(local_channel(),'redred','post_by_default');
 	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
 
    $s .= '<div class="settings-block">';
@@ -126,13 +126,13 @@ function redred_post_local(&$a,&$b) {
 	if(! perm_is_allowed($b['uid'],'','view_stream'))
 		return;
 
-	if((local_user()) && (local_user() == $b['uid']) && (! $b['item_private'])) {
+	if((local_channel()) && (local_channel() == $b['uid']) && (! $b['item_private'])) {
 
-		$redred_post = get_pconfig(local_user(),'redred','post');
+		$redred_post = get_pconfig(local_channel(),'redred','post');
 		$redred_enable = (($redred_post && x($_REQUEST,'redred_enable')) ? intval($_REQUEST['redred_enable']) : 0);
 
 		// if API is used, default to the chosen settings
-		if($_REQUEST['api_source'] && intval(get_pconfig(local_user(),'redred','post_by_default')))
+		if($_REQUEST['api_source'] && intval(get_pconfig(local_channel(),'redred','post_by_default')))
 			$redred_enable = 1;
 
        if(! $redred_enable)

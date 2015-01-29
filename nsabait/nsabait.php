@@ -66,10 +66,10 @@ function nsabait_post_hook($a, &$req) {
 
 	logger('nsabait invoked');
 
-	if(! local_user())   /* non-zero if this is a logged in user of this system */
+	if(! local_channel())   /* non-zero if this is a logged in user of this system */
 		return;
 
-	if(local_user() != $req['profile_uid'])    /* Does this person own the post? */
+	if(local_channel() != $req['profile_uid'])    /* Does this person own the post? */
 		return;
 
 	if($req['parent'])   /* If the req has a parent, this is a comment or something else, not a status post. */
@@ -80,7 +80,7 @@ function nsabait_post_hook($a, &$req) {
 
 	/* Retrieve our personal config setting */
 
-	$active = get_pconfig(local_user(), 'nsabait', 'enable');
+	$active = get_pconfig(local_channel(), 'nsabait', 'enable');
 
 	if(! $active)
 		return;
@@ -118,10 +118,10 @@ function nsabait_post_hook($a, &$req) {
  */
 
 function nsabait_settings_post($a,$post) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	if($_POST['nsabait-submit']) {
-		set_pconfig(local_user(),'nsabait','enable',intval($_POST['nsabait']));
+		set_pconfig(local_channel(),'nsabait','enable',intval($_POST['nsabait']));
 		info( t('Nsabait Settings updated.') . EOL);
 	}
 }
@@ -138,7 +138,7 @@ function nsabait_settings_post($a,$post) {
 
 function nsabait_settings(&$a,&$s) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
@@ -147,7 +147,7 @@ function nsabait_settings(&$a,&$s) {
 
 	/* Get the current state of our config variable */
 
-	$enabled = get_pconfig(local_user(),'nsabait','enable');
+	$enabled = get_pconfig(local_channel(),'nsabait','enable');
 
 	$checked = (($enabled) ? ' checked="checked" ' : '');
 

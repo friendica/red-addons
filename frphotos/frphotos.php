@@ -15,10 +15,10 @@ function frphotos_module() {}
 
 function frphotos_init(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
-	if(intval(get_pconfig(local_user(),'frphotos','complete')))
+	if(intval(get_pconfig(local_channel(),'frphotos','complete')))
 		return;
 
 	$channel = $a->get_channel();
@@ -66,7 +66,7 @@ function frphotos_init(&$a) {
 			}
 		}
 		if($total) {
-			set_pconfig(local_user(),'frphotos','complete','1');
+			set_pconfig(local_channel(),'frphotos','complete','1');
 		}
 		@unlink($cookies);
 		goaway(z_root() . '/photos/' . $channel['channel_address']);
@@ -76,12 +76,12 @@ function frphotos_init(&$a) {
 
 function frphotos_content(&$a) {
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		notice( t('Permission denied') . EOL);
 		return;
 	}
 
-	if(intval(get_pconfig(local_user(),'frphotos','complete'))) {
+	if(intval(get_pconfig(local_channel(),'frphotos','complete'))) {
 		info('Friendica photos have already been imported into this channel.');
 		return;
 	}

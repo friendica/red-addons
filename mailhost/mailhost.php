@@ -22,14 +22,14 @@ function mailhost_uninstall() {
 function mailhost_addon_settings(&$a,&$s) {
 
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
     /* Add our stylesheet to the page so we can make our settings look nice */
 
 	head_add_css('/addon/mailhost/mailhost.css');
 
-	$mailhost = get_pconfig(local_user(),'system','email_notify_host');
+	$mailhost = get_pconfig(local_channel(),'system','email_notify_host');
 	if(! $mailhost)
 		$mailhost = $a->get_hostname();
 		
@@ -52,11 +52,11 @@ function mailhost_addon_settings(&$a,&$s) {
 
 function mailhost_addon_settings_post(&$a,&$b) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	if($_POST['mailhost-submit']) {
-		set_pconfig(local_user(),'system','email_notify_host',trim($_POST['mailhost-mailhost']));
+		set_pconfig(local_channel(),'system','email_notify_host',trim($_POST['mailhost-mailhost']));
 		info( t('MAILHOST Settings saved.') . EOL);
 	}
 }

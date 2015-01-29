@@ -38,7 +38,7 @@ function superblock_unload() {
 
 function superblock_addon_settings(&$a,&$s) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
     /* Add our stylesheet to the page so we can make our settings look nice */
@@ -47,7 +47,7 @@ function superblock_addon_settings(&$a,&$s) {
     $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/superblock/superblock.css' . '" media="all" />' . "\r\n";
 
 
-	$words = get_pconfig(local_user(),'system','blocked');
+	$words = get_pconfig(local_channel(),'system','blocked');
 	if(! $words)
 		$words = '';
 
@@ -68,11 +68,11 @@ function superblock_addon_settings(&$a,&$s) {
 
 function superblock_addon_settings_post(&$a,&$b) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	if($_POST['superblock-submit']) {
-		set_pconfig(local_user(),'system','blocked',trim($_POST['superblock-words']));
+		set_pconfig(local_channel(),'system','blocked',trim($_POST['superblock-words']));
 		info( t('SUPERBLOCK Settings saved.') . EOL);
 	}
 }
@@ -108,10 +108,10 @@ function superblock_enotify_store(&$a,&$b) {
 
 function superblock_directory_item(&$a,&$b) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
-	$words = get_pconfig(local_user(),'system','blocked');
+	$words = get_pconfig(local_channel(),'system','blocked');
 	if($words) {
 		$arr = explode(',',$words);
 	}
@@ -141,10 +141,10 @@ function superblock_directory_item(&$a,&$b) {
 
 function superblock_conversation_start(&$a,&$b) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
-	$words = get_pconfig(local_user(),'system','blocked');
+	$words = get_pconfig(local_channel(),'system','blocked');
 	if($words) {
 		$a->data['superblock'] = explode(',',$words);
 	}
@@ -168,7 +168,7 @@ EOT;
 
 function superblock_item_photo_menu(&$a,&$b) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	$blocked = false;
@@ -193,10 +193,10 @@ function superblock_module() {}
 
 function superblock_init(&$a) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
-	$words = get_pconfig(local_user(),'system','blocked');
+	$words = get_pconfig(local_channel(),'system','blocked');
 
 	if(array_key_exists('block',$_GET) && $_GET['block']) {
 		if(strlen($words))
@@ -204,7 +204,7 @@ function superblock_init(&$a) {
 		$words .= trim($_GET['block']);
 	}
 
-	set_pconfig(local_user(),'system','blocked',$words);
+	set_pconfig(local_channel(),'system','blocked',$words);
 	info( t('superblock settings updated') . EOL );
 	killme();
 }

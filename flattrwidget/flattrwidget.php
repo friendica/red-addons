@@ -63,27 +63,27 @@ function flattrwidget_construct_page(&$a,&$b) {
     }
 }
 function flattrwidget_settings_post($a,$s) {
-    if(! local_user() || (! x($_POST,'flattrwidget-settings-submit')))
+    if(! local_channel() || (! x($_POST,'flattrwidget-settings-submit')))
 	return;
     $c = $a->get_channel();
-    set_pconfig( local_user(), 'flattrwidget', 'align', $_POST['flattrwidget-align'] );
-    set_pconfig( local_user(), 'flattrwidget', 'sd', $_POST['flattrwidget-static'] );
+    set_pconfig( local_channel(), 'flattrwidget', 'align', $_POST['flattrwidget-align'] );
+    set_pconfig( local_channel(), 'flattrwidget', 'sd', $_POST['flattrwidget-static'] );
     $thing = $_POST['flattrwidget-thing'];
     if ($thing == '') {
 	$thing = $a->get_baseurl().'/channel/'.$c['channel_address'];
     }
-    set_pconfig( local_user(), 'flattrwidget', 'thing', $thing);
-    set_pconfig( local_user(), 'flattrwidget', 'user', $_POST['flattrwidget-user']);
+    set_pconfig( local_channel(), 'flattrwidget', 'thing', $thing);
+    set_pconfig( local_channel(), 'flattrwidget', 'user', $_POST['flattrwidget-user']);
     $ftitle = $_POST['flattrwidget-thingtitle'];
     if ($ftitle == '') {
 	$ftitle = $c['channel_name'].' on The Red Matrix';
     }
-    set_pconfig( local_user(), 'flattrwidget', 'title', $ftitle);
-    set_pconfig( local_user(), 'flattrwidget', 'enable', intval($_POST['flattrwidget-enable']));
+    set_pconfig( local_channel(), 'flattrwidget', 'title', $ftitle);
+    set_pconfig( local_channel(), 'flattrwidget', 'enable', intval($_POST['flattrwidget-enable']));
     info(t('Flattr widget settings updated.').EOL);
 }
 function flattrwidget_settings(&$a,&$s) {
-    $id = local_user();
+    $id = local_channel();
     if (! $id)
 	return;
 
@@ -93,7 +93,7 @@ function flattrwidget_settings(&$a,&$s) {
     $thing = get_pconfig( $id, 'flattrwidget', 'thing');
     $user = get_pconfig( $id, 'flattrwidget', 'user');
     $ftitle = get_pconfig( $id, 'flattrwidget', 'title');
-    $enable = intval(get_pconfig(local_user(),'flattrwidget','enable'));
+    $enable = intval(get_pconfig(local_channel(),'flattrwidget','enable'));
     $enable_checked = (($enable) ? ' checked="checked" ' : '');
 
     $s .= '<div class="settings-block">';

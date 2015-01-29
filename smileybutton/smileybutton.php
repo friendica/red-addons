@@ -47,11 +47,11 @@ function show_button($a, &$b) {
 	 *
 	 */
 
-	if(! local_user()) {
+	if(! local_channel()) {
 		$nobutton = false;
 	} else {
-		$nobutton = get_pconfig(local_user(), 'smileybutton', 'nobutton');
-		$deactivated = get_pconfig(local_user(), 'smileybutton', 'deactivated');
+		$nobutton = get_pconfig(local_channel(), 'smileybutton', 'nobutton');
+		$deactivated = get_pconfig(local_channel(), 'smileybutton', 'deactivated');
 	}
 
 	/**
@@ -238,11 +238,11 @@ function show_button($a, &$b) {
  */
 
 function smileybutton_settings_post($a,$post) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	if($_POST['smileybutton-submit'])
-		set_pconfig(local_user(),'smileybutton','nobutton',intval($_POST['smileybutton']));
-		set_pconfig(local_user(),'smileybutton','deactivated',intval($_POST['deactivated']));
+		set_pconfig(local_channel(),'smileybutton','nobutton',intval($_POST['smileybutton']));
+		set_pconfig(local_channel(),'smileybutton','deactivated',intval($_POST['deactivated']));
 
 }
 
@@ -256,7 +256,7 @@ function smileybutton_settings_post($a,$post) {
 
 function smileybutton_settings(&$a,&$s) {
 
-	if(! local_user())
+	if(! local_channel())
 		return;
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
@@ -265,9 +265,9 @@ function smileybutton_settings(&$a,&$s) {
 
 	/* Get the current state of our config variable */
 
-	$nobutton = get_pconfig(local_user(),'smileybutton','nobutton');
+	$nobutton = get_pconfig(local_channel(),'smileybutton','nobutton');
 	$checked['nobutton'] = (($nobutton) ? ' checked="checked" ' : '');
-    $deactivated = get_pconfig(local_user(),'smileybutton','deactivated');
+    $deactivated = get_pconfig(local_channel(),'smileybutton','deactivated');
 	$checked['deactivated'] = (($deactivated) ? ' checked="checked" ' : '');
 	/* Add some HTML to the existing form */
 

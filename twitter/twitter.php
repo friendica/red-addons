@@ -88,19 +88,19 @@ function twitter_unload() {
 }
 
 function twitter_jot_nets(&$a,&$b) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 
-	$tw_post = get_pconfig(local_user(),'twitter','post');
+	$tw_post = get_pconfig(local_channel(),'twitter','post');
 	if(intval($tw_post) == 1) {
-		$tw_defpost = get_pconfig(local_user(),'twitter','post_by_default');
+		$tw_defpost = get_pconfig(local_channel(),'twitter','post_by_default');
 		$selected = ((intval($tw_defpost) == 1) ? ' checked="checked" ' : '');
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="twitter_enable"' . $selected . ' value="1" /> <img src="addon/twitter/twitter.png" /> ' . t('Post to Twitter') . '</div>';
 	}
 }
 
 function twitter_settings_post ($a,$post) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	// don't check twitter settings if twitter submit button is not clicked
 	if (!x($_POST,'twitter-submit'))
@@ -111,16 +111,16 @@ function twitter_settings_post ($a,$post) {
 		 * if the twitter-disconnect checkbox is set, clear the OAuth key/secret pair
 		 * from the user configuration
 		 */
-		del_pconfig(local_user(), 'twitter', 'consumerkey');
-		del_pconfig(local_user(), 'twitter', 'consumersecret');
-		del_pconfig(local_user(), 'twitter', 'oauthtoken');
-		del_pconfig(local_user(), 'twitter', 'oauthsecret');
-		del_pconfig(local_user(), 'twitter', 'post');
-		del_pconfig(local_user(), 'twitter', 'post_by_default');
-		del_pconfig(local_user(), 'twitter', 'post_taglinks');
-		del_pconfig(local_user(), 'twitter', 'lastid');
-		del_pconfig(local_user(), 'twitter', 'intelligent_shortening');
-		del_pconfig(local_user(), 'twitter', 'own_id');
+		del_pconfig(local_channel(), 'twitter', 'consumerkey');
+		del_pconfig(local_channel(), 'twitter', 'consumersecret');
+		del_pconfig(local_channel(), 'twitter', 'oauthtoken');
+		del_pconfig(local_channel(), 'twitter', 'oauthsecret');
+		del_pconfig(local_channel(), 'twitter', 'post');
+		del_pconfig(local_channel(), 'twitter', 'post_by_default');
+		del_pconfig(local_channel(), 'twitter', 'post_taglinks');
+		del_pconfig(local_channel(), 'twitter', 'lastid');
+		del_pconfig(local_channel(), 'twitter', 'intelligent_shortening');
+		del_pconfig(local_channel(), 'twitter', 'own_id');
 	} else {
 	if (isset($_POST['twitter-pin'])) {
 		//  if the user supplied us with a PIN from Twitter, let the magic of OAuth happen
@@ -134,27 +134,27 @@ function twitter_settings_post ($a,$post) {
 		$connection = new TwitterOAuth($ckey, $csecret, $_POST['twitter-token'], $_POST['twitter-token2']);
 		$token   = $connection->getAccessToken( $_POST['twitter-pin'] );
 		//  ok, now that we have the Access Token, save them in the user config
- 		set_pconfig(local_user(),'twitter', 'oauthtoken',  $token['oauth_token']);
-		set_pconfig(local_user(),'twitter', 'oauthsecret', $token['oauth_token_secret']);
-		set_pconfig(local_user(),'twitter', 'post', 1);
-		set_pconfig(local_user(),'twitter', 'post_taglinks', 1);
+ 		set_pconfig(local_channel(),'twitter', 'oauthtoken',  $token['oauth_token']);
+		set_pconfig(local_channel(),'twitter', 'oauthsecret', $token['oauth_token_secret']);
+		set_pconfig(local_channel(),'twitter', 'post', 1);
+		set_pconfig(local_channel(),'twitter', 'post_taglinks', 1);
 		//  reload the Addon Settings page, if we don't do it see Friendica Bug #42
         goaway($a->get_baseurl().'/settings/featured');
 	} else {
 		//  if no PIN is supplied in the POST variables, the user has changed the setting
 		//  to post a tweet for every new __public__ posting to the wall
-		set_pconfig(local_user(),'twitter','post',intval($_POST['twitter-enable']));
-		set_pconfig(local_user(),'twitter','post_by_default',intval($_POST['twitter-default']));
-		set_pconfig(local_user(),'twitter','post_taglinks',intval($_POST['twitter-sendtaglinks']));
-		set_pconfig(local_user(),'twitter', 'mirror_posts', intval($_POST['twitter-mirror']));
-		set_pconfig(local_user(),'twitter', 'intelligent_shortening', intval($_POST['twitter-shortening']));
-		set_pconfig(local_user(),'twitter', 'import', intval($_POST['twitter-import']));
-		set_pconfig(local_user(),'twitter', 'create_user', intval($_POST['twitter-create_user']));
+		set_pconfig(local_channel(),'twitter','post',intval($_POST['twitter-enable']));
+		set_pconfig(local_channel(),'twitter','post_by_default',intval($_POST['twitter-default']));
+		set_pconfig(local_channel(),'twitter','post_taglinks',intval($_POST['twitter-sendtaglinks']));
+		set_pconfig(local_channel(),'twitter', 'mirror_posts', intval($_POST['twitter-mirror']));
+		set_pconfig(local_channel(),'twitter', 'intelligent_shortening', intval($_POST['twitter-shortening']));
+		set_pconfig(local_channel(),'twitter', 'import', intval($_POST['twitter-import']));
+		set_pconfig(local_channel(),'twitter', 'create_user', intval($_POST['twitter-create_user']));
 		info( t('Twitter settings updated.') . EOL);
 	}}
 }
 function twitter_settings(&$a,&$s) {
-        if(! local_user())
+        if(! local_channel())
                 return;
         $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/twitter/twitter.css' . '" media="all" />' . "\r\n";
 	/***
@@ -164,13 +164,13 @@ function twitter_settings(&$a,&$s) {
 	 */
 	$ckey    = get_config('twitter', 'consumerkey' );
 	$csecret = get_config('twitter', 'consumersecret' );
-	$otoken  = get_pconfig(local_user(), 'twitter', 'oauthtoken'  );
-	$osecret = get_pconfig(local_user(), 'twitter', 'oauthsecret' );
-	$enabled = get_pconfig(local_user(), 'twitter', 'post');
+	$otoken  = get_pconfig(local_channel(), 'twitter', 'oauthtoken'  );
+	$osecret = get_pconfig(local_channel(), 'twitter', 'oauthsecret' );
+	$enabled = get_pconfig(local_channel(), 'twitter', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
-	$defenabled = get_pconfig(local_user(),'twitter','post_by_default');
+	$defenabled = get_pconfig(local_channel(),'twitter','post_by_default');
 	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
-//	$shorteningenabled = get_pconfig(local_user(),'twitter','intelligent_shortening');
+//	$shorteningenabled = get_pconfig(local_channel(),'twitter','intelligent_shortening');
 // $shorteningchecked = (($shorteningenabled) ? ' checked="checked" ' : '');
 
    $s .= '<div class="settings-block">';
@@ -254,18 +254,18 @@ function twitter_post_local(&$a,&$b) {
 	if($b['edit'])
 		return;
 
-    if((! local_user()) || (local_user() != $b['uid']))
+    if((! local_channel()) || (local_channel() != $b['uid']))
         return;
 
     if($b['item_private'] || ($b['mid'] != $b['parent_mid']))
         return;
 
 
-	$twitter_post = intval(get_pconfig(local_user(),'twitter','post'));
+	$twitter_post = intval(get_pconfig(local_channel(),'twitter','post'));
 	$twitter_enable = (($twitter_post && x($_REQUEST,'twitter_enable')) ? intval($_REQUEST['twitter_enable']) : 0);
 
 	// if API is used, default to the chosen settings
-	if($_REQUEST['api_source'] && intval(get_pconfig(local_user(),'twitter','post_by_default')))
+	if($_REQUEST['api_source'] && intval(get_pconfig(local_channel(),'twitter','post_by_default')))
 		$twitter_enable = 1;
 
 	if(! $twitter_enable)

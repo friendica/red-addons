@@ -199,7 +199,7 @@ function openclipatar_profile_photo_content_end(&$a, &$o) {
 }
 
 function openclipatar_content(&$a) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 		
 	$o = '';
@@ -219,7 +219,7 @@ function openclipatar_content(&$a) {
 		$hash = photo_new_resource();
 		
 		// save an original or "scale 0" image
-		$p = array('aid' => get_account_id(), 'uid' => local_user(), 'resource_id' => $hash, 'filename' => $id.'.png', 'album' => t('Profile Photos'), 'scale' => 0);
+		$p = array('aid' => get_account_id(), 'uid' => local_channel(), 'resource_id' => $hash, 'filename' => $id.'.png', 'album' => t('Profile Photos'), 'scale' => 0);
 		$r = $ph->save($p);
 		if($r) {
 			// scale 0 success, continue 4, 5, 6
@@ -249,7 +249,7 @@ function openclipatar_content(&$a) {
 		if($_REQUEST['profile']) {
 			$r = q("select id, is_default from profile where id = %d and uid = %d limit 1",
 				intval($_REQUEST['profile']),
-				intval(local_user())
+				intval(local_channel())
 			);
 			if(($r) && (! intval($r[0]['is_default'])))
 				$is_default_profile = 0;
@@ -257,20 +257,20 @@ function openclipatar_content(&$a) {
 		if($is_default_profile) {
 			// unset any existing profile photos
 			$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND uid = %d",
-				intval(local_user()));
+				intval(local_channel()));
 			$r = q("UPDATE photo SET photo_flags = (photo_flags & ~%d ) WHERE (photo_flags & %d )>0 AND uid = %d",
 				intval(PHOTO_PROFILE),
 				intval(PHOTO_PROFILE),
-				intval(local_user()));
+				intval(local_channel()));
 
 			// set all sizes of this one as profile photos
 			$r = q("UPDATE photo SET profile = 1 WHERE uid = %d AND resource_id = '%s'",
-				intval(local_user()),
+				intval(local_channel()),
 				dbesc($hash)
 				);
 			$r = q("UPDATE photo SET photo_flags = ( photo_flags | %d ) WHERE uid = %d AND resource_id = '%s'",
 				intval(PHOTO_PROFILE),
-				intval(local_user()),
+				intval(local_channel()),
 				dbesc($hash)
 				);
 			
@@ -286,7 +286,7 @@ function openclipatar_content(&$a) {
 				dbesc(get_app()->get_baseurl() . '/photo/' . $hash . '-4'),
 				dbesc(get_app()->get_baseurl() . '/photo/' . $hash . '-5'),
 				intval($_REQUEST['profile']),
-				intval(local_user())
+				intval(local_channel())
 			);
 			info( t('Profile photo updated successfully.') . EOL);
 		}
@@ -296,7 +296,7 @@ function openclipatar_content(&$a) {
 			dbesc($chan['xchan_hash'])
 		);
 		// tell everybody
-		proc_run('php','include/directory.php',local_user());
+		proc_run('php','include/directory.php',local_channel());
 		
 		$returnafter = get_config('openclipatar', 'returnafter');
 		$returnafter_urls = array(

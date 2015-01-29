@@ -33,12 +33,12 @@ function rtof_unload() {
 }
 
 function rtof_jot_nets(&$a,&$b) {
-    if((! local_user()) || (! perm_is_allowed(local_user(),'','view_stream')))
+    if((! local_channel()) || (! perm_is_allowed(local_channel(),'','view_stream')))
         return;
 
-	$rtof_post = get_pconfig(local_user(),'rtof','post');
+	$rtof_post = get_pconfig(local_channel(),'rtof','post');
 	if(intval($rtof_post) == 1) {
-		$rtof_defpost = get_pconfig(local_user(),'rtof','post_by_default');
+		$rtof_defpost = get_pconfig(local_channel(),'rtof','post_by_default');
 		$selected = ((intval($rtof_defpost) == 1) ? ' checked="checked" ' : '');
 		$b .= '<div class="profile-jot-net"><input type="checkbox" name="rtof_enable"' . $selected . ' value="1" /> ' 
 			. '<img src="addon/rtof/friendica.png" title="' . t('Post to Friendica') . '" />' . '</div>';
@@ -47,32 +47,32 @@ function rtof_jot_nets(&$a,&$b) {
 }
 
 function rtof_settings_post ($a,$post) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	// don't check rtof settings if rtof submit button is not clicked
 	if (! x($_POST,'rtof_submit')) 
 		return;
 	
-	set_pconfig(local_user(), 'rtof', 'baseapi',         trim($_POST['rtof_baseapi']));
-	set_pconfig(local_user(), 'rtof', 'username',        trim($_POST['rtof_username']));
-	set_pconfig(local_user(), 'rtof', 'password',        trim($_POST['rtof_password']));
-	set_pconfig(local_user(), 'rtof', 'post',            intval($_POST['rtof_enable']));
-	set_pconfig(local_user(), 'rtof', 'post_by_default', intval($_POST['rtof_default']));
+	set_pconfig(local_channel(), 'rtof', 'baseapi',         trim($_POST['rtof_baseapi']));
+	set_pconfig(local_channel(), 'rtof', 'username',        trim($_POST['rtof_username']));
+	set_pconfig(local_channel(), 'rtof', 'password',        trim($_POST['rtof_password']));
+	set_pconfig(local_channel(), 'rtof', 'post',            intval($_POST['rtof_enable']));
+	set_pconfig(local_channel(), 'rtof', 'post_by_default', intval($_POST['rtof_default']));
         info( t('rtof Settings saved.') . EOL);
 
 }
 
 function rtof_settings(&$a,&$s) {
-	if(! local_user())
+	if(! local_channel())
 		return;
 	head_add_css('/addon/rtof/rtof.css');
 
-	$api     = get_pconfig(local_user(), 'rtof', 'baseapi');
-	$username    = get_pconfig(local_user(), 'rtof', 'username' );
-	$password = get_pconfig(local_user(), 'rtof', 'password' );
-	$enabled = get_pconfig(local_user(), 'rtof', 'post');
+	$api     = get_pconfig(local_channel(), 'rtof', 'baseapi');
+	$username    = get_pconfig(local_channel(), 'rtof', 'username' );
+	$password = get_pconfig(local_channel(), 'rtof', 'password' );
+	$enabled = get_pconfig(local_channel(), 'rtof', 'post');
 	$checked = (($enabled) ? ' checked="checked" ' : '');
-	$defenabled = get_pconfig(local_user(),'rtof','post_by_default');
+	$defenabled = get_pconfig(local_channel(),'rtof','post_by_default');
 	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
 
     $s .= '<div class="settings-block">';
@@ -106,13 +106,13 @@ function rtof_post_local(&$a,&$b) {
 	if(! perm_is_allowed($b['uid'],'','view_stream'))
 		return;
 
-	if((local_user()) && (local_user() == $b['uid']) && (! $b['item_private'])) {
+	if((local_channel()) && (local_channel() == $b['uid']) && (! $b['item_private'])) {
 
-		$rtof_post = get_pconfig(local_user(),'rtof','post');
+		$rtof_post = get_pconfig(local_channel(),'rtof','post');
 		$rtof_enable = (($rtof_post && x($_REQUEST,'rtof_enable')) ? intval($_REQUEST['rtof_enable']) : 0);
 
 		// if API is used, default to the chosen settings
-		if($_REQUEST['api_source'] && intval(get_pconfig(local_user(),'rtof','post_by_default')))
+		if($_REQUEST['api_source'] && intval(get_pconfig(local_channel(),'rtof','post_by_default')))
 			$rtof_enable = 1;
 
        if(! $rtof_enable)

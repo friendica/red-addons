@@ -60,14 +60,14 @@ function ldapauth_hook_authenticate($a,&$b) {
 			$acct = create_account(array('email' => $mail, 'password' => random_string()));			
 			if($acct['success']) {
 				logger('ldapauth: Created account for ' . $b['username'] . ' using ' . $mail);
-				info(t('You were recognized as local LDAP-user and an account was created for you.'));
+				info(t('An account has been created for you.'));
 				$b['user_record'] = $acct['account'];
 				$b['authenticated'] = 1;
 			}
 
 		} elseif(intval(get_config('ldapauth','create_account')) != 1 && (! $results)) {
                   logger('ldapauth: User '.$b['username'].' authenticated but no db-record and. Rejecting auth.');
-		  notice(t('You were recognized as local LDAP-user but there is no redmatrix-account for you.'));
+		  notice( t('Authentication successful but rejected: account creation is disabled.'));
 		  return;
 		}
 		if($results) {

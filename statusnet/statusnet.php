@@ -871,8 +871,11 @@ function statusnet_fetchtimeline($a, $uid) {
 			continue;
 
 		if (!strpos($post->source, $application_name)) {
-			$_SESSION["authenticated"] = true;
-			$_SESSION["uid"] = $uid;
+
+/* WTF!?!
+//			$_SESSION["authenticated"] = true;
+//			$_SESSION["uid"] = $uid;
+*/
 
 			$_REQUEST["type"] = "wall";
 			$_REQUEST["api_source"] = true;

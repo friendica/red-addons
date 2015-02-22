@@ -490,9 +490,11 @@ function pumpio_fetchtimeline($a, $uid) {
 			if ($public AND !strstr($post->generator->displayName, $application_name)) {
 				require_once('include/html2bbcode.php');
 
-				$_SESSION["authenticated"] = true;
-				$_SESSION["uid"] = $uid;
 
+/* WTF!?!
+//				$_SESSION["authenticated"] = true;
+//				$_SESSION["uid"] = $uid;
+*/
 				$_REQUEST["type"] = "wall";
 				$_REQUEST["api_source"] = true;
 				$_REQUEST["profile_uid"] = $uid;

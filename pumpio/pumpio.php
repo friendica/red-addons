@@ -491,10 +491,10 @@ function pumpio_fetchtimeline($a, $uid) {
 				require_once('include/html2bbcode.php');
 
 
-/* WTF!?!
+// WTF!?!
 //				$_SESSION["authenticated"] = true;
 //				$_SESSION["uid"] = $uid;
-*/
+//
 				$_REQUEST["type"] = "wall";
 				$_REQUEST["api_source"] = true;
 				$_REQUEST["profile_uid"] = $uid;

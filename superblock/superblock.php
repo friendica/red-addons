@@ -94,7 +94,7 @@ function superblock_enotify_store(&$a,&$b) {
 				continue;
 			}
 
-			if(strpos($b['xchan_hash'],$word) !== false) {
+			if(strpos($b['sender_hash'],$word) !== false) {
 				$found = true;
 				break;
 			}

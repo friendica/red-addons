@@ -34,15 +34,15 @@ function rainbowtag_construct_page(&$a,&$b) {
 		return;
 
 	$c = get_pconfig($a->profile_uid,'rainbowtag','colors');
-	$color1 = ((is_array($c) && $c[0]) ? $c[0] : 'LawnGreen');
-	$color2 = ((is_array($c) && $c[1]) ? $c[1] : 'DarkBlue');
-	$color3 = ((is_array($c) && $c[2]) ? $c[2] : 'Red');
-	$color4 = ((is_array($c) && $c[3]) ? $c[3] : 'DarkOrange');
+	$color1 = ((is_array($c) && $c[0]) ? $c[0] : 'DarkGray');
+	$color2 = ((is_array($c) && $c[1]) ? $c[1] : 'LawnGreen');
+	$color3 = ((is_array($c) && $c[2]) ? $c[2] : 'DarkOrange');
+	$color4 = ((is_array($c) && $c[3]) ? $c[3] : 'Red');
 	$color5 = ((is_array($c) && $c[4]) ? $c[4] : 'Gold');
 	$color6 = ((is_array($c) && $c[5]) ? $c[5] : 'Teal');
-	$color7 = ((is_array($c) && $c[6]) ? $c[6] : 'Sienna');
-	$color8 = ((is_array($c) && $c[7]) ? $c[7] : 'DarkMagenta');
-	$color9 = ((is_array($c) && $c[8]) ? $c[8] : 'GreenYellow');
+	$color7 = ((is_array($c) && $c[6]) ? $c[6] : 'DarkMagenta');
+	$color8 = ((is_array($c) && $c[7]) ? $c[7] : 'DarkGoldenRod');
+	$color9 = ((is_array($c) && $c[8]) ? $c[8] : 'DarkBlue');
 	$color10 = ((is_array($c) && $c[9]) ? $c[9] : 'DeepPink');
 
 		

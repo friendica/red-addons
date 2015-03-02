@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Name: Upload Limits
+ * Description: visit $yoursite/upload_limits to show what system limits may apply to file/photo uploads
+ * Version: 1.0
+ * Author: Mike Macgirvin
+ */
+
+
+
+
 
 function upload_limits_load() {}
 function upload_limits_unload() {}

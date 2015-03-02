@@ -1,0 +1,16 @@
+
+#rainbowtag-enable-label {
+	float: left;
+	width: 350px;
+	margin-top: 10px;
+}
+
+#rainbowtag-enable {
+	float: left;
+	margin-top: 10px;
+}
+
+#rainbowtag-submit, #settings-rainbowtag-wrapper {
+	margin-top: 15px;
+}
+

@@ -82,7 +82,7 @@ function rainbowtag_addon_settings(&$a,&$s) {
     
     $s .= '<div id="rainbowtag-wrapper">';
     $s .= '<label id="rainbowtag-enable-label" for="rainbowtag-enable">' . t('Enable Rainbowtag') . ' </label>';
-    $s .= '<input id="ranbowtag-enable" type="checkbox" name="rainbowtag-enable" value="1"' . $enable_checked . ' />';
+    $s .= '<input id="rainbowtag-enable" type="checkbox" name="rainbowtag-enable" value="1"' . $enable_checked . ' />';
 	$s .= '<div class="clear"></div>';
     $s .= '</div><div class="clear"></div>';
 

@@ -107,7 +107,7 @@ function ljpost_settings_post(&$a,&$b) {
 		set_pconfig(local_channel(),'ljpost','post_by_default',intval($_POST['lj_bydefault']));
 		set_pconfig(local_channel(),'ljpost','lj_username',trim($_POST['lj_username']));
 		set_pconfig(local_channel(),'ljpost','lj_password',trim($_POST['lj_password']));
-                info( t('Livejournal Settings saved.') . EOL);
+                info( t('LiveJournal Settings saved.') . EOL);
 	}
 
 }

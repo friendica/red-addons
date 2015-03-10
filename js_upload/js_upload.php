@@ -98,7 +98,7 @@ function createUploader() {
 			if (typeof acl!="undefined"){
 				uploader.setParams( {
 					album			:	document.getElementById('photos-upload-album').value,
-					not_visible     :   document.getElementById('photos-upload-noshare').checked,
+					visible         :   document.getElementById('id_visible').checked,
 					source          :   document.getElementById('photos-upload-source').value,
 					group_allow		:	acl.allow_gid.join(','),
 					contact_allow	:	acl.allow_cid.join(','),
@@ -108,7 +108,7 @@ function createUploader() {
 			} else {
 				uploader.setParams( {
 					album			:	document.getElementById('photos-upload-album').value,
-					not_visible     :   document.getElementById('photos-upload-noshare').checked,
+					visible         :   document.getElementById('id_visible').checked,
 					source          :   document.getElementById('photos-upload-source').value,
 					group_allow		:	getSelected(document.getElementById('group_allow')).join(','),
 					contact_allow	:	getSelected(document.getElementById('contact_allow')).join(','),

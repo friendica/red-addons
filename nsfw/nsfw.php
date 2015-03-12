@@ -70,7 +70,7 @@ function nsfw_addon_settings(&$a,&$s) {
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
 
-	head_add_css('/addon/nsfw/nsfw.css');
+	//head_add_css('/addon/nsfw/nsfw.css');
 
 	$enable_checked = (intval(get_pconfig(local_channel(),'nsfw','disable')) ? false : 1);
 	$words = get_pconfig(local_channel(),'nsfw','words');
@@ -84,7 +84,7 @@ function nsfw_addon_settings(&$a,&$s) {
 	));
 
 	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
-		'$field'	=> array('nsfw-words', t('Comma separated list of keywords to hide'), $words, 'Use /expression/ to provide regular expressions')
+		'$field'	=> array('nsfw-words', t('Comma separated list of keywords to hide'), $words, t('Use /expression/ to provide regular expressions'))
 	));
 
 	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(

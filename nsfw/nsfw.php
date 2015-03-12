@@ -68,30 +68,29 @@ function nsfw_addon_settings(&$a,&$s) {
 	if(! local_channel())
 		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
 	head_add_css('/addon/nsfw/nsfw.css');
 
-	$enable_checked = (intval(get_pconfig(local_channel(),'nsfw','disable')) ? '' : ' checked="checked" ');
+	$enable_checked = (intval(get_pconfig(local_channel(),'nsfw','disable')) ? false : 1);
 	$words = get_pconfig(local_channel(),'nsfw','words');
 	if(! $words)
 		$words = 'nsfw,';
 		
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-nsfw-wrapper" data-toggle="collapse" type="button">' . t('Not Safe For Work (General Purpose Content Filter) Settings') . '</button>';
-    $s .= '<div id="settings-nsfw-wrapper" class="collapse well">';
-    
-    $s .= '<div id="nsfw-wrapper">';
-    $s .= '<p>' . t ('This plugin looks in posts for the words/text you specify below, and collapses any content containing those keywords so it is not displayed at inappropriate times, such as sexual innuendo that may be improper in a work setting. It is polite and recommended to tag any content containing nudity with #NSFW.  This filter can also match any other word/text you specify, and can thereby be used as a general purpose content filter.') . '</p>';
-    $s .= '<label id="nsfw-enable-label" for="nsfw-enable">' . t('Enable Content filter') . ' </label>';
-    $s .= '<input id="nsfw-enable" type="checkbox" name="nsfw-enable" value="1"' . $enable_checked . ' />';
-	$s .= '<div class="clear"></div>';
-    $s .= '<label id="nsfw-label" for="nsfw-words">' . t('Comma separated list of keywords to hide') . ' </label>';
-    $s .= '<input id="nsfw-words" type="text" name="nsfw-words" value="' . $words .'" /><div class="nsfw-desc">&nbsp;&nbsp;&nbsp;&nbsp;' . t('Use /expression/ to provide regular expressions') . '</div>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= '<p>' . t ('This plugin looks in posts for the words/text you specify below, and collapses any content containing those keywords so it is not displayed at inappropriate times, such as sexual innuendo that may be improper in a work setting. It is polite and recommended to tag any content containing nudity with #NSFW.  This filter can also match any other word/text you specify, and can thereby be used as a general purpose content filter.') . '</p>';
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="nsfw-submit" name="nsfw-submit" class="settings-submit" value="' . t('Submit Not Safe For Work Settings') . '" /></div>';
-	$s .= '</div></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('nsfw-enable', t('Enable Content filter'), $enable_checked, '', array(t('No'),t('Yes'))),
+	));
+
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('nsfw-words', t('Comma separated list of keywords to hide'), $words, 'Use /expression/ to provide regular expressions')
+	));
+
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('nsfw', t('Not Safe For Work Settings'), t('General Purpose Content Filter'), t('Submit')),
+		'$content'	=> $sc
+	));
 
 	return;
 

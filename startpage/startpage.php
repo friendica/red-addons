@@ -99,29 +99,21 @@ function startpage_settings(&$a,&$s) {
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
 
-	head_add_css('/addon/startpage/startpage.css');
+	//head_add_css('/addon/startpage/startpage.css');
 
 	/* Get the current state of our config variable */
 
-	$channel = $a->get_channel();
-	$page = $channel['channel_startpage'];
-	if(! $page)
-		$page = get_pconfig(local_channel(),'system','startpage');
+	$page = get_pconfig(local_channel(),'system','startpage');
 
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('startpage', t('Page to load after login'), $page, t('Examples: &quot;network&quot; or &quot;channel&quot; or &quot;notifications/system&quot; (leave blank for default apps page).'))
+	));
 
-	/* Add some HTML to the existing form */
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('startpage', t('Startpage Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
-   $s .= '<div class="settings-block">';
-   $s .= '<button class="btn btn-default" data-target="#settings-startpage-wrapper" data-toggle="collapse" type="button">' . t('Startpage Settings') . '</button>';
-   $s .= '<div id="settings-startpage-wrapper" class="collapse well">';
+	return;
     
-	$s .= '<div id="startpage-page-wrapper">';
-	$s .= '<label id="startpage-page-label" for="startpage-page">' . t('Home page to load after login  - leave blank for Apps page') . '</label>';
-	$s .= '<input id="startpage-page" type="text" name="startpage" value="' . $page . '" /><div id="startpage-desc">&nbsp;&nbsp;&nbsp;' . t('Examples: &quot;network&quot; or &quot;channel&quot; or &quot;notifications/system&quot;') . '</div>';
-	$s .= '</div><div class="clear"></div>';
-
-	/* provide a submit button */
-
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="startpage-submit" class="settings-submit" value="' . t('Submit Startpage Settings') . '" /></div></div></div>';
-
 }

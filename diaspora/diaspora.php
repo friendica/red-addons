@@ -144,9 +144,9 @@ function diaspora_settings(&$a,&$s) {
 
 	/* Add some HTML to the existing form */
 	if ($status) {
-		$s .= '<div id="diaspora-status-wrapper"><strong>';
-		$s .= $status;
-		$s .= '</strong></div><div class="clear"></div>';
+		$sc .= '<div class="section-content-danger-wrapper">';
+		$sc .= '<strong>' . $status . '</strong>';
+		$sc .= '</div>';
 	}
 
 	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
@@ -162,7 +162,7 @@ function diaspora_settings(&$a,&$s) {
 	));
 
 	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
-		'$field'	=> array('diaspora_url', t('Diaspora site URL'), $diaspora_url, '')
+		'$field'	=> array('diaspora_url', t('Diaspora site URL'), $diaspora_url, 'Example: https://joindiaspora.com')
 	));
 
 	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(

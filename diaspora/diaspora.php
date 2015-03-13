@@ -113,17 +113,17 @@ function diaspora_settings(&$a,&$s) {
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
 
-	$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/diaspora/diaspora.css' . '" media="all" />' . "\r\n";
+	//$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/diaspora/diaspora.css' . '" media="all" />' . "\r\n";
 
 	/* Get the current state of our config variables */
 
 	$enabled = get_pconfig(local_channel(),'diaspora','post');
-	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? '1' : false);
 	$css = (($enabled) ? '' : '-disabled');
 
 	$def_enabled = get_pconfig(local_channel(),'diaspora','post_by_default');
 
-	$def_checked = (($def_enabled) ? ' checked="checked" ' : '');
+	$def_checked = (($def_enabled) ? 1 : false);
 
 	$diaspora_username = get_pconfig(local_channel(), 'diaspora', 'diaspora_username');
 	$diaspora_password = get_pconfig(local_channel(), 'diaspora', 'diaspora_password');
@@ -143,46 +143,38 @@ function diaspora_settings(&$a,&$s) {
 	}
 
 	/* Add some HTML to the existing form */
-
-   $s .= '<div class="settings-block">';
-   $s .= '<button class="btn btn-default" data-target="#settings-diaspora-wrapper" data-toggle="collapse" type="button"><img src="addon/diaspora/diaspora.png" /> ' . t('Diaspora Post Settings') . '</button>';
-   $s .= '<div id="settings-diaspora-wrapper" class="collapse well">';
-
 	if ($status) {
 		$s .= '<div id="diaspora-status-wrapper"><strong>';
 		$s .= $status;
 		$s .= '</strong></div><div class="clear"></div>';
 	}
 
-	$s .= '<div id="diaspora-enable-wrapper">';
-	$s .= '<label id="diaspora-enable-label" for="diaspora-checkbox">' . t('Enable Diaspora Post Plugin') . '</label>';
-	$s .= '<input id="diaspora-checkbox" type="checkbox" name="diaspora" value="1" ' . $checked . '/>';
-	$s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('diaspora', t('Enable Diaspora Post Plugin'), $checked, '', array(t('No'),t('Yes'))),
+	));
 
-	$s .= '<div id="diaspora-username-wrapper">';
-	$s .= '<label id="diaspora-username-label" for="diaspora-username">' . t('Diaspora username') . '</label>';
-	$s .= '<input id="diaspora-username" type="text" name="diaspora_username" value="' . $diaspora_username . '" />';
-	$s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('diaspora_username', t('Diaspora username'), $diaspora_username, '')
+	));
 
-	$s .= '<div id="diaspora-password-wrapper">';
-	$s .= '<label id="diaspora-password-label" for="diaspora-password">' . t('Diaspora password') . '</label>';
-	$s .= '<input id="diaspora-password" type="password" name="diaspora_password" value="' . $diaspora_password . '" />';
-	$s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_password.tpl'), array(
+		'$field'	=> array('diaspora_password', t('Diaspora password'), $diaspora_password, '')
+	));
 
-	$s .= '<div id="diaspora-url-wrapper">';
-	$s .= '<label id="diaspora-url-label" for="diaspora-url">' . t('Diaspora site URL') . '</label>';
-	$s .= '<input id="diaspora-url" type="text" name="diaspora_url" value="' . $diaspora_url . '" />';
-	$s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('diaspora_url', t('Diaspora site URL'), $diaspora_url, '')
+	));
 
-	$s .= '<div id="diaspora-bydefault-wrapper">';
-	$s .= '<label id="diaspora-bydefault-label" for="diaspora-bydefault">' . t('Post to Diaspora by default') . '</label>';
-	$s .= '<input id="diaspora-bydefault" type="checkbox" name="diaspora_bydefault" value="1" ' . $def_checked . '/>';
-	$s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('diaspora_bydefault', t('Post to Diaspora by default'), $def_checked, '', array(t('No'),t('Yes'))),
+	));
 
-	/* provide a submit button */
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('diaspora', '<img src="addon/diaspora/diaspora.png" style="width:auto; height:1em; margin:-3px 5px 0px 0px;">' . t('Diaspora Post Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" id="diaspora-submit" name="diaspora-submit" class="settings-submit" value="' . t('Submit Diaspora Settings') . '" /></div></div></div>';
-
+	return;
 }
 
 

@@ -41,57 +41,49 @@ function libertree_jot_nets(&$a,&$b) {
 
 function libertree_settings(&$a,&$s) {
 
-    if(! local_channel())
-        return;
+	if(! local_channel())
+		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
-    $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/libertree/libertree.css' . '" media="all" />' . "\r\n";
+	//$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/libertree/libertree.css' . '" media="all" />' . "\r\n";
 
-    /* Get the current state of our config variables */
+	/* Get the current state of our config variables */
 
-    $enabled = get_pconfig(local_channel(),'libertree','post');
+	$enabled = get_pconfig(local_channel(),'libertree','post');
 
-    $checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 
-    $def_enabled = get_pconfig(local_channel(),'libertree','post_by_default');
+	$def_enabled = get_pconfig(local_channel(),'libertree','post_by_default');
 
-    $def_checked = (($def_enabled) ? ' checked="checked" ' : '');
+	$def_checked = (($def_enabled) ? 1 : false);
 
-    $ltree_api_token = get_pconfig(local_channel(), 'libertree', 'libertree_api_token');
-    $ltree_url = get_pconfig(local_channel(), 'libertree', 'libertree_url');
+	$ltree_api_token = get_pconfig(local_channel(), 'libertree', 'libertree_api_token');
+	$ltree_url = get_pconfig(local_channel(), 'libertree', 'libertree_url');
 
 
-    /* Add some HTML to the existing form */
+	/* Add some HTML to the existing form */
 
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-libertree-wrapper" data-toggle="collapse" type="button"><img src="addon/libertree/libertree.png" /> ' . t('Libertree Post Settings') . '</button>';
-    $s .= '<div id="settings-libertree-wrapper" class="collapse well">';
-    
-    $s .= '<div id="libertree-enable-wrapper">';
-    $s .= '<label id="libertree-enable-label" for="libertree-checkbox">' . t('Enable Libertree Post Plugin') . '</label>';
-    $s .= '<input id="libertree-checkbox" type="checkbox" name="libertree" value="1" ' . $checked . '/>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('libertree', t('Enable Libertree Post Plugin'), $checked, '', array(t('No'),t('Yes'))),
+	));
 
-    $s .= '<div id="libertree-api_token-wrapper">';
-    $s .= '<label id="libertree-api_token-label" for="libertree-api_token">' . t('Libertree API token') . '</label>';
-    $s .= '<input id="libertree-api_token" type="text" name="libertree_api_token" value="' . $ltree_api_token . '" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('libertree_api_token', t('Libertree API token'), $ltree_api_token, '')
+	));
 
-    $s .= '<div id="libertree-url-wrapper">';
-    $s .= '<label id="libertree-url-label" for="libertree-url">' . t('Libertree site URL') . '</label>';
-    $s .= '<input id="libertree-url" type="text" name="libertree_url" value="' . $ltree_url . '" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('libertree_url', t('Libertree site URL'), $ltree_url, '')
+	));
 
-    $s .= '<div id="libertree-bydefault-wrapper">';
-    $s .= '<label id="libertree-bydefault-label" for="libertree-bydefault">' . t('Post to Libertree by default') . '</label>';
-    $s .= '<input id="libertree-bydefault" type="checkbox" name="libertree_bydefault" value="1" ' . $def_checked . '/>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('libertree_bydefault', t('Post to Libertree by default'), $def_checked, '', array(t('No'),t('Yes'))),
+	));
 
-    /* provide a submit button */
-
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="libertree-submit" name="libertree-submit" class="settings-submit" value="' . t('Submit Libertree Settings') . '" /></div></div></div>';
-
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('libertree','<img src="addon/libertree/libertree.png" style="width:auto; height:1em; margin:-3px 5px 0px 0px;"> ' . t('Libertree Post Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 }
 
 

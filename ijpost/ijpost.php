@@ -45,56 +45,49 @@ function ijpost_jot_nets(&$a,&$b) {
 
 function ijpost_settings(&$a,&$s) {
 
-    if(! local_channel())
-        return;
+	if(! local_channel())
+		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
-    $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/ijpost/ijpost.css' . '" media="all" />' . "\r\n";
+	//$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/ijpost/ijpost.css' . '" media="all" />' . "\r\n";
 
-    /* Get the current state of our config variables */
+	/* Get the current state of our config variables */
 
-    $enabled = get_pconfig(local_channel(),'ijpost','post');
+	$enabled = get_pconfig(local_channel(),'ijpost','post');
 
-    $checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 
-    $def_enabled = get_pconfig(local_channel(),'ijpost','post_by_default');
+	$def_enabled = get_pconfig(local_channel(),'ijpost','post_by_default');
 
-    $def_checked = (($def_enabled) ? ' checked="checked" ' : '');
+	$def_checked = (($def_enabled) ? 1 : false);
 
 	$ij_username = get_pconfig(local_channel(), 'ijpost', 'ij_username');
 	$ij_password = get_pconfig(local_channel(), 'ijpost', 'ij_password');
 
 
-    /* Add some HTML to the existing form */
+	/* Add some HTML to the existing form */
 
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-insanejournal-wrapper" data-toggle="collapse" type="button">' . t('InsaneJournal Post Settings') . '</button>';
-    $s .= '<div id="settings-insanejournal-wrapper" class="collapse well">';    
-    
-    $s .= '<div id="ijpost-enable-wrapper">';
-    $s .= '<label id="ijpost-enable-label" for="ijpost-checkbox">' . t('Enable InsaneJournal Post Plugin') . '</label>';
-    $s .= '<input id="ijpost-checkbox" type="checkbox" name="ijpost" value="1" ' . $checked . '/>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('ijpost', t('Enable InsaneJournal Post Plugin'), $checked, '', array(t('No'),t('Yes'))),
+	));
 
-    $s .= '<div id="ijpost-username-wrapper">';
-    $s .= '<label id="ijpost-username-label" for="ijpost-username">' . t('InsaneJournal username') . '</label>';
-    $s .= '<input id="ijpost-username" type="text" name="ij_username" value="' . $ij_username . '" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('ij_username', t('InsaneJournal username'), $ij_username, '')
+	));
 
-    $s .= '<div id="ijpost-password-wrapper">';
-    $s .= '<label id="ijpost-password-label" for="ijpost-password">' . t('InsaneJournal password') . '</label>';
-    $s .= '<input id="ijpost-password" type="password" name="ij_password" value="' . $ij_password . '" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_password.tpl'), array(
+		'$field'	=> array('ij_password', t('InsaneJournal password'), $ij_password, '')
+	));
 
-    $s .= '<div id="ijpost-bydefault-wrapper">';
-    $s .= '<label id="ijpost-bydefault-label" for="ijpost-bydefault">' . t('Post to InsaneJournal by default') . '</label>';
-    $s .= '<input id="ijpost-bydefault" type="checkbox" name="ij_bydefault" value="1" ' . $def_checked . '/>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('ij_bydefault', t('Post to InsaneJournal by default'), $def_checked, '', array(t('No'),t('Yes'))),
+	));
 
-    /* provide a submit button */
-
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="ijpost-submit" name="ijpost-submit" class="settings-submit" value="' . t('Submit InsaneJournal Post Settings') . '" /></div></div></div>';
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('ijpost',t('Dreamwidth Post Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
 }
 

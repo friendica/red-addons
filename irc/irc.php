@@ -29,32 +29,29 @@ function irc_unload() {
 
 function irc_addon_settings(&$a,&$s) {
 
-
 	if(! is_site_admin())
 		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
-	$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/irc/irc.css' . '" media="all" />' . "\r\n";
+	//$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/irc/irc.css' . '" media="all" />' . "\r\n";
 
-    /* setting popular channels, auto connect channels */
+	/* setting popular channels, auto connect channels */
 	$sitechats = get_config('irc','sitechats'); /* popular channels */
 	$autochans = get_config('irc','autochans');  /* auto connect chans */
 
-   $s .= '<div class="settings-block">';
-   $s .= '<button class="btn btn-default" data-target="#settings-irc-wrapper" data-toggle="collapse" type="button">' . t('IRC Settings') . '</button>';
-   $s .= '<div id="settings-irc-wrapper" class="collapse well">';
-	$s .= '<div id="irc-chans">';
-	$s .= '<label id="irc-auto-label" for="autochans">' . t('Channel(s) to auto connect (comma separated)') . '</label>';
-	$s .= '<input id="irc-autochans" type="text" name="autochans" value="' . $autochans .'" />';
-	$s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('autochans', t('Channels to auto connect'), $sitechats, t('Comma separated list'))
+	));
 
-	$s .= '<div id="irc-popchans">';
-	$s .= '<label id="irc-pop-label" for="sitechats">' . t('Popular Channels (comma separated)') . '</label>';
-	$s .= '<input id="irc-sitechats" type="text" name="sitechats" value="' . $sitechats.'" />';
-	$s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('sitechats', t('Popular Channels'), $autochans, t('Comma separated list'))
+	));
 
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" id="irc-submit" name="irc-submit" class="settings-submit" value="' . t('Submit IRC Settings') . '" /></div></div></div>';
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('irc', t('IRC Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
 	return;
 

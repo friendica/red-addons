@@ -85,7 +85,7 @@ function ijpost_settings(&$a,&$s) {
 	));
 
 	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
-		'$addon' 	=> array('ijpost',t('Dreamwidth Post Settings'), '', t('Submit')),
+		'$addon' 	=> array('ijpost',t('InsaneJournal Post Settings'), '', t('Submit')),
 		'$content'	=> $sc
 	));
 

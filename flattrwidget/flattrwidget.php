@@ -63,7 +63,7 @@ function flattrwidget_construct_page(&$a,&$b) {
     }
 }
 function flattrwidget_settings_post($a,$s) {
-    if(! local_channel() || (! x($_POST,'flattrwidget-settings-submit')))
+    if(! local_channel() || (! x($_POST,'flattrwidget-submit')))
 	return;
     $c = $a->get_channel();
     set_pconfig( local_channel(), 'flattrwidget', 'align', $_POST['flattrwidget-align'] );
@@ -83,60 +83,47 @@ function flattrwidget_settings_post($a,$s) {
     info(t('Flattr widget settings updated.').EOL);
 }
 function flattrwidget_settings(&$a,&$s) {
-    $id = local_channel();
-    if (! $id)
-	return;
+	$id = local_channel();
+	if (! $id)
+		return;
 
-    $a->page['htmlhead'] .= '<link rel="stylesheet" href="'.$a->get_baseurl().'/addon/flattrwidget/style.css'.'" media="all" />';
-    $lr = get_pconfig( $id, 'flattrwidget', 'align');
-    $sd = get_pconfig( $id, 'flattrwidget', 'sd');
-    $thing = get_pconfig( $id, 'flattrwidget', 'thing');
-    $user = get_pconfig( $id, 'flattrwidget', 'user');
-    $ftitle = get_pconfig( $id, 'flattrwidget', 'title');
-    $enable = intval(get_pconfig(local_channel(),'flattrwidget','enable'));
-    $enable_checked = (($enable) ? ' checked="checked" ' : '');
+	//$a->page['htmlhead'] .= '<link rel="stylesheet" href="'.$a->get_baseurl().'/addon/flattrwidget/style.css'.'" media="all" />';
+	$lr = get_pconfig( $id, 'flattrwidget', 'align');
+	$sd = get_pconfig( $id, 'flattrwidget', 'sd');
+	$thing = get_pconfig( $id, 'flattrwidget', 'thing');
+	$user = get_pconfig( $id, 'flattrwidget', 'user');
+	$ftitle = get_pconfig( $id, 'flattrwidget', 'title');
+	$enable = intval(get_pconfig(local_channel(),'flattrwidget','enable'));
+	$enable_checked = (($enable) ? 1 : false);
 
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-flattrwidget-wrapper" data-toggle="collapse" type="button">' . t('Flattr Widget Settings') . '</button>';
-    $s .= '<div id="settings-flattrwidget-wrapper" class="collapse well">';   
-    
-    $s .= '<div id="flattrwidget-settings-wrapper">';
-    $s .= '<label id="flattrwidget-user-label" for="flattrwidget-user">' . t('flattr user'). '</label>';
-    $s .= '<input id="flattrwidget-user" type="text" name="flattrwidget-user" value="'.$user.'" />';
-    $s .= '<div class="clear"></div>';
-    $s .= '<label id="flattrwidget-thing-label" for="flattrwidget-thing">' . t('URL of the Thing to flattr (if empty channel URL is used)'). '</label>';
-    $s .= '<input id="flattrwidget-thing" type="text" name="flattrwidget-thing" value="'.$thing.'" />';
-    $s .= '<div class="clear"></div>';
-    $s .= '<label id="flattrwidget-thingtitle-label" for="flattrwidget-thingtitle">' . t('Title of the Thing (if empty "channel name on The Red Matrix" will be used)'). '</label>';
-    $s .= '<input id="flattrwidget-thingtitle" type="text" name="flattrwidget-thingtitle" value="'.$ftitle.'" />';
-    $s .= '<div class="clear"></div>';
-    $s .= '<label id="flattrwidget-static-label" for="flattrwidget-static">' . t('Static or dynamic flattr button'). '</label>';
-    $s .= '<select name="flattrwidget-static" id="flattrwidget-static">';
-    if ($sd=='static') {
-	$s .= '<option value="static" selected>'.t('static').'</option>';
-	$s .= '<option value)"dynamic">'.t('dynamic').'</option>';
-    } else {
-	$s .= '<option value="static">'.t('static').'</option>';
-	$s .= '<option value)"dynamic" selected>'.t('dynamic').'</option>';
-    }
-    $s .= '</select>';
-    $s .= '<div class="clear"></div>';
-    $s .= '<label id="flattrwidget-align-label" for="flattrwidget-align">' . t('Alignment of the widget'). '</label>';
-    $s .= '<select name="flattrwidget-align" id="flattrwidget-align">';
-    if ($lr=='aside') {
-	$s .= '<option value="aside" selected>'.t('left').'</option>';
-	$s .= '<option value="right_aside">'.t('right').'</option>';
-    } else {
-	$s .= '<option value="aside">'.t('left').'</option>';
-	$s .= '<option value="right_aside" selected>'.t('right').'</option>';
-    }
-    $s .= '</select>';
-    $s .= '<div class="clear"></div>';
-    $s .= '<label id="flattrwidget-enable-label" for="flattrwidget-enable">' . t('Enable Flattr widget') . '</label>';
-    $s .= '<input id="flattrwidget-enable" type="checkbox" name="flattrwidget-enable" value="1" ' . $enable_checked . '/>';
-    
-    $s .= '<div class="clear"></div>';
-    $s .= '</div>';
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="flattrwidget-settings-submit" class="settings-submit" value="' . t('Submit Flattr Widget Settings') . '" /></div>';
-    $s .= '</div></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('flattrwidget-user', t('Flattr user'), $user, '')
+	));
+
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('flattrwidget-thing', t('URL of the Thing to flattr'), $thing, t('If empty channel URL is used'))
+	));
+
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('flattrwidget-thingtitle', t('Title of the Thing to flattr'), $ftitle, t('If empty "channel name on The Red Matrix" will be used'))
+	));
+
+	$sc .= replace_macros(get_markup_template('field_select.tpl'), array(
+		'$field'	=> array('flattrwidget-static', t('Static or dynamic flattr button'), $sd, '', array('static'=>t('static'), 'dynamic'=>t('dynamic')))
+	));
+
+	$sc .= replace_macros(get_markup_template('field_select.tpl'), array(
+		'$field'	=> array('flattrwidget-align', t('Alignment of the widget'), $lr, '', array('aside'=>t('left'), 'right_aside'=>t('right')))
+	));
+
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('flattrwidget-enable', t('Enable Flattr widget'), $enable_checked, '', array(t('No'),t('Yes'))),
+	));
+
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('flattrwidget',t('Flattr Widget Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
+
+
 }

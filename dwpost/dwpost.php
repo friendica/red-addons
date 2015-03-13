@@ -45,56 +45,49 @@ function dwpost_jot_nets(&$a,&$b) {
 
 function dwpost_settings(&$a,&$s) {
 
-    if(! local_channel())
-        return;
+	if(! local_channel())
+		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
-    $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/dwpost/dwpost.css' . '" media="all" />' . "\r\n";
+	//$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/dwpost/dwpost.css' . '" media="all" />' . "\r\n";
 
-    /* Get the current state of our config variables */
+	/* Get the current state of our config variables */
 
-    $enabled = get_pconfig(local_channel(),'dwpost','post');
+	$enabled = get_pconfig(local_channel(),'dwpost','post');
 
-    $checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 
-    $def_enabled = get_pconfig(local_channel(),'dwpost','post_by_default');
+	$def_enabled = get_pconfig(local_channel(),'dwpost','post_by_default');
 
-    $def_checked = (($def_enabled) ? ' checked="checked" ' : '');
+	$def_checked = (($def_enabled) ? 1 : false);
 
 	$dw_username = get_pconfig(local_channel(), 'dwpost', 'dw_username');
 	$dw_password = get_pconfig(local_channel(), 'dwpost', 'dw_password');
 
 
-    /* Add some HTML to the existing form */
+	/* Add some HTML to the existing form */
 
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-dreamwidth-wrapper" data-toggle="collapse" type="button">' . t('Dreamwidth Post Settings') . '</button>';
-    $s .= '<div id="settings-dreamwidth-wrapper" class="collapse well">';        
-    
-    $s .= '<div id="dwpost-enable-wrapper">';
-    $s .= '<label id="dwpost-enable-label" for="dwpost-checkbox">' . t('Enable dreamwidth Post Plugin') . '</label>';
-    $s .= '<input id="dwpost-checkbox" type="checkbox" name="dwpost" value="1" ' . $checked . '/>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('dwpost', t('Enable Dreamwidth Post Plugin'), $checked, '', array(t('No'),t('Yes'))),
+	));
 
-    $s .= '<div id="dwpost-username-wrapper">';
-    $s .= '<label id="dwpost-username-label" for="dwpost-username">' . t('dreamwidth username') . '</label>';
-    $s .= '<input id="dwpost-username" type="text" name="dw_username" value="' . $dw_username . '" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('dw_username', t('Dreamwidth username'), $dw_username, '')
+	));
 
-    $s .= '<div id="dwpost-password-wrapper">';
-    $s .= '<label id="dwpost-password-label" for="dwpost-password">' . t('dreamwidth password') . '</label>';
-    $s .= '<input id="dwpost-password" type="password" name="dw_password" value="' . $dw_password . '" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_password.tpl'), array(
+		'$field'	=> array('dw_password', t('Dreamwidth password'), $dw_password, '')
+	));
 
-    $s .= '<div id="dwpost-bydefault-wrapper">';
-    $s .= '<label id="dwpost-bydefault-label" for="dwpost-bydefault">' . t('Post to dreamwidth by default') . '</label>';
-    $s .= '<input id="dwpost-bydefault" type="checkbox" name="dw_bydefault" value="1" ' . $def_checked . '/>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('dw_bydefault', t('Post to Dreamwidth by default'), $def_checked, '', array(t('No'),t('Yes'))),
+	));
 
-    /* provide a submit button */
-
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="dwpost-submit" name="dwpost-submit" class="settings-submit" value="' . t('Submit Dreamwidth Post Settings') . '" /></div></div></div>';
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('dwpost',t('Dreamwidth Post Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
 }
 

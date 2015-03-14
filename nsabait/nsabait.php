@@ -143,27 +143,22 @@ function nsabait_settings(&$a,&$s) {
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
 
-	$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/nsabait/nsabait.css' . '" media="all" />' . "\r\n";
+	//$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/nsabait/nsabait.css' . '" media="all" />' . "\r\n";
 
 	/* Get the current state of our config variable */
 
 	$enabled = get_pconfig(local_channel(),'nsabait','enable');
 
-	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 
 	/* Add some HTML to the existing form */
 
-	$s .= '<div class="settings-block">';
-   $s .= '<button class="btn btn-default" data-target="#settings-nsabait-wrapper" data-toggle="collapse" type="button">' . t('NSAbait Settings') . '</button>';
-   $s .= '<div id="settings-nsabait-wrapper" class="collapse well">';    	
-	
-	$s .= '<div id="nsabait-enable-wrapper">';
-	$s .= '<label id="nsabait-enable-label" for="nsabait-checkbox">' . t('Enable NSAbait Plugin') . '</label>';
-	$s .= '<input id="nsabait-checkbox" type="checkbox" name="nsabait" value="1" ' . $checked . '/>';
-	$s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('nsabait', t('Enable NSAbait Plugin'), $checked, '', array(t('No'),t('Yes'))),
+	));
 
-	/* provide a submit button */
-
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="nsabait-submit" class="settings-submit" value="' . t('Submit NSAbait Settings') . '" /></div></div></div>';
-
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('nsabait',t('NSAbait Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 }

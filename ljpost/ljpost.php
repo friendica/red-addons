@@ -45,56 +45,46 @@ function ljpost_jot_nets(&$a,&$b) {
 
 function ljpost_settings(&$a,&$s) {
 
-    if(! local_channel())
-        return;
+	if(! local_channel())
+		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
-    $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/ljpost/ljpost.css' . '" media="all" />' . "\r\n";
+	//$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/ljpost/ljpost.css' . '" media="all" />' . "\r\n";
 
-    /* Get the current state of our config variables */
+	/* Get the current state of our config variables */
 
-    $enabled = get_pconfig(local_channel(),'ljpost','post');
+	$enabled = get_pconfig(local_channel(),'ljpost','post');
 
-    $checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 
-    $def_enabled = get_pconfig(local_channel(),'ljpost','post_by_default');
+	$def_enabled = get_pconfig(local_channel(),'ljpost','post_by_default');
 
-    $def_checked = (($def_enabled) ? ' checked="checked" ' : '');
+	$def_checked = (($def_enabled) ? 1 : false);
 
 	$lj_username = get_pconfig(local_channel(), 'ljpost', 'lj_username');
 	$lj_password = get_pconfig(local_channel(), 'ljpost', 'lj_password');
 
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('ljpost', t('Enable LiveJournal Post Plugin'), $checked, '', array(t('No'),t('Yes'))),
+	));
 
-    /* Add some HTML to the existing form */
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('lj_username', t('LiveJournal username'), $lj_username, '')
+	));
 
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-livejournal-wrapper" data-toggle="collapse" type="button">' . t('LiveJournal Post Settings') . '</button>';
-    $s .= '<div id="settings-livejournal-wrapper" class="collapse well">';    
-    
-    $s .= '<div id="ljpost-enable-wrapper">';
-    $s .= '<label id="ljpost-enable-label" for="ljpost-checkbox">' . t('Enable LiveJournal Post Plugin') . '</label>';
-    $s .= '<input id="ljpost-checkbox" type="checkbox" name="ljpost" value="1" ' . $checked . '/>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_password.tpl'), array(
+		'$field'	=> array('lj_password', t('LiveJournal password'), $lj_password, '')
+	));
 
-    $s .= '<div id="ljpost-username-wrapper">';
-    $s .= '<label id="ljpost-username-label" for="ljpost-username">' . t('LiveJournal username') . '</label>';
-    $s .= '<input id="ljpost-username" type="text" name="lj_username" value="' . $lj_username . '" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('lj_bydefault', t('Post to LiveJournal by default'), $def_checked, '', array(t('No'),t('Yes'))),
+	));
 
-    $s .= '<div id="ljpost-password-wrapper">';
-    $s .= '<label id="ljpost-password-label" for="ljpost-password">' . t('LiveJournal password') . '</label>';
-    $s .= '<input id="ljpost-password" type="password" name="lj_password" value="' . $lj_password . '" />';
-    $s .= '</div><div class="clear"></div>';
-
-    $s .= '<div id="ljpost-bydefault-wrapper">';
-    $s .= '<label id="ljpost-bydefault-label" for="ljpost-bydefault">' . t('Post to LiveJournal by default') . '</label>';
-    $s .= '<input id="ljpost-bydefault" type="checkbox" name="lj_bydefault" value="1" ' . $def_checked . '/>';
-    $s .= '</div><div class="clear"></div>';
-
-    /* provide a submit button */
-
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="ljpost-submit" name="ljpost-submit" class="settings-submit" value="' . t('Submit LiveJournal Post Settings') . '" /></div></div></div>';
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('ljpost',t('LiveJournal Post Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
 }
 

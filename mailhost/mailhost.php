@@ -21,33 +21,27 @@ function mailhost_uninstall() {
 
 function mailhost_addon_settings(&$a,&$s) {
 
-
 	if(! local_channel())
 		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
-	head_add_css('/addon/mailhost/mailhost.css');
+	//head_add_css('/addon/mailhost/mailhost.css');
 
 	$mailhost = get_pconfig(local_channel(),'system','email_notify_host');
 	if(! $mailhost)
 		$mailhost = $a->get_hostname();
-		
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-mailhost-wrapper" data-toggle="collapse" type="button">' . t('Mailhost Settings') . '</button>';
-    $s .= '<div id="settings-mailhost-wrapper" class="collapse well">';
-    
-    $s .= '<div id="mailhost-wrapper">';
-    $s .= '<p>' . t ('Allow only the following hub to send you email notifications.') . '</p>';
-    $s .= '<label id="mailhost-label" for="mailhost-mailhost">' . t('Email notification hub (hostname)') . ' </label>';
-    $s .= '<input id="mailhost-mailhost" type="text" name="mailhost-mailhost" value="' . $mailhost . '" />';
-    $s .= '</div><div class="clear"></div>';
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="mailhost-submit" name="mailhost-submit" class="settings-submit" value="' . t('Submit Mailhost Settings') . '" /></div>';
-	$s .= '</div></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('mailhost-mailhost', t('Email notification hub'), $mailhost, t('Hostname'))
+	));
+
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('mailhost',t('Mailhost Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
 	return;
-
 }
 
 function mailhost_addon_settings_post(&$a,&$b) {

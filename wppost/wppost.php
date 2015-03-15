@@ -48,71 +48,62 @@ function wppost_jot_nets(&$a,&$b) {
 
 function wppost_settings(&$a,&$s) {
 
-    if(! local_channel())
-        return;
+	if(! local_channel())
+		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
-	head_add_css('/addon/wppost/wppost.css');
+	//head_add_css('/addon/wppost/wppost.css');
 
-    /* Get the current state of our config variables */
+	/* Get the current state of our config variables */
 
-    $enabled = get_pconfig(local_channel(),'wppost','post');
+	$enabled = get_pconfig(local_channel(),'wppost','post');
 
-    $checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 
 	$fwd_enabled = get_pconfig(local_channel(), 'wppost','forward_comments');
 
-    $fwd_checked = (($fwd_enabled) ? ' checked="checked" ' : '');
+	$fwd_checked = (($fwd_enabled) ? 1 : false);
 
-    $def_enabled = get_pconfig(local_channel(),'wppost','post_by_default');
+	$def_enabled = get_pconfig(local_channel(),'wppost','post_by_default');
 
-    $def_checked = (($def_enabled) ? ' checked="checked" ' : '');
+	$def_checked = (($def_enabled) ? 1 : false);
 
 	$wp_username = get_pconfig(local_channel(), 'wppost', 'wp_username');
 	$wp_password = get_pconfig(local_channel(), 'wppost', 'wp_password');
 	$wp_blog = get_pconfig(local_channel(), 'wppost', 'wp_blog');
 
 
-    /* Add some HTML to the existing form */
+	/* Add some HTML to the existing form */
 
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-wordpress-wrapper" data-toggle="collapse" type="button"><img src="addon/wppost/wordpress-logo.png" /> ' . t('WordPress Post Settings') . '</button>';
-    $s .= '<div id="settings-wordpress-wrapper" class="collapse well">';
-    
-    $s .= '<div id="wppost-enable-wrapper">';
-    $s .= '<label id="wppost-enable-label" for="wppost-checkbox">' . t('Enable WordPress Post Plugin') . '</label>';
-    $s .= '<input id="wppost-checkbox" type="checkbox" name="wppost" value="1" ' . $checked . '/>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('wppost', t('Enable WordPress Post Plugin'), $checked, '', array(t('No'),t('Yes'))),
+	));
 
-    $s .= '<div id="wppost-username-wrapper">';
-    $s .= '<label id="wppost-username-label" for="wppost-username">' . t('WordPress username') . '</label>';
-    $s .= '<input id="wppost-username" type="text" name="wp_username" value="' . $wp_username . '" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('wp_username', t('WordPress username'), $wp_username, '')
+	));
 
-    $s .= '<div id="wppost-password-wrapper">';
-    $s .= '<label id="wppost-password-label" for="wppost-password">' . t('WordPress password') . '</label>';
-    $s .= '<input id="wppost-password" type="password" name="wp_password" value="' . $wp_password . '" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_password.tpl'), array(
+		'$field'	=> array('wp_password', t('WordPress password'), $wp_password, '')
+	));
 
-    $s .= '<div id="wppost-blog-wrapper">';
-    $s .= '<label id="wppost-blog-label" for="wppost-blog">' . t('WordPress API URL') . '</label>';
-    $s .= '<input id="wppost-blog" type="text" name="wp_blog" value="' . $wp_blog . '" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('wp_blog', t('WordPress API URL'), $wp_blog, '')
+	));
 
-    $s .= '<div id="wppost-bydefault-wrapper">';
-    $s .= '<label id="wppost-bydefault-label" for="wppost-bydefault">' . t('Post to WordPress by default') . '</label>';
-    $s .= '<input id="wppost-bydefault" type="checkbox" name="wp_bydefault" value="1" ' . $def_checked . '/>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('wp_bydefault', t('Post to WordPress by default'), $def_checked, '', array(t('No'),t('Yes'))),
+	));
 
-    $s .= '<div id="wppost-forward-wrapper">';
-    $s .= '<label id="wppost-forward-label" for="wppost-forward">' . t('Forward comments (requires post_to_red plugin)') . '</label>';
-    $s .= '<input id="wppost-forward" type="checkbox" name="wp_forward_comments" value="1" ' . $fwd_checked . '/>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('wp_forward_comments', t('Forward comments (requires post_to_red plugin)'), $fwd_checked, '', array(t('No'),t('Yes'))),
+	));
 
-    /* provide a submit button */
-
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="wppost-submit" name="wppost-submit" class="settings-submit" value="' . t('Submit WordPress Post Settings') . '" /></div></div></div>';
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('wppost', '<img src="addon/wppost/wordpress-logo.png" style="width:auto; height:1em; margin:-3px 5px 0px 0px;">' . t('WordPress Post Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
 }
 

@@ -234,7 +234,7 @@ function pumpio_settings(&$a,&$s) {
 		));
 
 		$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
-			'$field'	=> array('pumpio_mirror', t('Should posts be public?'), $mirror_checked, '', array(t('No'),t('Yes'))),
+			'$field'	=> array('pumpio_mirror', t('Mirror all public posts'), $mirror_checked, '', array(t('No'),t('Yes'))),
 		));
 
 	}

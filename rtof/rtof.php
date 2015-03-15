@@ -50,7 +50,7 @@ function rtof_settings_post ($a,$post) {
 	if(! local_channel())
 		return;
 	// don't check rtof settings if rtof submit button is not clicked
-	if (! x($_POST,'rtof_submit')) 
+	if (! x($_POST,'rtof-submit'))
 		return;
 	
 	set_pconfig(local_channel(), 'rtof', 'baseapi',         trim($_POST['rtof_baseapi']));
@@ -71,31 +71,35 @@ function rtof_settings(&$a,&$s) {
 	$username    = get_pconfig(local_channel(), 'rtof', 'username' );
 	$password = get_pconfig(local_channel(), 'rtof', 'password' );
 	$enabled = get_pconfig(local_channel(), 'rtof', 'post');
-	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 	$defenabled = get_pconfig(local_channel(),'rtof','post_by_default');
-	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
+	$defchecked = (($defenabled) ? 1 : false);
 
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-rtof-wrapper" data-toggle="collapse" type="button"><img src="addon/rtof/friendica.png" /> ' . t('Red to Friendica (rtof) Post Settings') . '</button>';
-    $s .= '<div id="settings-rtof-wrapper" class="collapse well">';	
-	
-	$s .= '<label id="rtof-enable-label" for="rtof-checkbox">'. t('Allow posting to Friendica') .'</label>';
-	$s .= '<input id="rtof-checkbox" type="checkbox" name="rtof_enable" value="1" ' . $checked . '/>';
-	$s .= '<div class="clear"></div>';
-	$s .= '<label id="rtof-default-label" for="rtof-default">'. t('Send public postings to Friendica by default') .'</label>';
-	$s .= '<input id="rtof-default" type="checkbox" name="rtof_default" value="1" ' . $defchecked . '/>';
-	$s .= '<div class="clear"></div>';    
-	$s .= '<label id="rtof-baseapi-label" for="rtof_baseapi">'. t('Friendica API Path (https://{sitename}/api)') .'</label>';
-	$s .= '<input id="rtof-baseapi" type="text" name="rtof_baseapi" value="' . $api . '" size="35" />';
-	$s .= '<div class="clear"></div>';
-	$s .= '<label id="rtof-username-label" for="rtof_username">'. t('Friendica login name') .'</label>';
-	$s .= '<input id="rtof-username" type="text" name="rtof_username" size="35" value="' . $username . '" />';
-	$s .= '<div class="clear"></div>';
-	$s .= '<label id="rtof-password-label" for="rtof_password">'. t('Friendica password') .'</label>';
-	$s .= '<input id="rtof-password" type="password" name="rtof_password" size="35" value="' . $password . '" />';
-	$s .= '<div class="clear"></div>';
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="rtof_submit" class="settings-submit" value="' . t('Submit Red to Friendica Post Settings') . '" /></div>';
-	$s .= '</div></div>';
+
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('rtof_enable', t('Allow posting to Friendica'), $checked, '', array(t('No'),t('Yes'))),
+	));
+
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('rtof_default', t('Send public postings to Friendica by default'), $defchecked, '', array(t('No'),t('Yes'))),
+	));
+
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('rtof_baseapi', t('Friendica API Path'), $api, t('https://{sitename}/api'))
+	));
+
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('rtof_username', t('Friendica login name'), $username, t('Email'))
+	));
+
+	$sc .= replace_macros(get_markup_template('field_password.tpl'), array(
+		'$field'	=> array('rtof_password', t('Friendica password'), $password, '')
+	));
+
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('rtof', '<img src="addon/rtof/friendica.png" style="width:auto; height:1em; margin:-3px 5px 0px 0px;">' . t('Red to Friendica Post Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 }
 
 

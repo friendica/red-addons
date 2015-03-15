@@ -154,27 +154,22 @@ function visage_settings(&$a,&$s) {
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
 
-	head_add_css('/addon/visage/visage.css');
+	//head_add_css('/addon/visage/visage.css');
 
 	/* Get the current state of our config variables */
 
 	$enabled = get_pconfig(local_channel(),'visage','enabled');
-	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 	$css = (($enabled) ? '' : '-disabled');
 
-	$s .= '<div class="settings-block">';
-	$s .= '<button class="btn btn-default" data-target="#settings-visage-wrapper" data-toggle="collapse" type="button">' . t('Visage Settings') . '</button>';
-	$s .= '<div id="settings-visage-wrapper" class="collapse well">';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('visage', t('Enable Visage Visitor Logging'), $checked, '', array(t('No'),t('Yes'))),
+	));
 
-	$s .= '<div id="visage-enable-wrapper">';
-	$s .= '<label id="visage-enable-label" for="visage-checkbox">' . t('Enable Visage Visitor Logging') . '</label>';
-	$s .= '<input id="visage-checkbox" type="checkbox" name="visage" value="1" ' . $checked . '/>';
-	$s .= '</div><div class="clear"></div>';
-
-	/* provide a submit button */
-
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" id="visage-submit" name="visage-submit" class="settings-submit" value="' . t('Submit Visage Settings') . '" /></div></div></div>';
-
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('visage', t('Visage Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 }
 
 

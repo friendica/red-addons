@@ -65,7 +65,7 @@ function rtof_settings_post ($a,$post) {
 function rtof_settings(&$a,&$s) {
 	if(! local_channel())
 		return;
-	head_add_css('/addon/rtof/rtof.css');
+	//head_add_css('/addon/rtof/rtof.css');
 
 	$api     = get_pconfig(local_channel(), 'rtof', 'baseapi');
 	$username    = get_pconfig(local_channel(), 'rtof', 'username' );

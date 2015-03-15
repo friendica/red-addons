@@ -174,84 +174,75 @@ function pumpio_jot_nets(&$a,&$b) {
 
 function pumpio_settings(&$a,&$s) {
 
-    if(! local_channel())
-        return;
+	if(! local_channel())
+		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
-    $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/pumpio/pumpio.css' . '" media="all" />' . "\r\n";
+	//$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/pumpio/pumpio.css' . '" media="all" />' . "\r\n";
 
-    /* Get the current state of our config variables */
+	/* Get the current state of our config variables */
 
-    $enabled = get_pconfig(local_channel(),'pumpio','post');
-    $checked = (($enabled) ? ' checked="checked" ' : '');
+	$enabled = get_pconfig(local_channel(),'pumpio','post');
+	$checked = (($enabled) ? 1 : false);
 
-    $def_enabled = get_pconfig(local_channel(),'pumpio','post_by_default');
-    $def_checked = (($def_enabled) ? ' checked="checked" ' : '');
+	$def_enabled = get_pconfig(local_channel(),'pumpio','post_by_default');
+	$def_checked = (($def_enabled) ? 1 : false);
 
-    $public_enabled = get_pconfig(local_channel(),'pumpio','public');
-    $public_checked = (($public_enabled) ? ' checked="checked" ' : '');
+	$public_enabled = get_pconfig(local_channel(),'pumpio','public');
+	$public_checked = (($public_enabled) ? 1 : false);
 
-    $mirror_enabled = get_pconfig(local_channel(),'pumpio','mirror');
-    $mirror_checked = (($mirror_enabled) ? ' checked="checked" ' : '');
+	$mirror_enabled = get_pconfig(local_channel(),'pumpio','mirror');
+	$mirror_checked = (($mirror_enabled) ? 1 : false);
 
-    $servername = get_pconfig(local_channel(), "pumpio", "host");
-    $username = get_pconfig(local_channel(), "pumpio", "user");
+	$servername = get_pconfig(local_channel(), "pumpio", "host");
+	$username = get_pconfig(local_channel(), "pumpio", "user");
 
-    /* Add some HTML to the existing form */
+	/* Add some HTML to the existing form */
 
-    $s .= '<div class="settings-block">';
-        $s .= '<button class="btn btn-default" data-target="#settings-pumpio-wrapper" data-toggle="collapse" type="button"><img src="addon/pumpio/pumpio.png" /> ' . t('Pump.io Post Settings') . '</button>';
-    $s .= '<div id="settings-pumpio-wrapper" class="collapse well">';    
-    
-    $s .= '<div id="pumpio-servername-wrapper">';
-    $s .= '<label id="pumpio-servername-label" for="pumpio-servername">'.t('pump.io servername (without "http://" or "https://" )').'</label>';
-    $s .= '<input id="pumpio-servername" type="text" name="pumpio_host" value="'.$servername.'" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('pumpio_host', t('Pump.io servername'), $servername, t('Without "http://" or "https://"'))
+	));
 
-    $s .= '<div id="pumpio-username-wrapper">';
-    $s .= '<label id="pumpio-username-label" for="pumpio-username">'.t('pump.io username (without the servername)').'</label>';
-    $s .= '<input id="pumpio-username" type="text" name="pumpio_user" value="'.$username.'" />';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('pumpio_user', t('Pump.io username'), $username, t('Without the servername'))
+	));
 
-    if (($username != '') AND ($servername != '')) {
-	$s .= '<div id="pumpio-authenticate-wrapper">';
-	$s .= '<a href="'.$a->get_baseurl().'/pumpio/connect">'.t("(Re-)Authenticate your pump.io connection").'</a>';
-	$s .= '</div><div class="clear"></div>';
 
-	$s .= '<div id="pumpio-enable-wrapper">';
-	$s .= '<label id="pumpio-enable-label" for="pumpio-checkbox">' . t('Enable pump.io Post Plugin') . '</label>';
-	$s .= '<input id="pumpio-checkbox" type="checkbox" name="pumpio" value="1" ' . $checked . '/>';
-	$s .= '</div><div class="clear"></div>';
+	if (($username != '') AND ($servername != '')) {
 
-	$s .= '<div id="pumpio-bydefault-wrapper">';
-	$s .= '<label id="pumpio-bydefault-label" for="pumpio-bydefault">' . t('Post to pump.io by default') . '</label>';
-	$s .= '<input id="pumpio-bydefault" type="checkbox" name="pumpio_bydefault" value="1" ' . $def_checked . '/>';
-	$s .= '</div><div class="clear"></div>';
+		$oauth_token = get_pconfig(local_channel(), "pumpio", "oauth_token");
+		$oauth_token_secret = get_pconfig(local_channel(), "pumpio", "oauth_token_secret");
 
-	$s .= '<div id="pumpio-public-wrapper">';
-	$s .= '<label id="pumpio-public-label" for="pumpio-public">' . t('Should posts be public?') . '</label>';
-	$s .= '<input id="pumpio-public" type="checkbox" name="pumpio_public" value="1" ' . $public_checked . '/>';
-	$s .= '</div><div class="clear"></div>';
+		if (($oauth_token == "") OR ($oauth_token_secret == "")) {
+			$sc .= '<div class="section-content-danger-wrapper">';
+			$sc .= '<strong>' . t("You are not authenticated to pumpio") . '</strong><br>';
+			$sc .= '</div>';
+			$sc .= '<a href="'.$a->get_baseurl().'/pumpio/connect" class="btn btn-primary btn-xs">'.t("(Re-)Authenticate your pump.io connection").'</a>';
+		}
 
-	$s .= '<div id="pumpio-mirror-wrapper">';
-	$s .= '<label id="pumpio-mirror-label" for="pumpio-mirror">' . t('Mirror all public posts') . '</label>';
-	$s .= '<input id="pumpio-mirror" type="checkbox" name="pumpio_mirror" value="1" ' . $mirror_checked . '/>';
-	$s .= '</div><div class="clear"></div>';
+		$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+			'$field'	=> array('pumpio', t('Enable pump.io Post Plugin'), $checked, '', array(t('No'),t('Yes'))),
+		));
 
-	$oauth_token = get_pconfig(local_channel(), "pumpio", "oauth_token");
-	$oauth_token_secret = get_pconfig(local_channel(), "pumpio", "oauth_token_secret");
+		$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+			'$field'	=> array('pumpio_bydefault', t('Post to pump.io by default'), $def_checked, '', array(t('No'),t('Yes'))),
+		));
 
-	$s .= '<div id="pumpio-password-wrapper">';
-	if (($oauth_token == "") OR ($oauth_token_secret == ""))
-		$s .= t("You are not authenticated to pumpio");
+		$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+			'$field'	=> array('pumpio_public', t('Should posts be public?'), $public_checked, '', array(t('No'),t('Yes'))),
+		));
 
-	$s .= '</div><div class="clear"></div>';
-    }
+		$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+			'$field'	=> array('pumpio_mirror', t('Should posts be public?'), $mirror_checked, '', array(t('No'),t('Yes'))),
+		));
 
-    /* provide a submit button */
+	}
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="pumpio-submit" name="pumpio-submit" class="settings-submit" value="' . t('Submit Pump.io Post Settings') . '" /></div></div></div>';
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('pumpio', '<img src="addon/pumpio/pumpio.png" style="width:auto; height:1em; margin:-3px 5px 0px 0px;">' . t('Pump.io Post Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
 }
 

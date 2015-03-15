@@ -261,31 +261,26 @@ function smileybutton_settings(&$a,&$s) {
 
 	/* Add our stylesheet to the page so we can make our settings look nice */
 
-	$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/smileybutton/smileybutton.css' . '" media="all" />' . "\r\n";
+	//$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/smileybutton/smileybutton.css' . '" media="all" />' . "\r\n";
 
 	/* Get the current state of our config variable */
 
 	$nobutton = get_pconfig(local_channel(),'smileybutton','nobutton');
-	$checked['nobutton'] = (($nobutton) ? ' checked="checked" ' : '');
-    $deactivated = get_pconfig(local_channel(),'smileybutton','deactivated');
-	$checked['deactivated'] = (($deactivated) ? ' checked="checked" ' : '');
+	$checked['nobutton'] = (($nobutton) ? 1 : false);
+	$deactivated = get_pconfig(local_channel(),'smileybutton','deactivated');
+	$checked['deactivated'] = (($deactivated) ? 1 : false);
 	/* Add some HTML to the existing form */
 
-	$s .= '<div class="settings-block">';
-   $s .= '<button class="btn btn-default" data-target="#settings-smileybutton-wrapper" data-toggle="collapse" type="button">' . t('Smileybutton Settings') . '</button>';
-   $s .= '<div id="settings-smileybutton-wrapper" class="collapse well">';    	
-		
-	$s .= '<div id="smileybutton-enable-wrapper">';
-	$s .= '<label id="smileybutton-deactivated-label" for="smileybutton-deactivated-checkbox">'.t('Deactivate the feature').'</label>';	
-	$s .= '<input id="smileybutton-deactivated-checkbox" type="checkbox" name="deactivated" value="1" ' . $checked['deactivated'] . '/>';
-	$s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('deactivated', t('Deactivate the feature'), $checked['deactivated'], '', array(t('No'),t('Yes'))),
+	));
 
-	$s .= '<label id="smileybutton-enable-label" for="smileybutton-nobutton-checkbox">'.t('Hide the button and show the smilies directly.').'</label>';
-	$s .= '<input id="smileybutton-nobutton-checkbox" type="checkbox" name="smileybutton" value="1" ' . $checked['nobutton'] . '/>';
-    $s .= '<div class="clear"></div>'; 
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('smileybutton', t('Hide the button and show the smilies directly.'), $checked['nobutton'], '', array(t('No'),t('Yes'))),
+	));
 
-	/* provide a submit button */
-
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="smileybutton-submit" class="settings-submit" value="' . t('Submit Smileybutton Settings') . '" /></div></div></div>';
-
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('smileybutton', t('Smileybutton Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 }

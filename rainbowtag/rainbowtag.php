@@ -70,24 +70,20 @@ function rainbowtag_addon_settings(&$a,&$s) {
 	if(! local_channel())
 		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
+	/* Add our stylesheet to the page so we can make our settings look nice */
 
-	head_add_css('/addon/rainbowtag/rainbowtag.css');
+	//head_add_css('/addon/rainbowtag/rainbowtag.css');
 
-	$enable_checked = (intval(get_pconfig(local_channel(),'rainbowtag','enable')) ? ' checked="checked" ' : '');
-		
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-rainbowtag-wrapper" data-toggle="collapse" type="button">' . t('Rainbowtag Settings') . '</button>';
-    $s .= '<div id="settings-rainbowtag-wrapper" class="collapse well">';
-    
-    $s .= '<div id="rainbowtag-wrapper">';
-    $s .= '<label id="rainbowtag-enable-label" for="rainbowtag-enable">' . t('Enable Rainbowtag') . ' </label>';
-    $s .= '<input id="rainbowtag-enable" type="checkbox" name="rainbowtag-enable" value="1"' . $enable_checked . ' />';
-	$s .= '<div class="clear"></div>';
-    $s .= '</div><div class="clear"></div>';
+	$enable_checked = (intval(get_pconfig(local_channel(),'rainbowtag','enable')) ? 1 : false);
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="rainbowtag-submit" name="rainbowtag-submit" class="settings-submit" value="' . t('Submit Rainbowtag Settings') . '" /></div>';
-	$s .= '</div></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('rainbowtag-enable', t('Enable Rainbowtag'), $enable_checked, '', array(t('No'),t('Yes'))),
+	));
+
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('rainbowtag', t('Rainbowtag Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
 	return;
 

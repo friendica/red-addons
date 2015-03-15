@@ -81,7 +81,7 @@ function libertree_settings(&$a,&$s) {
 	));
 
 	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
-		'$addon' 	=> array('libertree','<img src="addon/libertree/libertree.png" style="width:auto; height:1em; margin:-3px 5px 0px 0px;"> ' . t('Libertree Post Settings'), '', t('Submit')),
+		'$addon' 	=> array('libertree','<img src="addon/libertree/libertree.png" style="width:auto; height:1em; margin:-3px 5px 0px 0px;">' . t('Libertree Post Settings'), '', t('Submit')),
 		'$content'	=> $sc
 	));
 }

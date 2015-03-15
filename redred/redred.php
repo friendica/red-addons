@@ -49,7 +49,7 @@ function redred_settings_post ($a,$post) {
 	if(! local_channel())
 		return;
 	// don't check redred settings if redred submit button is not clicked
-	if (! x($_POST,'redred_submit')) 
+	if (! x($_POST,'redred-submit'))
 		return;
 
 	$channel = $a->get_channel();
@@ -81,41 +81,46 @@ function redred_settings_post ($a,$post) {
 function redred_settings(&$a,&$s) {
 	if(! local_channel())
 		return;
-	head_add_css('/addon/redred/redred.css');
+	//head_add_css('/addon/redred/redred.css');
 
 	$api     = get_pconfig(local_channel(), 'redred', 'baseapi');
 	$username    = get_pconfig(local_channel(), 'redred', 'username' );
 	$password = get_pconfig(local_channel(), 'redred', 'password' );
 	$channel = get_pconfig(local_channel(), 'redred', 'channel' );
 	$enabled = get_pconfig(local_channel(), 'redred', 'post');
-	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 	$defenabled = get_pconfig(local_channel(),'redred','post_by_default');
-	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
+	$defchecked = (($defenabled) ? 1 : false);
 
-   $s .= '<div class="settings-block">';
-   $s .= '<button class="btn btn-default" data-target="#settings-redred-wrapper" data-toggle="collapse" type="button"><img src="images/rm-32.png" /> ' . t('Red to Red (redred) Post Settings') . '</button>';
-   $s .= '<div id="settings-redred-wrapper" class="collapse well">';
-	
-	$s .= '<label id="redred-enable-label" for="redred-checkbox">'. t('Allow posting to Red Channel') .'</label>';
-	$s .= '<input id="redred-checkbox" type="checkbox" name="redred_enable" value="1" ' . $checked . '/>';
-	$s .= '<div class="clear"></div>';
-	$s .= '<label id="redred-default-label" for="redred-default">'. t('Send public postings to Red by default') .'</label>';
-	$s .= '<input id="redred-default" type="checkbox" name="redred_default" value="1" ' . $defchecked . '/>';
-	$s .= '<div class="clear"></div>';    
-	$s .= '<label id="redred-baseapi-label" for="redred_baseapi">'. t('Red API Path (https://{sitename}/api)') .'</label>';
-	$s .= '<input id="redred-baseapi" type="text" name="redred_baseapi" value="' . $api . '" size="35" />';
-	$s .= '<div class="clear"></div>';
-	$s .= '<label id="redred-username-label" for="redred_username">'. t('Red login name (email)') .'</label>';
-	$s .= '<input id="redred-username" type="text" name="redred_username" size="35" value="' . $username . '" />';
-	$s .= '<div class="clear"></div>';
-	$s .= '<label id="redred-channel-label" for="redred_channel">'. t('Red channel (nick)name') .'</label>';
-	$s .= '<input id="redred-channel" type="text" name="redred_channel" size="35" value="' . $channel . '" />';
-	$s .= '<div class="clear"></div>';
-	$s .= '<label id="redred-password-label" for="redred_password">'. t('Red password') .'</label>';
-	$s .= '<input id="redred-password" type="password" name="redred_password" size="35" value="' . $password . '" />';
-	$s .= '<div class="clear"></div>';
-	$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="redred_submit" class="settings-submit" value="' . t('Submit Red to Red Post Settings') . '" /></div>';
-	$s .= '</div></div>';
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('redred_enable', t('Allow posting to Red Channel'), $checked, '', array(t('No'),t('Yes'))),
+	));
+
+	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+		'$field'	=> array('redred_default', t('Send public postings to Red by default'), $defchecked, '', array(t('No'),t('Yes'))),
+	));
+
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('redred_baseapi', t('Red API Path'), $api, t('https://{sitename}/api'))
+	));
+
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('redred_username', t('Red login name'), $username, t('Email'))
+	));
+
+	$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+		'$field'	=> array('redred_channel', t('Red channel name'), $channel, t('Nickname'))
+	));
+
+	$sc .= replace_macros(get_markup_template('field_password.tpl'), array(
+		'$field'	=> array('redred_password', t('Red password'), $password, '')
+	));
+
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('redred', '<img src="images/rm-32.png" style="width:auto; height:1em; margin:-3px 5px 0px 0px;">' . t('Red to Red Post Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
+
 }
 
 

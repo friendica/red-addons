@@ -41,26 +41,23 @@ function superblock_addon_settings(&$a,&$s) {
 	if(! local_channel())
 		return;
 
-    /* Add our stylesheet to the page so we can make our settings look nice */
-	if(! array_key_exists('htmlhead',$a->page))
-		$a->page['htmlhead'] = '';
-    $a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/superblock/superblock.css' . '" media="all" />' . "\r\n";
-
+	/* Add our stylesheet to the page so we can make our settings look nice */
+	//if(! array_key_exists('htmlhead',$a->page))
+		//$a->page['htmlhead'] = '';
+	//$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/superblock/superblock.css' . '" media="all" />' . "\r\n";
 
 	$words = get_pconfig(local_channel(),'system','blocked');
 	if(! $words)
 		$words = '';
 
-    $s .= '<div class="settings-block">';
-    $s .= '<button class="btn btn-default" data-target="#settings-superblock-wrapper" data-toggle="collapse" type="button">' . t('"Superblock" Settings') . '</button>';
-    $s .= '<div id="settings-superblock-wrapper" class="collapse well">';
-    
-    $s .= '<div id="superblock-wrapper">';
-    $s .= '<label id="superblock-label" for="superblock-words">' . t('Comma separated profile URLS to block') . ' </label>';
-    $s .= '<textarea id="superblock-words" type="text" name="superblock-words" >' . htmlspecialchars($words) . '</textarea>';
-    $s .= '</div><div class="clear"></div>';
+	$sc .= replace_macros(get_markup_template('field_textarea.tpl'), array(
+		'$field'	=> array('superblock-words', t('Comma separated profile URLS to block'), htmlspecialchars($words), ''),
+	));
 
-    $s .= '<div class="settings-submit-wrapper" ><input type="submit" id="superblock-submit" name="superblock-submit" class="settings-submit" value="' . t('Submit Superblock Settings') . '" /></div></div></div>';
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('superblock', t('"Superblock" Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
 
 	return;
 

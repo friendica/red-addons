@@ -167,22 +167,20 @@ function twitter_settings(&$a,&$s) {
 	$otoken  = get_pconfig(local_channel(), 'twitter', 'oauthtoken'  );
 	$osecret = get_pconfig(local_channel(), 'twitter', 'oauthsecret' );
 	$enabled = get_pconfig(local_channel(), 'twitter', 'post');
-	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 	$defenabled = get_pconfig(local_channel(),'twitter','post_by_default');
-	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
-//	$shorteningenabled = get_pconfig(local_channel(),'twitter','intelligent_shortening');
-// $shorteningchecked = (($shorteningenabled) ? ' checked="checked" ' : '');
+	$defchecked = (($defenabled) ? 1 : false);
+	//$shorteningenabled = get_pconfig(local_channel(),'twitter','intelligent_shortening');
+	//$shorteningchecked = (($shorteningenabled) ? 1 : false);
 
-   $s .= '<div class="settings-block">';
-   $s .= '<button class="btn btn-default" data-target="#settings-twitter-wrapper" data-toggle="collapse" type="button"><img src="addon/twitter/twitter.png" /> ' . t('Twitter Post Settings') . '</button>';
-   $s .= '<div id="settings-twitter-wrapper" class="collapse well">';
-   
 	if ( (!$ckey) && (!$csecret) ) {
 		/***
 		 * no global consumer keys
 		 * display warning and skip personal config
 		 */
-		$s .= '<p>'. t('No consumer key pair for Twitter found. Please contact your site administrator.') .'</p>';
+		$sc .= '<div class="section-content-danger-wrapper">';
+		$sc .= t('No consumer key pair for Twitter found. Please contact your site administrator.');
+		$sc .= '</div>';
 	} else {
 		/***
 		 * ok we have a consumer key pair now look into the OAuth stuff
@@ -201,15 +199,23 @@ function twitter_settings(&$a,&$s) {
 			/***
 			 *  make some nice form
 			 */
-			$s .= '<p>'. t('At this RedMatrix instance the Twitter plugin was enabled but you have not yet connected your account to your Twitter account. To do so click the button below to get a PIN from Twitter which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to Twitter.') .'</p>';
-			$s .= '<a href="'.$connection->getAuthorizeURL($token).'" target="_twitter"><img src="addon/twitter/lighter.png" alt="'.t('Log in with Twitter').'"></a>';
-			$s .= '<div id="twitter-pin-wrapper">';
-			$s .= '<label id="twitter-pin-label" for="twitter-pin">'. t('Copy the PIN from Twitter here') .'</label>';
-			$s .= '<input id="twitter-pin" type="text" name="twitter-pin" />';
-			$s .= '<input id="twitter-token" type="hidden" name="twitter-token" value="'.$token.'" />';
-			$s .= '<input id="twitter-token2" type="hidden" name="twitter-token2" value="'.$request_token['oauth_token_secret'].'" />';
-            $s .= '</div><div class="clear"></div>';
-            $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="twitter-submit" class="settings-submit" value="' . t('Submit Twitter Settings') . '" /></div></div>';
+
+			$sc .= '<div class="section-content-info-wrapper">';
+			$sc .= t('At this RedMatrix instance the Twitter plugin was enabled but you have not yet connected your account to your Twitter account. To do so click the button below to get a PIN from Twitter which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to Twitter.');
+			$sc .= '</div>';
+			$sc .= '<a href="'.$connection->getAuthorizeURL($token).'" target="_twitter"><img src="addon/twitter/lighter.png" class="form-group" alt="'.t('Log in with Twitter').'"></a>';
+
+			$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+				'$field'	=> array('twitter-pin', t('Copy the PIN from Twitter here'), '', '')
+			));
+
+			$sc .= '<input id="twitter-token" type="hidden" name="twitter-token" value="'.$token.'" />';
+			$sc .= '<input id="twitter-token2" type="hidden" name="twitter-token2" value="'.$request_token['oauth_token_secret'].'" />';
+
+			$sc .= '<div class=" settings-submit-wrapper">';
+			$sc .= '<button type="submit" name="twitter-submit" class="btn btn-primary" value="' . t('Submit') . '">' . t('Submit') . '</button>';
+			$sc .= '</div>';
+
 		} else {
 			/***
 			 *  we have an OAuth key / secret pair for the user
@@ -218,34 +224,43 @@ function twitter_settings(&$a,&$s) {
 			require_once('library/twitteroauth.php');
 			$connection = new TwitterOAuth($ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
-			$s .= '<div id="twitter-info" ><img id="twitter-avatar" src="'.$details->profile_image_url.'" /><p id="twitter-info-block">'. t('Currently connected to: ') .'<a href="https://twitter.com/'.$details->screen_name.'" target="_twitter">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
-			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings can be posted to the associated Twitter account. You can choose to do so by default (here) or for every posting separately in the posting options when writing the entry.') .'</p>';
 
-//FIXME no hidewall in Red
+			$sc .= '<div id="twitter-info" ><img id="twitter-avatar" src="'.$details->profile_image_url.'" /><p id="twitter-info-block">'. t('Currently connected to: ') .'<a href="https://twitter.com/'.$details->screen_name.'" target="_twitter">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
+			$sc .= '<div class="clear"></div>';
+			//FIXME no hidewall in Red
 			if ($a->user['hidewall']) {
-				$s .= '<p>'. t('<strong>Note</strong>: Due your privacy settings (<em>Hide your profile details from unknown viewers?</em>) the link potentially included in public postings relayed to Twitter will lead the visitor to a blank page informing the visitor that the access to your profile has been restricted.') .'</p>';
+				$sc .= '<div class="section-content-info-wrapper">';
+				$sc .= t('<strong>Note:</strong> Due your privacy settings (<em>Hide your profile details from unknown viewers?</em>) the link potentially included in public postings relayed to Twitter will lead the visitor to a blank page informing the visitor that the access to your profile has been restricted.');
+				$sc .= '</div>';
 			}
-			$s .= '<div id="twitter-enable-wrapper">';
-			$s .= '<label id="twitter-enable-label" for="twitter-checkbox">'. t('Allow posting to Twitter'). '</label>';
-			$s .= '<input id="twitter-checkbox" type="checkbox" name="twitter-enable" value="1" ' . $checked . '/>';
-			$s .= '<div class="clear"></div>';
-			$s .= '<label id="twitter-default-label" for="twitter-default">'. t('Send public postings to Twitter by default') .'</label>';
-			$s .= '<input id="twitter-default" type="checkbox" name="twitter-default" value="1" ' . $defchecked . '/>';
-			$s .= '<div class="clear"></div>';
 
-// 		FIXME: Doesn't seem to work. But maybe we don't want this at all.
-//			$s .= '<label id="twitter-shortening-label" for="twitter-shortening">'.t('Shortening method that optimizes the tweet').'</label>';
-//			$s .= '<input id="twitter-shortening" type="checkbox" name="twitter-shortening" value="1" '. $shorteningchecked . '/>';
-//			$s .= '<div class="clear"></div>';
+			$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+				'$field'	=> array('twitter-enable', t('Allow posting to Twitter'), $checked, t('If enabled your public postings can be posted to the associated Twitter account'))
+			));
 
-			$s .= '<div id="twitter-disconnect-wrapper">';
-			$s .= '<label id="twitter-disconnect-label" for="twitter-disconnect">'. t('Clear OAuth configuration') .'</label>';
-			$s .= '<input id="twitter-disconnect" type="checkbox" name="twitter-disconnect" value="1" />';
-			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="twitter-submit" class="settings-submit" value="' . t('Submit Twitter Settings') . '" /></div></div>'; 
+			$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+				'$field'	=> array('twitter-default', t('Send public postings to Twitter by default'), $defchecked, t('If enabled your public postings will be posted to the associated Twitter account by default'))
+			));
+
+			//FIXME: Doesn't seem to work. But maybe we don't want this at all.
+			//$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+			//	'$field'	=> array('twitter-shortening', t('Shortening method that optimizes the tweet'), $shorteningchecked, '')
+			//));
+
+			$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+				'$field'	=> array('twitter-disconnect', t('Clear OAuth configuration'), '', '')
+			));
+
+			$sc .= '<div class=" settings-submit-wrapper">';
+			$sc .= '<button type="submit" name="twitter-submit" class="btn btn-primary" value="' . t('Submit') . '">' . t('Submit') . '</button>';
+			$sc .= '</div>';
 		}
 	}
-	$s .= '<div class="clear"></div></div></div>';
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('', '<img src="addon/twitter/twitter.png" style="width:auto; height:1em; margin:-3px 5px 0px 0px;">' . t('Twitter Post Settings'), '', ''),
+		'$content'	=> $sc
+	));
+
 }
 
 

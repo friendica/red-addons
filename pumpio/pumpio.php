@@ -216,7 +216,7 @@ function pumpio_settings(&$a,&$s) {
 
 		if (($oauth_token == "") OR ($oauth_token_secret == "")) {
 			$sc .= '<div class="section-content-danger-wrapper">';
-			$sc .= '<strong>' . t("You are not authenticated to pumpio") . '</strong><br>';
+			$sc .= '<strong>' . t("You are not authenticated to pumpio") . '</strong>';
 			$sc .= '</div>';
 			$sc .= '<a href="'.$a->get_baseurl().'/pumpio/connect" class="btn btn-primary btn-xs">'.t("(Re-)Authenticate your pump.io connection").'</a>';
 		}

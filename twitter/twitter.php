@@ -235,20 +235,20 @@ function twitter_settings(&$a,&$s) {
 			}
 
 			$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
-				'$field'	=> array('twitter-enable', t('Allow posting to Twitter'), $checked, t('If enabled your public postings can be posted to the associated Twitter account'))
+				'$field'	=> array('twitter-enable', t('Allow posting to Twitter'), $checked, t('If enabled your public postings can be posted to the associated Twitter account'), array(t('No'),t('Yes')))
 			));
 
 			$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
-				'$field'	=> array('twitter-default', t('Send public postings to Twitter by default'), $defchecked, t('If enabled your public postings will be posted to the associated Twitter account by default'))
+				'$field'	=> array('twitter-default', t('Send public postings to Twitter by default'), $defchecked, t('If enabled your public postings will be posted to the associated Twitter account by default'), array(t('No'),t('Yes')))
 			));
 
 			//FIXME: Doesn't seem to work. But maybe we don't want this at all.
 			//$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
-			//	'$field'	=> array('twitter-shortening', t('Shortening method that optimizes the tweet'), $shorteningchecked, '')
+			//	'$field'	=> array('twitter-shortening', t('Shortening method that optimizes the tweet'), $shorteningchecked, '', array(t('No'),t('Yes')))
 			//));
 
 			$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
-				'$field'	=> array('twitter-disconnect', t('Clear OAuth configuration'), '', '')
+				'$field'	=> array('twitter-disconnect', t('Clear OAuth configuration'), '', '', array(t('No'),t('Yes')))
 			));
 
 			$sc .= '<div class=" settings-submit-wrapper">';

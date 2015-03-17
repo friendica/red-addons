@@ -76,8 +76,9 @@ function nsfw_addon_settings(&$a,&$s) {
 	$words = get_pconfig(local_channel(),'nsfw','words');
 	if(! $words)
 		$words = 'nsfw,';
-		
-	$sc .= '<p>' . t ('This plugin looks in posts for the words/text you specify below, and collapses any content containing those keywords so it is not displayed at inappropriate times, such as sexual innuendo that may be improper in a work setting. It is polite and recommended to tag any content containing nudity with #NSFW.  This filter can also match any other word/text you specify, and can thereby be used as a general purpose content filter.') . '</p>';
+	$sc .= '<div class="section-content-info-wrapper">';
+	$sc .= t('This plugin looks in posts for the words/text you specify below, and collapses any content containing those keywords so it is not displayed at inappropriate times, such as sexual innuendo that may be improper in a work setting. It is polite and recommended to tag any content containing nudity with #NSFW.  This filter can also match any other word/text you specify, and can thereby be used as a general purpose content filter.');
+	$sc .= '</div>';
 
 	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
 		'$field'	=> array('nsfw-enable', t('Enable Content filter'), $enable_checked, '', array(t('No'),t('Yes'))),

@@ -267,74 +267,86 @@ function statusnet_settings_post ($a,$post) {
 }
 
 function statusnet_settings(&$a,&$s) {
-		if(! local_channel())
-				return;
-		$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/statusnet/statusnet.css' . '" media="all" />' . "\r\n";
+	if(! local_channel())
+		return;
+
+	$a->page['htmlhead'] .= '<link rel="stylesheet"  type="text/css" href="' . $a->get_baseurl() . '/addon/statusnet/statusnet.css' . '" media="all" />' . "\r\n";
+
 	/***
 	 * 1) Check that we have a base api url and a consumer key & secret
 	 * 2) If no OAuthtoken & stuff is present, generate button to get some
 		 *	allow the user to cancel the connection process at this step
 	 * 3) Checkbox for "Send public notices (respect size limitation)
 	 */
-		$api	 = get_pconfig(local_channel(), 'statusnet', 'baseapi');
+	$api	 = get_pconfig(local_channel(), 'statusnet', 'baseapi');
 	$ckey	= get_pconfig(local_channel(), 'statusnet', 'consumerkey' );
 	$csecret = get_pconfig(local_channel(), 'statusnet', 'consumersecret' );
 	$otoken  = get_pconfig(local_channel(), 'statusnet', 'oauthtoken'  );
 	$osecret = get_pconfig(local_channel(), 'statusnet', 'oauthsecret' );
 	$enabled = get_pconfig(local_channel(), 'statusnet', 'post');
-	$checked = (($enabled) ? ' checked="checked" ' : '');
+	$checked = (($enabled) ? 1 : false);
 	$defenabled = get_pconfig(local_channel(),'statusnet','post_by_default');
-	$defchecked = (($defenabled) ? ' checked="checked" ' : '');
-
-//	$shorteningenabled = get_pconfig(local_channel(),'statusnet','intelligent_shortening');
-//	$shorteningchecked = (($shorteningenabled) ? ' checked="checked" ' : '');
-
-	$s .= '<div class="settings-block">';
-   $s .= '<button class="btn btn-default" data-target="#settings-gnusocial-wrapper" data-toggle="collapse" type="button"><img src="addon/statusnet/gnusocial.png" /> ' . t('GNU social Post Settings') . '</button>';
-   $s .= '<div id="settings-gnusocial-wrapper" class="collapse well">';
+	$defchecked = (($defenabled) ? 1 : false);
+	//$shorteningenabled = get_pconfig(local_channel(),'statusnet','intelligent_shortening');
+	//$shorteningchecked = (($shorteningenabled) ? 1 : false);
 
 	if ( (!$ckey) && (!$csecret) ) {
 		/***
 		 * no consumer keys
-				 */
-			$globalsn = get_config('statusnet', 'sites');
-			/***
-			 * lets check if we have one or more globally configured GNU social
-			 * server OAuth credentials in the configuration. If so offer them
-			 * with a little explanation to the user as choice - otherwise
-			 * ignore this option entirely.
-			 */
-			if (! $globalsn == null) {
-				$s .= '<h4>' . t('Globally Available GNU social OAuthKeys') . '</h4>';
-				$s .= '<p>'. t("There are preconfigured OAuth key pairs for some GNU social servers available. If you are using one of them, please use these credentials. If not feel free to connect to any other GNU social instance \x28see below\x29.") .'</p>';
-				$s .= '<div id="statusnet-preconf-wrapper">';
-				foreach ($globalsn as $asn) {
-					$s .= '<input type="radio" name="statusnet-preconf-apiurl" value="'. $asn['apiurl'] .'">'. $asn['sitename'] .'<br />';
-				}
-				$s .= '<p></p><div class="clear"></div></div>';
-				$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div>';
+		 */
+		$globalsn = get_config('statusnet', 'sites');
+
+		/***
+		 * lets check if we have one or more globally configured GNU social
+		 * server OAuth credentials in the configuration. If so offer them
+		 * with a little explanation to the user as choice - otherwise
+		 * ignore this option entirely.
+		 */
+		if (! $globalsn == null) {
+			$sc .= '<h3>' . t('Globally Available GNU social OAuthKeys') . '</h3>';
+			$sc .= '<div class="section-content-info-wrapper">';
+			$sc .= t("There are preconfigured OAuth key pairs for some GNU social servers available. If you are using one of them, please use these credentials.<br />If not feel free to connect to any other GNU social instance \x28see below\x29.");
+			$sc .= '</div>';
+
+			foreach ($globalsn as $asn) {
+				$sc .= replace_macros(get_markup_template('field_radio.tpl'), array(
+					'$field'	=> array('statusnet-preconf-apiurl', $asn['sitename'], $asn['apiurl'], '')
+				));
 			}
-			$s .= '<h4>' . t('Provide your own OAuth Credentials') . '</h4>';
-			$s .= '<p>'. t('No consumer key pair for GNU social found. Register your RedMatrix Account as an desktop client on your GNU social account, copy the consumer key pair here and enter the API base root.<br />Before you register your own OAuth key pair ask the administrator if there is already a key pair for this RedMatrix installation at your favourite GNU social installation.') .'</p>';
-			$s .= '<div id="statusnet-consumer-wrapper">';
-			$s .= '<label id="statusnet-consumerkey-label" for="statusnet-consumerkey">'. t('OAuth Consumer Key') .'</label>';
-			$s .= '<input id="statusnet-consumerkey" type="text" name="statusnet-consumerkey" size="35" /><br />';
-			$s .= '<div class="clear"></div>';
-			$s .= '<label id="statusnet-consumersecret-label" for="statusnet-consumersecret">'. t('OAuth Consumer Secret') .'</label>';
-			$s .= '<input id="statusnet-consumersecret" type="text" name="statusnet-consumersecret" size="35" /><br />';
-			$s .= '<div class="clear"></div>';
-			$s .= '<label id="statusnet-baseapi-label" for="statusnet-baseapi">'. t("Base API Path \x28remember the trailing /\x29") .'</label>';
-			$s .= '<input id="statusnet-baseapi" type="text" name="statusnet-baseapi" size="35" /><br />';
-			$s .= '<p></p><div class="clear"></div></div>';
-			$s .= '<label id="statusnet-applicationname-label" for="statusnet-applicationname">'.t('GNU social application name').'</label>';
-			$s .= '<input id="statusnet-applicationname" type="text" name="statusnet-applicationname" size="35" /><br />';
-			$s .= '<p></p><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div>';
+
+			$sc .= '<div class=" settings-submit-wrapper">';
+			$sc .= '<button type="submit" name="statusnet-submit" class="btn btn-primary" value="' . t('Submit') . '">' . t('Submit') . '</button>';
+			$sc .= '</div>';
+
+		}
+
+		$sc .= '<h3>' . t('Provide your own OAuth Credentials') . '</h3>';
+		$sc .= '<div class="section-content-info-wrapper">';
+		$sc .= t('No consumer key pair for GNU social found. Register your RedMatrix Account as an desktop client on your GNU social account, copy the consumer key pair here and enter the API base root.<br />Before you register your own OAuth key pair ask the administrator if there is already a key pair for this RedMatrix installation at your favourite GNU social installation.');
+		$sc .= '</div>';
+
+		$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+			'$field'	=> array('statusnet-consumerkey', t('OAuth Consumer Key'), '', '')
+		));
+
+		$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+			'$field'	=> array('statusnet-consumersecret', t('OAuth Consumer Secret'), '', '')
+		));
+
+		$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+			'$field'	=> array('statusnet-baseapi', t("Base API Path"), '', t("Remember the trailing /"))
+		));
+
+		$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+			'$field'	=> array('statusnet-applicationname', t('GNU social application name'), '', '')
+		));
+
 	} else {
 		/***
 		 * ok we have a consumer key pair now look into the OAuth stuff
 		 */
 		if ( (!$otoken) && (!$osecret) ) {
+
 			/***
 			 * the user has not yet connected the account to GNU social
 			 * get a temporary OAuth key/secret pair and display a button with
@@ -344,58 +356,79 @@ function statusnet_settings(&$a,&$s) {
 			$connection = new StatusNetOAuth($api, $ckey, $csecret);
 			$request_token = $connection->getRequestToken('oob');
 			$token = $request_token['oauth_token'];
+
 			/***
 			 *  make some nice form
 			 */
-			$s .= '<p>'. t('To connect to your GNU social account click the button below to get a security code from GNU social which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to GNU social.') .'</p>';
-			$s .= '<a href="'.$connection->getAuthorizeURL($token,False).'" target="_statusnet"><img src="addon/statusnet/signinwithgnusocial.png" alt="'. t('Log in with GNU social') .'"></a>';
-			$s .= '<div id="statusnet-pin-wrapper">';
-			$s .= '<label id="statusnet-pin-label" for="statusnet-pin">'. t('Copy the security code from GNU social here') .'</label>';
-			$s .= '<input id="statusnet-pin" type="text" name="statusnet-pin" />';
-			$s .= '<input id="statusnet-token" type="hidden" name="statusnet-token" value="'.$token.'" />';
-			$s .= '<input id="statusnet-token2" type="hidden" name="statusnet-token2" value="'.$request_token['oauth_token_secret'].'" />';
-			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div>';
-			$s .= '<h4>'.t('Cancel Connection Process').'</h4>';
-			$s .= '<div id="statusnet-cancel-wrapper">';
-			$s .= '<p>'.t('Current GNU social API is').': '.$api.'</p>';
-			$s .= '<label id="statusnet-cancel-label" for="statusnet-cancel">'. t('Cancel GNU social Connection') . '</label>';
-			$s .= '<input id="statusnet-cancel" type="checkbox" name="statusnet-disconnect" value="1" />';
-			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div>';
+			$sc .= '<div class="section-content-info-wrapper">';
+			$sc .= t('To connect to your GNU social account click the button below to get a security code from GNU social which you have to copy into the input box below and submit the form. Only your <strong>public</strong> posts will be posted to GNU social.');
+			$sc .= '</div>';
+			$sc .= '<a href="'.$connection->getAuthorizeURL($token,False).'" target="_statusnet"><img src="addon/statusnet/signinwithgnusocial.png" class="form-group" alt="'. t('Log in with GNU social') .'"></a>';
+
+			$sc .= replace_macros(get_markup_template('field_input.tpl'), array(
+				'$field'	=> array('statusnet-pin', t('Copy the security code from GNU social here'), '', '')
+			));
+
+			$sc .= '<input id="statusnet-token" type="hidden" name="statusnet-token" value="'.$token.'" />';
+			$sc .= '<input id="statusnet-token2" type="hidden" name="statusnet-token2" value="'.$request_token['oauth_token_secret'].'" />';
+
+			$sc .= '<div class=" settings-submit-wrapper">';
+			$sc .= '<button type="submit" name="statusnet-submit" class="btn btn-primary" value="' . t('Submit') . '">' . t('Submit') . '</button>';
+			$sc .= '</div>';
+
+			$sc .= '<h3>'.t('Cancel Connection Process').'</h3>';
+			$sc .= '<div class="section-content-info-wrapper">';
+			$sc .= t('Current GNU social API is').': ' . $api;
+			$sc .= '</div>';
+
+			$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+				'$field'	=> array('statusnet-disconnect', t('Cancel GNU social Connection'), '', '', array(t('No'),t('Yes')))
+			));
+
 		} else {
+
 			/***
 			 *  we have an OAuth key / secret pair for the user
 			 *  so let's give a chance to disable the postings to statusnet
 			 */
 			$connection = new StatusNetOAuth($api,$ckey,$csecret,$otoken,$osecret);
 			$details = $connection->get('account/verify_credentials');
-			$s .= '<div id="statusnet-info" ><img id="statusnet-avatar" src="'.$details->profile_image_url.'" /><p id="statusnet-info-block">'. t('Currently connected to: ') .'<a href="'.$details->statusnet_profile_url.'" target="_statusnet">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
-			$s .= '<p>'. t('If enabled all your <strong>public</strong> postings can be posted to the associated GNU social account. You can choose to do so by default (here) or for every posting separately in the posting options when writing the entry.') .'</p>';
-						if ($a->user['hidewall']) {
-							$s .= '<p>'. t('<strong>Note</strong>: Due your privacy settings (<em>Hide your profile details from unknown viewers?</em>) the link potentially included in public postings relayed to GNU social will lead the visitor to a blank page informing the visitor that the access to your profile has been restricted.') .'</p>';
-						}
-			$s .= '<div id="statusnet-enable-wrapper">';
-			$s .= '<label id="statusnet-enable-label" for="statusnet-checkbox">'. t('Allow posting to GNU social') .'</label>';
-			$s .= '<input id="statusnet-checkbox" type="checkbox" name="statusnet-enable" value="1" ' . $checked . '/>';
-			$s .= '<div class="clear"></div>';
-			$s .= '<label id="statusnet-default-label" for="statusnet-default">'. t('Send public postings to GNU social by default') .'</label>';
-			$s .= '<input id="statusnet-default" type="checkbox" name="statusnet-default" value="1" ' . $defchecked . '/>';
-			$s .= '<div class="clear"></div>';
 
-// 		FIXME: Doesn't seem to work. But maybe we don't want it all.
-//			$s .= '<label id="statusnet-shortening-label" for="statusnet-shortening">'.t('Shortening method that optimizes the post').'</label>';
-//			$s .= '<input id="statusnet-shortening" type="checkbox" name="statusnet-shortening" value="1" '. $shorteningchecked . '/>';
-//			$s .= '<div class="clear"></div>';
+			$sc .= '<div id="statusnet-info" ><img id="statusnet-avatar" src="'.$details->profile_image_url.'" /><p id="statusnet-info-block">'. t('Currently connected to: ') .'<a href="'.$details->statusnet_profile_url.'" target="_statusnet">'.$details->screen_name.'</a><br /><em>'.$details->description.'</em></p></div>';
+			$sc .= '<div class="clear"></div>';
 
-			$s .= '<div id="statusnet-disconnect-wrapper">';
-						$s .= '<label id="statusnet-disconnect-label" for="statusnet-disconnect">'. t('Clear OAuth configuration') .'</label>';
-						$s .= '<input id="statusnet-disconnect" type="checkbox" name="statusnet-disconnect" value="1" />';
-			$s .= '</div><div class="clear"></div>';
-			$s .= '<div class="settings-submit-wrapper" ><input type="submit" name="statusnet-submit" class="settings-submit" value="' . t('Submit GNU social Post Settings') . '" /></div></div>'; 
+			if ($a->user['hidewall']) {
+				$sc .= '<div class="section-content-info-wrapper">';
+				$sc .= t('<strong>Note</strong>: Due your privacy settings (<em>Hide your profile details from unknown viewers?</em>) the link potentially included in public postings relayed to GNU social will lead the visitor to a blank page informing the visitor that the access to your profile has been restricted.');
+				$sc .= '</div>';
+			}
+
+			$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+				'$field'	=> array('statusnet-enable', t('Allow posting to GNU social'), $checked, t('If enabled your public postings can be posted to the associated Twitter account'), array(t('No'),t('Yes')))
+			));
+
+			$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+				'$field'	=> array('statusnet-default', t('Allow posting to GNU social'), $defchecked, t('If enabled your public postings will be posted to the associated Twitter account by default'), array(t('No'),t('Yes')))
+			));
+
+			//FIXME: Doesn't seem to work. But maybe we don't want it all.
+			//$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+			//	'$field'	=> array('statusnet-shortening', t('Shortening method that optimizes the post'), $shorteningchecked, '', array(t('No'),t('Yes')))
+			//));
+
+			$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
+				'$field'	=> array('statusnet-disconnect', t('Clear OAuth configuration'), '', '', array(t('No'),t('Yes')))
+			));
+
 		}
+
 	}
-		$s .= '</div><div class="clear"></div></div>';
+
+	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
+		'$addon' 	=> array('statusnet', '<img src="addon/statusnet/gnusocial.png" style="width:auto; height:1em; margin:-3px 5px 0px 0px;">' . t('GNU social Post Settings'), '', t('Submit')),
+		'$content'	=> $sc
+	));
+
 }
 
 

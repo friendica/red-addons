@@ -1,71 +1,7 @@
-#settings-gnusocial-wrapper {
-	margin-top: 12px;
-}
-
 #statusnet-avatar {
 	float: left;
 	width: 48px;
 	height: 48px;
-	padding: 2px;
-}
-#statusnet-info-block {
-	height: 52px;
-	vertical-align: middle;
-}
-#statusnet-disconnect-label {
-	float: left;
-	width: 350px;
-	margin-bottom: 25px;
-}
-#statusnet-disconnect {
-	float: left;
+	margin: 0px 15px 15px 0px;
 }
 
-#statusnet-default-label,
-#statusnet-applicationname-label,
-#statusnet-sendtaglinks-label,
-#statusnet-shortening-label, 
-#statusnet-mirror-label,
-#statusnet-pin-label,
-#statusnet-enable-label {
-	float: left;
-	width: 350px;
-	margin-bottom: 5px;
-}
-
-#statusnet-checkbox {
-	float: left;
-}
-
-#statusnet-pin {
-	float: left;
-}
-
-
-#statusnet-consumerkey-label {
-	float: left;
-	width: 350px;
-	margin-bottom: 8px;
-}
-#statusnet-consumerkey {
-	float: left;
-	margin-bottom: 8px;
-}
-#statusnet-consumersecret-label {
-	float: left;
-	width: 350px;
-	margin-bottom: 8px;
-}
-#statusnet-consumersecret {
-	float: left;
-	margin-bottom: 8px;
-}
-#statusnet-baseapi-label {
-	float: left;
-	width: 350px;
-	margin-bottom: 25px;
-}
-#statusnet-baseapi {
-	float: left;
-	margin-bottom: 8px;
-}

@@ -209,11 +209,12 @@ function wppost_send(&$a,&$b) {
 		require_once('include/bbcode.php');
 
 		$data = array(
-			'post_title'   => trim($b['title']),
-			'post_content' => bbcode($b['body']),
-			'post_type'    => 'post',
-			'post_status'  => 'publish',
-			'custom_fields' => array(array('key' => 'post_from_red', 'value' => '1'))
+			'post_title'     => trim($b['title']),
+			'post_content'   => bbcode($b['body']),
+			'post_type'      => 'post',
+			'post_status'    => 'publish',
+			'comment_status' => 'open',
+			'custom_fields'  => array(array('key' => 'post_from_red', 'value' => '1'))
 		);
 		if($terms_names)
 			$data['terms_names'] = $terms_names;
@@ -254,6 +255,8 @@ function wppost_send(&$a,&$b) {
 function wppost_post_remote_end(&$a,&$b) {
 
 	// We are only looking for public comments
+
+	logger('wppost_post_remote_end');
 
 	if($b['mid'] === $b['parent_mid'])
 		return;

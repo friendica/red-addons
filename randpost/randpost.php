@@ -59,7 +59,7 @@ function randpost_enotify_store(&$a,&$b) {
 	elseif($p[0]['author_xchan'] === $c[0]['channel_hash'])
 		$my_conversation = true;
 	elseif($p[0]['term']) {
-		$v = get_terms_of_type($p[0]['term'],TERM_MENTION);
+		$v = get_terms_oftype($p[0]['term'],TERM_MENTION);
 		$link = normalise_link($a->get_baseurl() . '/channel/' . $c[0]['channel_address']);
 		if($v) {
 			foreach($v as $vv) {

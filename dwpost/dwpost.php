@@ -63,7 +63,7 @@ function dwpost_settings(&$a,&$s) {
 	$def_checked = (($def_enabled) ? 1 : false);
 
 	$dw_username = get_pconfig(local_channel(), 'dwpost', 'dw_username');
-	$dw_password = get_pconfig(local_channel(), 'dwpost', 'dw_password');
+	$dw_password = z_unobscure(get_pconfig(local_channel(), 'dwpost', 'dw_password'));
 
 
 	/* Add some HTML to the existing form */
@@ -99,7 +99,7 @@ function dwpost_settings_post(&$a,&$b) {
 		set_pconfig(local_channel(),'dwpost','post',intval($_POST['dwpost']));
 		set_pconfig(local_channel(),'dwpost','post_by_default',intval($_POST['dw_bydefault']));
 		set_pconfig(local_channel(),'dwpost','dw_username',trim($_POST['dw_username']));
-		set_pconfig(local_channel(),'dwpost','dw_password',trim($_POST['dw_password']));
+		set_pconfig(local_channel(),'dwpost','dw_password',z_obscure(trim($_POST['dw_password'])));
 
 	}
 
@@ -165,7 +165,7 @@ function dwpost_send(&$a,&$b) {
 		$tz = $x[0]['channel_timezone'];	
 
 	$dw_username = get_pconfig($b['uid'],'dwpost','dw_username');
-	$dw_password = get_pconfig($b['uid'],'dwpost','dw_password');
+	$dw_password = z_unobscure(get_pconfig($b['uid'],'dwpost','dw_password'));
 	$dw_blog = 'http://www.dreamwidth.org/interface/xmlrpc';
 
 	if($dw_username && $dw_password && $dw_blog) {

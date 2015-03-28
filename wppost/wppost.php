@@ -70,7 +70,7 @@ function wppost_settings(&$a,&$s) {
 	$def_checked = (($def_enabled) ? 1 : false);
 
 	$wp_username = get_pconfig(local_channel(), 'wppost', 'wp_username');
-	$wp_password = get_pconfig(local_channel(), 'wppost', 'wp_password');
+	$wp_password = z_unobscure(get_pconfig(local_channel(), 'wppost', 'wp_password'));
 	$wp_blog = get_pconfig(local_channel(), 'wppost', 'wp_blog');
 
 
@@ -97,7 +97,7 @@ function wppost_settings(&$a,&$s) {
 	));
 
 	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
-		'$field'	=> array('wp_forward_comments', t('Forward comments (requires post_to_red plugin)'), $fwd_checked, '', array(t('No'),t('Yes'))),
+		'$field'	=> array('wp_forward_comments', t('Forward comments (requires redmatrix_wp plugin)'), $fwd_checked, '', array(t('No'),t('Yes'))),
 	));
 
 	$s .= replace_macros(get_markup_template('generic_addon_settings.tpl'), array(
@@ -113,7 +113,7 @@ function wppost_settings_post(&$a,&$b) {
 		set_pconfig(local_channel(),'wppost','post',intval($_POST['wppost']));
 		set_pconfig(local_channel(),'wppost','post_by_default',intval($_POST['wp_bydefault']));
 		set_pconfig(local_channel(),'wppost','wp_username',trim($_POST['wp_username']));
-		set_pconfig(local_channel(),'wppost','wp_password',trim($_POST['wp_password']));
+		set_pconfig(local_channel(),'wppost','wp_password',z_obscure(trim($_POST['wp_password'])));
 		set_pconfig(local_channel(),'wppost','wp_blog',trim($_POST['wp_blog']));
 		set_pconfig(local_channel(),'wppost','forward_comments',trim($_POST['wp_forward_comments']));
 		info( t('Wordpress Settings saved.') . EOL);
@@ -201,7 +201,7 @@ function wppost_send(&$a,&$b) {
 
 
 	$wp_username = get_pconfig($b['uid'],'wppost','wp_username');
-	$wp_password = get_pconfig($b['uid'],'wppost','wp_password');
+	$wp_password = z_unobscure(get_pconfig($b['uid'],'wppost','wp_password'));
 	$wp_blog     = get_pconfig($b['uid'],'wppost','wp_blog');
 
 	if($wp_username && $wp_password && $wp_blog) {
@@ -314,7 +314,7 @@ function wppost_post_remote_end(&$a,&$b) {
 	}
 
 	$wp_username = get_pconfig($b['uid'],'wppost','wp_username');
-	$wp_password = get_pconfig($b['uid'],'wppost','wp_password');
+	$wp_password = z_unobscure(get_pconfig($b['uid'],'wppost','wp_password'));
 	$wp_blog     = get_pconfig($b['uid'],'wppost','wp_blog');
 
 	if($wp_username && $wp_password && $wp_blog) {
@@ -385,7 +385,7 @@ function wppost_drop_item(&$a,&$b) {
 	$post_id = basename($r[0]['sid']);
 
 	$wp_username = get_pconfig($b['item']['uid'],'wppost','wp_username');
-	$wp_password = get_pconfig($b['item']['uid'],'wppost','wp_password');
+	$wp_password = z_unobscure(get_pconfig($b['item']['uid'],'wppost','wp_password'));
 	$wp_blog     = get_pconfig($b['item']['uid'],'wppost','wp_blog');
 
 	if($post_id && $wp_username && $wp_password && $wp_blog) {

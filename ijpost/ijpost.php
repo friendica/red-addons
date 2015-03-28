@@ -63,7 +63,7 @@ function ijpost_settings(&$a,&$s) {
 	$def_checked = (($def_enabled) ? 1 : false);
 
 	$ij_username = get_pconfig(local_channel(), 'ijpost', 'ij_username');
-	$ij_password = get_pconfig(local_channel(), 'ijpost', 'ij_password');
+	$ij_password = z_unobscure(get_pconfig(local_channel(), 'ijpost', 'ij_password'));
 
 
 	/* Add some HTML to the existing form */
@@ -99,7 +99,7 @@ function ijpost_settings_post(&$a,&$b) {
 		set_pconfig(local_channel(),'ijpost','post',intval($_POST['ijpost']));
 		set_pconfig(local_channel(),'ijpost','post_by_default',intval($_POST['ij_bydefault']));
 		set_pconfig(local_channel(),'ijpost','ij_username',trim($_POST['ij_username']));
-		set_pconfig(local_channel(),'ijpost','ij_password',trim($_POST['ij_password']));
+		set_pconfig(local_channel(),'ijpost','ij_password',z_obscure(trim($_POST['ij_password'])));
                 info( t('Insane Journal Settings saved.') . EOL);
 	}
 
@@ -165,7 +165,7 @@ function ijpost_send(&$a,&$b) {
 		$tz = $x[0]['channel_timezone'];	
 
 	$ij_username = get_pconfig($b['uid'],'ijpost','ij_username');
-	$ij_password = get_pconfig($b['uid'],'ijpost','ij_password');
+	$ij_password = z_unobscure(get_pconfig($b['uid'],'ijpost','ij_password'));
 	$ij_blog = 'http://www.insanejournal.com/interface/xmlrpc';
 
 	if($ij_username && $ij_password && $ij_blog) {

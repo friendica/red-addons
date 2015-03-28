@@ -64,7 +64,7 @@ function diaspora_queue_hook(&$a,&$b) {
 		$userdata = $r[0];
 
 		$diaspora_username = get_pconfig($userdata['uid'],'diaspora','diaspora_username');
-		$diaspora_password = get_pconfig($userdata['uid'],'diaspora','diaspora_password');
+		$diaspora_password = z_unobscure(get_pconfig($userdata['uid'],'diaspora','diaspora_password'));
 		$diaspora_url = get_pconfig($userdata['uid'],'diaspora','diaspora_url');
 
 		$success = false;
@@ -126,7 +126,7 @@ function diaspora_settings(&$a,&$s) {
 	$def_checked = (($def_enabled) ? 1 : false);
 
 	$diaspora_username = get_pconfig(local_channel(), 'diaspora', 'diaspora_username');
-	$diaspora_password = get_pconfig(local_channel(), 'diaspora', 'diaspora_password');
+	$diaspora_password = z_unobscure(get_pconfig(local_channel(), 'diaspora', 'diaspora_password'));
 	$diaspora_url = get_pconfig(local_channel(), 'diaspora', 'diaspora_url');
 
 	$status = "";
@@ -185,7 +185,7 @@ function diaspora_settings_post(&$a,&$b) {
 		set_pconfig(local_channel(),'diaspora','post',intval($_POST['diaspora']));
 		set_pconfig(local_channel(),'diaspora','post_by_default',intval($_POST['diaspora_bydefault']));
 		set_pconfig(local_channel(),'diaspora','diaspora_username',trim($_POST['diaspora_username']));
-		set_pconfig(local_channel(),'diaspora','diaspora_password',trim($_POST['diaspora_password']));
+		set_pconfig(local_channel(),'diaspora','diaspora_password',z_obscure(trim($_POST['diaspora_password'])));
 		set_pconfig(local_channel(),'diaspora','diaspora_url',trim($_POST['diaspora_url']));
 
 	}
@@ -248,7 +248,7 @@ function diaspora_send(&$a,&$b) {
 	logger('diaspora_send: prepare posting', LOGGER_DEBUG);
 
 	$diaspora_username = get_pconfig($b['uid'],'diaspora','diaspora_username');
-	$diaspora_password = get_pconfig($b['uid'],'diaspora','diaspora_password');
+	$diaspora_password = z_unobscure(get_pconfig($b['uid'],'diaspora','diaspora_password'));
 	$diaspora_url = get_pconfig($b['uid'],'diaspora','diaspora_url');
 
 	if($diaspora_url && $diaspora_username && $diaspora_password) {

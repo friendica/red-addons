@@ -63,7 +63,7 @@ function ljpost_settings(&$a,&$s) {
 	$def_checked = (($def_enabled) ? 1 : false);
 
 	$lj_username = get_pconfig(local_channel(), 'ljpost', 'lj_username');
-	$lj_password = get_pconfig(local_channel(), 'ljpost', 'lj_password');
+	$lj_password = z_unobscure(get_pconfig(local_channel(), 'ljpost', 'lj_password'));
 
 	$sc .= replace_macros(get_markup_template('field_checkbox.tpl'), array(
 		'$field'	=> array('ljpost', t('Enable LiveJournal Post Plugin'), $checked, '', array(t('No'),t('Yes'))),
@@ -96,7 +96,7 @@ function ljpost_settings_post(&$a,&$b) {
 		set_pconfig(local_channel(),'ljpost','post',intval($_POST['ljpost']));
 		set_pconfig(local_channel(),'ljpost','post_by_default',intval($_POST['lj_bydefault']));
 		set_pconfig(local_channel(),'ljpost','lj_username',trim($_POST['lj_username']));
-		set_pconfig(local_channel(),'ljpost','lj_password',trim($_POST['lj_password']));
+		set_pconfig(local_channel(),'ljpost','lj_password',z_obscure(trim($_POST['lj_password'])));
                 info( t('LiveJournal Settings saved.') . EOL);
 	}
 
@@ -160,7 +160,7 @@ function ljpost_send(&$a,&$b) {
 		$tz = $x[0]['channel_timezone'];	
 
 	$lj_username = xmlify(get_pconfig($b['uid'],'ljpost','lj_username'));
-	$lj_password = xmlify(get_pconfig($b['uid'],'ljpost','lj_password'));
+	$lj_password = xmlify(z_unobscure(get_pconfig($b['uid'],'ljpost','lj_password')));
 	$lj_journal = xmlify(get_pconfig($b['uid'],'ljpost','lj_journal'));
 //	if(! $lj_journal)
 //		$lj_journal = $lj_username;

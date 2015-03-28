@@ -55,7 +55,7 @@ function rtof_settings_post ($a,$post) {
 	
 	set_pconfig(local_channel(), 'rtof', 'baseapi',         trim($_POST['rtof_baseapi']));
 	set_pconfig(local_channel(), 'rtof', 'username',        trim($_POST['rtof_username']));
-	set_pconfig(local_channel(), 'rtof', 'password',        trim($_POST['rtof_password']));
+	set_pconfig(local_channel(), 'rtof', 'password',        z_obscure(trim($_POST['rtof_password'])));
 	set_pconfig(local_channel(), 'rtof', 'post',            intval($_POST['rtof_enable']));
 	set_pconfig(local_channel(), 'rtof', 'post_by_default', intval($_POST['rtof_default']));
         info( t('rtof Settings saved.') . EOL);
@@ -69,7 +69,7 @@ function rtof_settings(&$a,&$s) {
 
 	$api     = get_pconfig(local_channel(), 'rtof', 'baseapi');
 	$username    = get_pconfig(local_channel(), 'rtof', 'username' );
-	$password = get_pconfig(local_channel(), 'rtof', 'password' );
+	$password = z_unobscure(get_pconfig(local_channel(), 'rtof', 'password' ));
 	$enabled = get_pconfig(local_channel(), 'rtof', 'post');
 	$checked = (($enabled) ? 1 : false);
 	$defenabled = get_pconfig(local_channel(),'rtof','post_by_default');
@@ -160,7 +160,7 @@ function rtof_post_hook(&$a,&$b) {
 	if(substr($api,-1,1) != '/')
 		$api .= '/';
 	$username = get_pconfig($b['uid'], 'rtof', 'username');
-	$password = get_pconfig($b['uid'], 'rtof', 'password');
+	$password = z_unobscure(get_pconfig($b['uid'], 'rtof', 'password'));
 
 	$msg = $b['body'];
 

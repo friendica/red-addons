@@ -70,7 +70,7 @@ function redred_settings_post ($a,$post) {
 	
 	set_pconfig(local_channel(), 'redred', 'baseapi',         trim($_POST['redred_baseapi']));
 	set_pconfig(local_channel(), 'redred', 'username',        trim($_POST['redred_username']));
-	set_pconfig(local_channel(), 'redred', 'password',        trim($_POST['redred_password']));
+	set_pconfig(local_channel(), 'redred', 'password',        z_obscure(trim($_POST['redred_password'])));
 	set_pconfig(local_channel(), 'redred', 'channel',         trim($_POST['redred_channel']));
 	set_pconfig(local_channel(), 'redred', 'post',            intval($_POST['redred_enable']));
 	set_pconfig(local_channel(), 'redred', 'post_by_default', intval($_POST['redred_default']));
@@ -85,7 +85,7 @@ function redred_settings(&$a,&$s) {
 
 	$api     = get_pconfig(local_channel(), 'redred', 'baseapi');
 	$username    = get_pconfig(local_channel(), 'redred', 'username' );
-	$password = get_pconfig(local_channel(), 'redred', 'password' );
+	$password = z_unobscure(get_pconfig(local_channel(), 'redred', 'password' ));
 	$channel = get_pconfig(local_channel(), 'redred', 'channel' );
 	$enabled = get_pconfig(local_channel(), 'redred', 'post');
 	$checked = (($enabled) ? 1 : false);
@@ -181,7 +181,7 @@ function redred_post_hook(&$a,&$b) {
 	if(substr($api,-1,1) != '/')
 		$api .= '/';
 	$username = get_pconfig($b['uid'], 'redred', 'username');
-	$password = get_pconfig($b['uid'], 'redred', 'password');
+	$password = z_unobscure(get_pconfig($b['uid'], 'redred', 'password'));
 	$channel  = get_pconfig($b['uid'], 'redred', 'channel');
 
 	$msg = $b['body'];

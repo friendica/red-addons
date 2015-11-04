@@ -24,7 +24,7 @@ Activate the analytics addon in your admin panel and then open the
 .htconfig.php file in you fav editor to add the following lines:
 
     $a->config['piwik']['baseurl'] = 'example.com/piwik/';
-    $a->config['piwik']['sideid'] = '1';
+    $a->config['piwik']['siteid'] = '1';
     $a->config['piwik']['optout'] = true;
     $a->config['piwik']['async'] = false;
     $a->config['piwik']['trackjserror'] = false;
@@ -36,7 +36,7 @@ Configuration fields
 
 * The *baseurl* points to your Piwik installation. Use the absolute path,
   remember trailing slashes but ignore the protocol (http/s) part of the URL.
-* Change the *sideid* parameter to whatever ID you want to use for tracking your
+* Change the *siteid* parameter to whatever ID you want to use for tracking your
   red# installation.
 * The *optout* parameter (true|false) defines whether or
   not a short notice about the utilization of Piwik will be displayed on every
